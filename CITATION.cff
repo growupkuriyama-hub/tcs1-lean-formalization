@@ -6,8 +6,10 @@ authors:
   - family-names: Kuriyama
     given-names: Takayuki
 version: "tcs1-v79-formalization-1.0.0"
+doi: "10.5281/zenodo.22939434"
 date-released: 2026-09-24
 repository-code: "https://github.com/growupkuriyama-hub/tcs1-lean-formalization"
+url: "https://doi.org/10.5281/zenodo.22939434"
 keywords:
   - Lean
   - formal verification
