@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this formalization, please cite this software and the associated paper."
+title: "Lean formalization for Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing"
+type: software
+authors:
+  - family-names: Kuriyama
+    given-names: Takayuki
+version: "tcs1-v79-formalization-1.0.0"
+date-released: 2026-09-24
+repository-code: "https://github.com/growupkuriyama-hub/lean_cfg_project"
+keywords:
+  - Lean
+  - formal verification
+  - grammatical inference
+  - context-free languages
+  - finite monoids
+  - Gold learning
+abstract: "Lean formalization of the theorem-facing mathematical content, executable reconstruction and learner layers, and paper-facing polynomial combinatorial bounds for the v79 manuscript Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing."
