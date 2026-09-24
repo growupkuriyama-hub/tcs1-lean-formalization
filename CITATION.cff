@@ -7,7 +7,7 @@ authors:
     given-names: Takayuki
 version: "tcs1-v79-formalization-1.0.0"
 date-released: 2026-09-24
-repository-code: "https://github.com/growupkuriyama-hub/lean_cfg_project"
+repository-code: "https://github.com/growupkuriyama-hub/tcs1-lean-formalization"
 keywords:
   - Lean
   - formal verification
