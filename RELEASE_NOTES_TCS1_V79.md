@@ -31,4 +31,4 @@ Statements intentionally kept external are documented in `FORMALIZATION_TCS1_V79
 lake build LeanCfgProject.TCS1.All
 ```
 
-The intended Git tag is `tcs1-v79-formalization-1.0.0`.
+The archival Git tag is `tcs1-v79-formalization-1.0.0`.
