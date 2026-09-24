@@ -1,8 +1,12 @@
 # TCS #1 Lean formalization (v79)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22939434.svg)](https://doi.org/10.5281/zenodo.22939434)
+
 Standalone Lean formalization accompanying:
 
 **Takayuki Kuriyama, _Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing_.**
+
+The archival release is preserved on Zenodo at DOI `10.5281/zenodo.22939434`.
 
 This repository is intentionally restricted to the TCS #1 artifact. It excludes the unrelated JALC, MCFG, ORC, build-log, and historical project files contained in the broader research repository.
 
