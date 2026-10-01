@@ -186,8 +186,12 @@ theorem cleanLevelTreeWord_length_rec
       simp [cleanLevelTreeWord, cleanLevelTree,
         LevelTree.serialize, levelCleanTreeLength]
   | succ n ih =>
+      have ih' :
+          (cleanLevelTree n).serialize.length =
+            levelCleanTreeLength n := by
+        simpa [cleanLevelTreeWord] using ih
       simp [cleanLevelTreeWord, cleanLevelTree,
-        LevelTree.serialize, levelCleanTreeLength, ih]
+        LevelTree.serialize, levelCleanTreeLength, ih']
       omega
 
 /-- Concrete manuscript closed form |z_n| = 5*2^n-2. -/
