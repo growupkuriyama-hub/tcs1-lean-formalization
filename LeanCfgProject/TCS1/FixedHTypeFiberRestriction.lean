@@ -47,16 +47,24 @@ theorem fixedHSubstitutable_inter_recognizedPreimage
       H.h (c.1 ++ x ++ c.2) =
         H.h (c.1 ++ y ++ c.2) :=
     context_image_eq H hxy c.1 c.2
+  have htype' :
+      H.h (c.1 ++ (x ++ c.2)) =
+        H.h (c.1 ++ (y ++ c.2)) := by
+    simpa only [List.append_assoc] using htype
   change
     ((c.1 ++ x ++ c.2 ∈ L) ∧
-      H.h (c.1 ++ x ++ c.2) ∈ F) ↔
+      H.h (c.1 ++ (x ++ c.2)) ∈ F) ↔
     ((c.1 ++ y ++ c.2 ∈ L) ∧
-      H.h (c.1 ++ y ++ c.2) ∈ F)
+      H.h (c.1 ++ (y ++ c.2)) ∈ F)
   constructor
   · rintro ⟨hxL, hxF⟩
-    exact ⟨hL.mp hxL, by simpa [htype] using hxF⟩
+    refine ⟨hL.mp hxL, ?_⟩
+    rw [← htype']
+    exact hxF
   · rintro ⟨hyL, hyF⟩
-    exact ⟨hL.mpr hyL, by simpa [htype] using hyF⟩
+    refine ⟨hL.mpr hyL, ?_⟩
+    rw [htype']
+    exact hyF
 
 end TCS1
 end LeanCfgProject
