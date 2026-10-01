@@ -5,6 +5,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: tcs1-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tcs1:
     runs-on: ubuntu-latest
