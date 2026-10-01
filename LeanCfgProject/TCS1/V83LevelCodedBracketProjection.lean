@@ -58,6 +58,18 @@ theorem dyckOne_append_mem
   exact hy
 
 /--
+Shortcut serialization contributes exactly one matching bracket pair to the
+projection, independently of its residual-height code.
+-/
+@[simp] theorem levelBracketProjection_shortcut_serialize
+    (i : Nat) :
+    levelBracketProjection
+        (LevelTree.shortcut i).serialize =
+      [DyckOne.Symbol.a, DyckOne.Symbol.b] := by
+  simp [LevelTree.serialize, levelBracketProjection,
+    levelBracketLetter, levelShortcutBody]
+
+/--
 Every level-tree serialization projects to a balanced one-bracket Dyck word.
 -/
 theorem levelTree_bracketProjection_mem_dyck
@@ -70,11 +82,13 @@ theorem levelTree_bracketProjection_mem_dyck
       simp [LevelTree.serialize, levelBracketProjection,
         levelBracketLetter, DyckOne.Language, DyckOne.scan]
   | shortcut i =>
-      simp [LevelTree.serialize,
-        levelBracketProjection_append,
-        levelBracketProjection_shortcutBody,
-        levelBracketProjection, levelBracketLetter,
-        DyckOne.Language, DyckOne.scan]
+      change
+        DyckOne.scan 0
+            (levelBracketProjection
+              (LevelTree.shortcut i).serialize) =
+          some 0
+      rw [levelBracketProjection_shortcut_serialize]
+      rfl
   | @node n left right ihL ihR =>
       have hinner :
           levelBracketProjection left.serialize ++
@@ -121,17 +135,6 @@ theorem levelTree_bracketProjection_neutral
     DyckOne.scan_dyck_at_height
       (levelTree_bracketProjection_mem_dyck t) h
 
-/--
-Shortcut serialization contributes exactly one matching bracket pair to the
-projection, independently of its residual-height code.
--/
-@[simp] theorem levelBracketProjection_shortcut_serialize
-    (i : Nat) :
-    levelBracketProjection
-        (LevelTree.shortcut i).serialize =
-      [DyckOne.Symbol.a, DyckOne.Symbol.b] := by
-  simp [LevelTree.serialize, levelBracketProjection,
-    levelBracketLetter, levelShortcutBody]
 
 end TCS1
 end LeanCfgProject
