@@ -292,16 +292,19 @@ theorem cleanLevelTreeWord_factor_context
             exact hq.trans hsuf
           have hparse :=
             congrArg (parseLevelTreePrefix i) heq
-          simp at hparse
+          have hpair :
+              (cleanLevelTree i,
+                  [r] ++ q) =
+                (sibling,
+                  [r] ++ outer.suffix) := by
+            simpa [cleanLevelTreeWord] using hparse
           have hsib :
               sibling = cleanLevelTree i := by
-            exact congrArg Prod.fst
-              (Option.some.inj hparse)
+            exact (congrArg Prod.fst hpair).symm
           have htail :
               [r] ++ q =
                 [r] ++ outer.suffix := by
-            exact congrArg Prod.snd
-              (Option.some.inj hparse)
+            exact congrArg Prod.snd hpair
           refine ⟨outer, ?_, ?_⟩
           · have hp' :
                 p ++ [l] =
@@ -341,7 +344,7 @@ theorem levelCleanBodyRecognition_proved
       have haFactor :
           t.serialize = p ++ a :: q := by
         rw [ht]
-        simpa [levelCleanNodeBody] using rfl
+        simp [levelCleanNodeBody, List.append_assoc]
       exact levelTree_a_factor_context t haFactor
   | succ i =>
       have hfirst :
@@ -371,11 +374,14 @@ theorem levelCleanBodyRecognition_proved
             exact hq.trans hsuf
           have hparse :=
             congrArg (parseLevelTreePrefix i) heq
-          simp at hparse
+          have hpair :
+              (cleanLevelTree i, q) =
+                (sibling,
+                  [r] ++ outer.suffix) := by
+            simpa [cleanLevelTreeWord] using hparse
           have htail :
               q = [r] ++ outer.suffix := by
-            exact congrArg Prod.snd
-              (Option.some.inj hparse)
+            exact congrArg Prod.snd hpair
           refine ⟨outer, ?_, htail⟩
           exact hp.trans hpre
         · rcases hright with
