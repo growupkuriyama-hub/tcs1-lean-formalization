@@ -79,6 +79,7 @@ import LeanCfgProject.TCS1.V83TypedThicknessWitnessBounds
 import LeanCfgProject.TCS1.V83FixedWindowRefinedBounds
 import LeanCfgProject.TCS1.V83OrdinaryThicknessLowerBoundKernel
 import LeanCfgProject.TCS1.V83LevelCodedTreeSyntax
+import LeanCfgProject.TCS1.V83LevelCodedBracketProjection
 import LeanCfgProject.TCS1.V83LevelCodedTreeLanguage
 import LeanCfgProject.TCS1.V83LevelCodedDisplayedGrammar
 import LeanCfgProject.TCS1.V83LevelCodedDisplayedThickness
