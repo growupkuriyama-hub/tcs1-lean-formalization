@@ -230,16 +230,20 @@ import LeanCfgProject.TCS1.V79PreliminariesAudit
 import LeanCfgProject.TCS1.V79ManuscriptClaimAudit
 import LeanCfgProject.TCS1.V79FrontBackAppendixAudit
 import LeanCfgProject.TCS1.V79FullManuscriptAudit
+import LeanCfgProject.TCS1.V83FullManuscriptAudit
 /-!
-# TCS #1 archived v79 facade with v83 re-verification delta
+# TCS #1 integrated facade: archived v79 baseline plus completed v83 delta
 
 The archival v79 theorem-facing surface remains imported unchanged.  The
-current branch additionally imports the first v83 delta modules while the new
-typed-thickness and operator-independent ordinary-thickness results are being
-re-verified.  Thus v79 remains the completed archival baseline; v83 coverage
-is explicitly in progress rather than silently inherited. Building this one
-target is the fast integration check; CI separately rejects placeholder proofs
-and project-level axiom declarations inside the TCS1 namespace.
+current v83 re-verification adds the revised typed-thickness, fixed-window,
+level-coded Appendix, and ordinary-thickness lower-bound development,
+including exact finite indexed grammars, reducedness, thickness, and linear
+presentation-size certificates.
+
+`V83FullManuscriptAudit` is the final theorem-facing audit facade for this
+delta.  Building this target through `TCS1.All` is the integration check;
+CI separately rejects placeholder proofs and project-level axiom declarations
+inside the TCS1 source tree.
 -/
 
 namespace LeanCfgProject
@@ -265,11 +269,13 @@ theorem v78_facade_loaded : True :=
 theorem v79_facade_loaded : True :=
   True.intro
 
-/-- Marker theorem: the v83 delta re-verification branch has been started. -/
+/-- Compatibility marker retained from the start of the v83 audit. -/
 theorem v83_reverification_started : True :=
+  True.intro
+
+/-- Marker theorem: the v83 theorem-facing re-verification is integrated. -/
+theorem v83_reverification_completed : True :=
   True.intro
 
 end TCS1
 end LeanCfgProject
-
-import LeanCfgProject.TCS1.V83FullManuscriptAudit
