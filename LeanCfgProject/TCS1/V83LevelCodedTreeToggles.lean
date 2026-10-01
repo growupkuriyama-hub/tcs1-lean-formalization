@@ -49,23 +49,26 @@ theorem levelTreeToggle_serialized_context
     {n : Nat}
     {s t : LevelTree n}
     (h : LevelTreeToggle s t) :
-    ∃ u v : Word LevelTreeSymbol,
-      s.serialize = u ++
-        (match h with
-          | .expand ctx => (.shortcut _ : LevelTree _).serialize
-          | .contract ctx => (cleanLevelTree _).serialize) ++ v
-      ∧
-      t.serialize = u ++
-        (match h with
-          | .expand ctx => (cleanLevelTree _).serialize
-          | .contract ctx => (.shortcut _ : LevelTree _).serialize) ++ v := by
+    ∃ u v x y : Word LevelTreeSymbol,
+      s.serialize = u ++ x ++ v ∧
+      t.serialize = u ++ y ++ v := by
   cases h with
   | @expand i ctx =>
-      exact levelTreeContext_shortcut_clean_same_context ctx
+      obtain ⟨u, v, hs, ht⟩ :=
+        levelTreeContext_shortcut_clean_same_context ctx
+      exact
+        ⟨u, v,
+          (.shortcut i : LevelTree i).serialize,
+          (cleanLevelTree i).serialize,
+          hs, ht⟩
   | @contract i ctx =>
       obtain ⟨u, v, hs, ht⟩ :=
         levelTreeContext_shortcut_clean_same_context ctx
-      exact ⟨u, v, ht, hs⟩
+      exact
+        ⟨u, v,
+          (cleanLevelTree i).serialize,
+          (.shortcut i : LevelTree i).serialize,
+          ht, hs⟩
 
 /-- Finite reflexive-transitive closure of parsed-node toggles. -/
 inductive LevelTreeToggleReach {n : Nat} :
