@@ -95,9 +95,11 @@ theorem levelTreeTyping_eq_one_iff
       exact hc ((levelTreeTyping_eq_zeta_iff w).1 hz)
     cases hval : levelTreeTyping.h w with
     | one =>
-        exact hval
+        simpa using hval
     | zeta =>
-        exact False.elim (hnotz hval)
+        have hz : levelTreeTyping.h w = zeta := by
+          simpa using hval
+        exact False.elim (hnotz hz)
 
 /--
 The shortcut-containing language is exactly the zeta fibre of the full
