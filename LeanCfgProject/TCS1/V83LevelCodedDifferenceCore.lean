@@ -396,7 +396,8 @@ theorem levelTree_difference_core
                 intro hEq
                 apply htailR
                 rw [← hxHead, ← hyHead]
-                exact hEq
+                simpa [List.reverse_append,
+                  List.append_assoc] using hEq
 
 
 /--
