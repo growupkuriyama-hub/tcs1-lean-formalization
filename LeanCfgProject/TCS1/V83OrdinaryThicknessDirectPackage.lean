@@ -98,5 +98,71 @@ theorem levelCode_direct_ordinaryThickness_package
   · exact levelCodeRMinus_displayed_thickness_bound n
   · exact levelCode_displayed_joint_symbolCount_linear n
 
+
+/--
+Unconditional direct package: the Appendix admissibility and cut-locality
+premises are now discharged for the concrete level-coded family.
+-/
+theorem levelCode_direct_ordinaryThickness_package_unconditional
+    (n : Nat)
+    (hn : 1 ≤ n)
+    (B :
+      Finset (Word LevelTreeSymbol) →
+        Set (Word LevelTreeSymbol))
+    {C Cminus : Finset (Word LevelTreeSymbol)}
+    (hC :
+      IsSetDrivenCharacteristicSample
+        B (LevelTreeLanguage n) C)
+    (hCminus :
+      IsSetDrivenCharacteristicSample
+        B (LevelTreeShortcutLanguage n) Cminus) :
+    LevelCodeRStartLanguage n =
+        LevelTreeLanguage n
+      ∧
+    LevelCodeRMinusStartLanguage n =
+        (LevelTreeLanguage n \
+          ({cleanLevelTreeWord n} :
+            Set (Word LevelTreeSymbol)))
+      ∧
+    ((∀ i : Nat, i ≤ n →
+        ∃ w : Word LevelTreeSymbol,
+          LevelCodeZDerives i w ∧
+          w.length ≤ n + 5) ∧
+      (∀ i : Nat, i ≤ n →
+        ∃ w : Word LevelTreeSymbol,
+          LevelCodeADerives i w ∧
+          w.length ≤ n + 5))
+      ∧
+    ((∀ i : Nat, i ≤ n →
+        ∃ w : Word LevelTreeSymbol,
+          LevelCodeZDerives i w ∧
+          w.length ≤ n + 5) ∧
+      (∀ i : Nat, i < n →
+        ∃ w : Word LevelTreeSymbol,
+          LevelCodeADerives i w ∧
+          w.length ≤ n + 5) ∧
+      (∀ i : Nat, i ≤ n →
+        ∃ w : Word LevelTreeSymbol,
+          LevelCodeAMinusDerives i w ∧
+          w.length ≤ n + 5))
+      ∧
+    (levelCodeRProductionSymbolCount n +
+        levelCodeRMinusProductionSymbolCount n
+      ≤ 44 * (n + 1) + 9)
+      ∧
+    FixedHSubstitutable
+        levelTreeTyping (LevelTreeLanguage n)
+      ∧
+    FixedHSubstitutable
+        levelTreeTyping (LevelTreeShortcutLanguage n)
+      ∧
+    5 * 2^n - 1 ≤ reconstructionSampleNorm C := by
+  exact
+    levelCode_direct_ordinaryThickness_package
+      n hn B
+      (levelBodyToggleAdmissible_levelTree n)
+      (levelBodyToggleCutLocality_levelTree n)
+      hC hCminus
+
 end TCS1
 end LeanCfgProject
