@@ -47,26 +47,26 @@ theorem fixedHSubstitutable_inter_recognizedPreimage
       H.h (c.1 ++ x ++ c.2) =
         H.h (c.1 ++ y ++ c.2) :=
     context_image_eq H hxy c.1 c.2
-  have htype' :
-      H.h (c.1 ++ (x ++ c.2)) =
-        H.h (c.1 ++ (y ++ c.2)) := by
-    simpa only [List.append_assoc] using htype
   change
     (c.1 ++ x ++ c.2 ∈ L ∩ RecognizedPreimage H F) ↔
     (c.1 ++ y ++ c.2 ∈ L ∩ RecognizedPreimage H F)
   constructor
   · rintro ⟨hxL, hxF⟩
     refine ⟨hL.mp hxL, ?_⟩
-    change H.h (c.1 ++ (x ++ c.2)) ∈ F at hxF
-    change H.h (c.1 ++ (y ++ c.2)) ∈ F
-    rw [← htype']
-    exact hxF
+    have hxF' : H.h (c.1 ++ x ++ c.2) ∈ F := by
+      simpa [RecognizedPreimage] using hxF
+    have hyF' : H.h (c.1 ++ y ++ c.2) ∈ F := by
+      rw [← htype]
+      exact hxF'
+    simpa [RecognizedPreimage] using hyF'
   · rintro ⟨hyL, hyF⟩
     refine ⟨hL.mpr hyL, ?_⟩
-    change H.h (c.1 ++ (y ++ c.2)) ∈ F at hyF
-    change H.h (c.1 ++ (x ++ c.2)) ∈ F
-    rw [htype']
-    exact hyF
+    have hyF' : H.h (c.1 ++ y ++ c.2) ∈ F := by
+      simpa [RecognizedPreimage] using hyF
+    have hxF' : H.h (c.1 ++ x ++ c.2) ∈ F := by
+      rw [htype]
+      exact hyF'
+    simpa [RecognizedPreimage] using hxF'
 
 end TCS1
 end LeanCfgProject
