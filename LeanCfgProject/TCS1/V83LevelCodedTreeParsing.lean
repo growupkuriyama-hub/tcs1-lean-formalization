@@ -32,7 +32,16 @@ def consumeLevelZeros : Nat → Word LevelTreeSymbol →
   | zero =>
       simp [consumeLevelZeros]
   | succ k ih =>
-      simp [consumeLevelZeros, ih]
+      exact ih
+
+/-- Every serialized level tree begins with the left bracket. -/
+theorem levelTree_serialize_starts_l
+    {n : Nat}
+    (t : LevelTree n) :
+    ∃ rest : Word LevelTreeSymbol,
+      t.serialize = l :: rest := by
+  cases t <;>
+    simp [LevelTree.serialize, levelShortcutBody]
 
 /--
 Parse one residual-height-n tree from the front of a word and return the
@@ -78,11 +87,29 @@ arbitrary following suffix.
   | cleanLeaf =>
       simp [LevelTree.serialize, parseLevelTreePrefix]
   | shortcut n =>
-      simp [LevelTree.serialize, levelShortcutBody,
-        parseLevelTreePrefix, List.append_assoc]
+      cases n with
+      | zero =>
+          simp [LevelTree.serialize, levelShortcutBody,
+            parseLevelTreePrefix,
+            consumeLevelZeros_replicate_append,
+            List.append_assoc]
+      | succ n =>
+          simp [LevelTree.serialize, levelShortcutBody,
+            parseLevelTreePrefix,
+            consumeLevelZeros_replicate_append,
+            List.append_assoc, Nat.succ_eq_add_one,
+            Nat.add_assoc]
   | @node n left right ihL ihR =>
-      simp [LevelTree.serialize, parseLevelTreePrefix,
-        List.append_assoc, ihL, ihR]
+      obtain ⟨leftRest, hstart⟩ :=
+        levelTree_serialize_starts_l left
+      have hL :=
+        ihL (right.serialize ++ [r] ++ suffix)
+      have hR :=
+        ihR ([r] ++ suffix)
+      rw [hstart] at hL
+      simp [LevelTree.serialize, hstart,
+        parseLevelTreePrefix, List.append_assoc,
+        hL, hR]
 
 @[simp] theorem parseLevelTreePrefix_serialize
     {n : Nat}
