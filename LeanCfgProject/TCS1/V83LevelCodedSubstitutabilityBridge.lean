@@ -22,6 +22,67 @@ namespace LeanCfgProject
 namespace TCS1
 
 /--
+Recognition statement for a literal shortcut body occurrence in a valid
+level-n serialization: the occurrence is exactly the body of a parsed
+residual-height-i node.
+-/
+def LevelShortcutBodyRecognition (n : Nat) : Prop :=
+  ∀ {i : Nat}
+    {p q : Word LevelTreeSymbol},
+    p ++ levelShortcutBody i ++ q ∈
+        LevelTreeLanguage n →
+    ∃ ctx : LevelTreeContext n i,
+      p = ctx.prefix ++ [LevelTreeSymbol.l] ∧
+      q = [LevelTreeSymbol.r] ++ ctx.suffix
+
+/--
+Recognition statement for a clean body occurrence: it is exactly the body of
+a parsed residual-height-i clean node.
+-/
+def LevelCleanBodyRecognition (n : Nat) : Prop :=
+  ∀ {i : Nat}
+    {p q : Word LevelTreeSymbol},
+    p ++ levelCleanNodeBody i ++ q ∈
+        LevelTreeLanguage n →
+    ∃ ctx : LevelTreeContext n i,
+      p = ctx.prefix ++ [LevelTreeSymbol.l] ∧
+      q = [LevelTreeSymbol.r] ++ ctx.suffix
+
+/--
+The two literal-occurrence recognition lemmas imply replay admissibility of
+every body toggle.
+-/
+theorem levelBodyToggleAdmissible_of_recognition
+    (n : Nat)
+    (hshort : LevelShortcutBodyRecognition n)
+    (hclean : LevelCleanBodyRecognition n) :
+    LevelBodyToggleAdmissible n := by
+  intro x y hstep u v hmem
+  cases hstep with
+  | expand i p q =>
+      have hwhole :
+          (u ++ p) ++ levelShortcutBody i ++
+              (q ++ v) ∈ LevelTreeLanguage n := by
+        simpa [List.append_assoc] using hmem
+      obtain ⟨ctx, hp, hq⟩ :=
+        hshort hwhole
+      have hcleanMem :=
+        levelTreeContext_clean_mem ctx
+      rw [levelTreeContext_clean_body_factor] at hcleanMem
+      simpa [hp, hq, List.append_assoc] using hcleanMem
+  | contract i p q =>
+      have hwhole :
+          (u ++ p) ++ levelCleanNodeBody i ++
+              (q ++ v) ∈ LevelTreeLanguage n := by
+        simpa [List.append_assoc] using hmem
+      obtain ⟨ctx, hp, hq⟩ :=
+        hclean hwhole
+      have hshortMem :=
+        levelTreeContext_shortcut_mem ctx
+      rw [levelTreeContext_shortcut_body_factor] at hshortMem
+      simpa [hp, hq, List.append_assoc] using hshortMem
+
+/--
 Every legal literal body step can be replayed inside an arbitrary surrounding
 word context without leaving T_n.
 -/
