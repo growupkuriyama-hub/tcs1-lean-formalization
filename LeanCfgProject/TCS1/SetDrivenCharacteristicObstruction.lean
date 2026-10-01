@@ -81,7 +81,7 @@ theorem nestedTarget_characteristicSample_obstruction
     hC.2 K hCK hKL
   have hEqL' : B K = L' :=
     hC'.2 K hC'K hKL'
-  exact hne (hEqL.symm.trans hEqL')
+  exact hne (hEqL'.symm.trans hEqL)
 
 end TCS1
 end LeanCfgProject
