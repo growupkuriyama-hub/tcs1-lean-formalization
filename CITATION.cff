@@ -5,11 +5,9 @@ type: software
 authors:
   - family-names: Kuriyama
     given-names: Takayuki
-version: "tcs1-v79-formalization-1.0.0"
-doi: "10.5281/zenodo.22939434"
-date-released: 2026-09-24
+version: "tcs1-v83-formalization-2.0.0"
+date-released: 2026-10-02
 repository-code: "https://github.com/growupkuriyama-hub/tcs1-lean-formalization"
-url: "https://doi.org/10.5281/zenodo.22939434"
 keywords:
   - Lean
   - formal verification
@@ -17,4 +15,4 @@ keywords:
   - context-free languages
   - finite monoids
   - Gold learning
-abstract: "Lean formalization of the theorem-facing mathematical content, executable reconstruction and learner layers, and paper-facing polynomial combinatorial bounds for the v79 manuscript Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing."
+abstract: "Lean theorem-facing re-verification of the internal v83 major-revision manuscript Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing. This release includes the completed level-coded Appendix substitutability proof and finite indexed R_n/R_n^- exact-language, reducedness, ordinary-thickness, linear-size, and exponential characteristic-sample lower-bound packages."
