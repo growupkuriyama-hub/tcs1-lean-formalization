@@ -59,6 +59,13 @@ def levelTreeTyping :
   map_append u v := by
     simp [List.map_append, List.prod_append]
 
+@[simp] theorem levelTreeTyping_cons
+    (x : LevelTreeSymbol)
+    (xs : Word LevelTreeSymbol) :
+    levelTreeTyping.h (x :: xs) =
+      levelTreeLetterType x * levelTreeTyping.h xs := by
+  rfl
+
 /-- The typing evaluates to zeta exactly when c occurs. -/
 theorem levelTreeTyping_eq_zeta_iff
     (w : Word LevelTreeSymbol) :
@@ -67,9 +74,9 @@ theorem levelTreeTyping_eq_zeta_iff
   | nil =>
       simp [levelTreeTyping]
   | cons x xs ih =>
+      simp only [levelTreeTyping_cons, List.mem_cons]
       cases x <;>
-        simp [levelTreeTyping, levelTreeLetterType,
-          LevelTreeType.mul, ih]
+        simp [levelTreeLetterType, LevelTreeType.mul, ih]
 
 /-- Equivalently, type one means c-free. -/
 theorem levelTreeTyping_eq_one_iff
@@ -83,13 +90,17 @@ theorem levelTreeTyping_eq_one_iff
     rw [hOne] at hZ
     cases hZ
   · intro hc
-    cases hType : levelTreeTyping.h w with
-    | one => exact hType
-    | zeta =>
-        have hmem :
-            c ∈ w :=
-          (levelTreeTyping_eq_zeta_iff w).1 hType
-        exact False.elim (hc hmem)
+    have hnotz : levelTreeTyping.h w ≠ zeta := by
+      intro hz
+      exact hc ((levelTreeTyping_eq_zeta_iff w).1 hz)
+    have hcases :
+        levelTreeTyping.h w = one ∨
+          levelTreeTyping.h w = zeta := by
+      generalize heq : levelTreeTyping.h w = t
+      cases t with
+      | one => exact Or.inl heq
+      | zeta => exact Or.inr heq
+    exact hcases.resolve_right hnotz
 
 /--
 The shortcut-containing language is exactly the zeta fibre of the full
