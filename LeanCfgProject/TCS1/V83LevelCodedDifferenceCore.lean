@@ -1,0 +1,312 @@
+import LeanCfgProject.TCS1.V83LevelCodedNodeBodies
+import LeanCfgProject.TCS1.V83LevelCodedTreeParsing
+
+/-!
+# TCS #1 v83: canonical difference cores for level-coded trees
+
+For two distinct residual-height-n trees, the Appendix argument needs a
+contiguous serialized interval containing every structural difference, with
+equal material outside that interval.  This module constructs such a core
+recursively.
+
+The core factors are connected by literal body toggles.  Their first symbols
+differ, and their last symbols differ (expressed as different heads after
+reversal).  These endpoint facts are the key to showing that any common
+displayed prefix/suffix must lie outside the core.
+-/
+
+namespace LeanCfgProject
+namespace TCS1
+
+open LevelTreeSymbol
+
+/-- Every level-tree serialization ends with the right bracket. -/
+theorem levelTree_serialize_ends_r
+    {n : Nat}
+    (t : LevelTree n) :
+    ∃ pre : Word LevelTreeSymbol,
+      t.serialize = pre ++ [r] := by
+  cases t with
+  | cleanLeaf =>
+      exact ⟨[l, a], rfl⟩
+  | shortcut n =>
+      exact ⟨[l] ++ levelShortcutBody n, by
+        simp [LevelTree.serialize, List.append_assoc]⟩
+  | @node n left right =>
+      exact
+        ⟨[l] ++ left.serialize ++ right.serialize, by
+          simp [LevelTree.serialize, List.append_assoc]⟩
+
+/-- One root shortcut expansion, stated on node bodies. -/
+theorem levelShortcutBody_reach_cleanBody
+    (n : Nat) :
+    LevelBodyToggleReach
+      (levelShortcutBody n)
+      (levelCleanNodeBody n) := by
+  exact
+    LevelBodyToggleReach.step
+      (LevelBodyToggleStep.expand n [] [])
+      (LevelBodyToggleReach.refl _)
+
+/--
+At positive residual height, the shortcut body can be expanded and then its
+two clean children can be independently changed into arbitrary children.
+-/
+theorem levelShortcutBody_reach_nodeBody
+    {n : Nat}
+    (left right : LevelTree n) :
+    LevelBodyToggleReach
+      (levelShortcutBody (n + 1))
+      (left.serialize ++ right.serialize) := by
+  have hroot :
+      LevelBodyToggleReach
+        (levelShortcutBody (n + 1))
+        (cleanLevelTreeWord n ++
+          cleanLevelTreeWord n) := by
+    simpa [levelCleanNodeBody] using
+      levelShortcutBody_reach_cleanBody (n + 1)
+  have hleft :
+      LevelBodyToggleReach
+        (cleanLevelTreeWord n)
+        left.serialize :=
+    levelTreeLanguage_bodyToggle_connected
+      (cleanLevelTreeWord_mem_language n)
+      ⟨left, rfl⟩
+  have hright :
+      LevelBodyToggleReach
+        (cleanLevelTreeWord n)
+        right.serialize :=
+    levelTreeLanguage_bodyToggle_connected
+      (cleanLevelTreeWord_mem_language n)
+      ⟨right, rfl⟩
+  have hleft' :
+      LevelBodyToggleReach
+        (cleanLevelTreeWord n ++
+          cleanLevelTreeWord n)
+        (left.serialize ++
+          cleanLevelTreeWord n) := by
+    simpa using
+      levelBodyToggleReach_contextual
+        hleft [] (cleanLevelTreeWord n)
+  have hright' :
+      LevelBodyToggleReach
+        (left.serialize ++
+          cleanLevelTreeWord n)
+        (left.serialize ++ right.serialize) := by
+    simpa using
+      levelBodyToggleReach_contextual
+        hright left.serialize []
+  exact
+    levelBodyToggleReach_trans hroot
+      (levelBodyToggleReach_trans hleft' hright')
+
+/--
+Canonical serialized difference core.
+
+For equal trees we return the equality.  For distinct trees we return a
+common outer prefix/suffix and middle factors connected by body toggles; the
+middle factors differ at both their left and right endpoints.
+-/
+theorem levelTree_difference_core
+    {n : Nat}
+    (s t : LevelTree n) :
+    s = t ∨
+      ∃ p q x y : Word LevelTreeSymbol,
+        s.serialize = p ++ x ++ q ∧
+        t.serialize = p ++ y ++ q ∧
+        LevelBodyToggleReach x y ∧
+        x.head? ≠ y.head? ∧
+        x.reverse.head? ≠ y.reverse.head? := by
+  induction s generalizing t with
+  | cleanLeaf =>
+      cases t with
+      | cleanLeaf =>
+          exact Or.inl rfl
+      | shortcut n =>
+          right
+          refine ⟨[l], [r], [a],
+            levelShortcutBody 0, ?_, ?_, ?_, ?_, ?_⟩
+          · rfl
+          · simp [LevelTree.serialize, List.append_assoc]
+          · exact
+              levelBodyToggleReach_symm
+                (levelShortcutBody_reach_cleanBody 0)
+          · simp [levelShortcutBody]
+          · simp [levelShortcutBody]
+  | shortcut k =>
+      cases t with
+      | cleanLeaf =>
+          right
+          refine ⟨[l], [r],
+            levelShortcutBody 0, [a],
+            ?_, ?_, ?_, ?_, ?_⟩
+          · simp [LevelTree.serialize, List.append_assoc]
+          · rfl
+          · exact levelShortcutBody_reach_cleanBody 0
+          · simp [levelShortcutBody]
+          · simp [levelShortcutBody]
+      | shortcut k' =>
+          have hk : k = k' := by omega
+          subst k'
+          exact Or.inl rfl
+      | @node j left right =>
+          right
+          refine ⟨[l], [r],
+            levelShortcutBody (j + 1),
+            left.serialize ++ right.serialize,
+            ?_, ?_, ?_, ?_, ?_⟩
+          · simp [LevelTree.serialize, List.append_assoc]
+          · simp [LevelTree.serialize, List.append_assoc]
+          · exact
+              levelShortcutBody_reach_nodeBody left right
+          · obtain ⟨rest, hrest⟩ :=
+              levelTree_serialize_starts_l left
+            rw [hrest]
+            simp [levelShortcutBody]
+          · obtain ⟨pre, hpre⟩ :=
+              levelTree_serialize_ends_r right
+            rw [hpre]
+            simp [levelShortcutBody, List.reverse_append]
+  | @node j left right ihL ihR =>
+      cases t with
+      | shortcut k =>
+          right
+          refine ⟨[l], [r],
+            left.serialize ++ right.serialize,
+            levelShortcutBody (j + 1),
+            ?_, ?_, ?_, ?_, ?_⟩
+          · simp [LevelTree.serialize, List.append_assoc]
+          · simp [LevelTree.serialize, List.append_assoc]
+          · exact
+              levelBodyToggleReach_symm
+                (levelShortcutBody_reach_nodeBody left right)
+          · obtain ⟨rest, hrest⟩ :=
+              levelTree_serialize_starts_l left
+            rw [hrest]
+            simp [levelShortcutBody]
+          · obtain ⟨pre, hpre⟩ :=
+              levelTree_serialize_ends_r right
+            rw [hpre]
+            simp [levelShortcutBody, List.reverse_append]
+      | @node _ left' right' =>
+          rcases ihL left' with hLeq | hLdiff
+          · subst left'
+            rcases ihR right' with hReq | hRdiff
+            · subst right'
+              exact Or.inl rfl
+            · right
+              rcases hRdiff with
+                ⟨pR, qR, xR, yR,
+                  hsR, htR, hreachR,
+                  hheadR, htailR⟩
+              refine
+                ⟨[l] ++ left.serialize ++ pR,
+                  qR ++ [r], xR, yR,
+                  ?_, ?_, hreachR,
+                  hheadR, htailR⟩
+              · rw [LevelTree.serialize, hsR]
+                simp [List.append_assoc]
+              · rw [LevelTree.serialize, htR]
+                simp [List.append_assoc]
+          · rcases ihR right' with hReq | hRdiff
+            · subst right'
+              right
+              rcases hLdiff with
+                ⟨pL, qL, xL, yL,
+                  hsL, htL, hreachL,
+                  hheadL, htailL⟩
+              refine
+                ⟨[l] ++ pL,
+                  qL ++ right.serialize ++ [r],
+                  xL, yL, ?_, ?_, hreachL,
+                  hheadL, htailL⟩
+              · rw [LevelTree.serialize, hsL]
+                simp [List.append_assoc]
+              · rw [LevelTree.serialize, htL]
+                simp [List.append_assoc]
+            · right
+              rcases hLdiff with
+                ⟨pL, qL, xL, yL,
+                  hsL, htL, hreachL,
+                  hheadL, htailL⟩
+              rcases hRdiff with
+                ⟨pR, qR, xR, yR,
+                  hsR, htR, hreachR,
+                  hheadR, htailR⟩
+              let mid : Word LevelTreeSymbol :=
+                qL ++ pR
+              let coreS : Word LevelTreeSymbol :=
+                xL ++ mid ++ xR
+              let coreT : Word LevelTreeSymbol :=
+                yL ++ mid ++ yR
+              have hfirst :
+                  LevelBodyToggleReach
+                    coreS
+                    (yL ++ mid ++ xR) := by
+                dsimp [coreS, coreT, mid]
+                simpa [List.append_assoc] using
+                  levelBodyToggleReach_contextual
+                    hreachL []
+                    (qL ++ pR ++ xR)
+              have hsecond :
+                  LevelBodyToggleReach
+                    (yL ++ mid ++ xR)
+                    coreT := by
+                dsimp [coreS, coreT, mid]
+                simpa [List.append_assoc] using
+                  levelBodyToggleReach_contextual
+                    hreachR (yL ++ qL ++ pR) []
+              have hreach :
+                  LevelBodyToggleReach coreS coreT :=
+                levelBodyToggleReach_trans
+                  hfirst hsecond
+              refine
+                ⟨[l] ++ pL, qR ++ [r],
+                  coreS, coreT,
+                  ?_, ?_, hreach, ?_, ?_⟩
+              · rw [LevelTree.serialize, hsL, hsR]
+                simp [coreS, mid, List.append_assoc]
+              · rw [LevelTree.serialize, htL, htR]
+                simp [coreT, mid, List.append_assoc]
+              · dsimp [coreS, coreT, mid]
+                exact
+                  List.head?_append_of_ne_none
+                    (by
+                      intro hx
+                      have hxnil :
+                          xL = [] := by
+                        simpa using
+                          (List.head?_eq_none.mp hx)
+                      subst xL
+                      simp at hheadL)
+                    |>.trans_ne
+                      (by
+                        simpa using hheadL)
+              · dsimp [coreS, coreT, mid]
+                simp only [List.reverse_append]
+                have hxRne :
+                    xR.reverse.head? ≠ none := by
+                  intro hx
+                  have hxnil :
+                      xR.reverse = [] :=
+                    List.head?_eq_none.mp hx
+                  have hxRnil : xR = [] := by
+                    simpa using congrArg List.reverse hxnil
+                  subst xR
+                  simp at htailR
+                have hyRne :
+                    yR.reverse.head? ≠ none := by
+                  intro hy
+                  have hynil :
+                      yR.reverse = [] :=
+                    List.head?_eq_none.mp hy
+                  have hyRnil : yR = [] := by
+                    simpa using congrArg List.reverse hynil
+                  subst yR
+                  simp at htailR
+                rw [List.head?_append_of_ne_none hxRne,
+                    List.head?_append_of_ne_none hyRne]
+                exact htailR
+
+end TCS1
+end LeanCfgProject
