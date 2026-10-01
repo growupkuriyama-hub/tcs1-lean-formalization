@@ -75,6 +75,7 @@ import LeanCfgProject.TCS1.MinimalReducedWitnessChoices
 import LeanCfgProject.TCS1.GoldConvergenceClosure
 import LeanCfgProject.TCS1.GoldCharacteristicBridge
 import LeanCfgProject.TCS1.SetDrivenCharacteristicObstruction
+import LeanCfgProject.TCS1.V83TypedThicknessWitnessBounds
 import LeanCfgProject.TCS1.ConcreteConservativeLearner
 import LeanCfgProject.TCS1.ConcreteLearnerComplexity
 import LeanCfgProject.TCS1.BinaryMembershipKernel
