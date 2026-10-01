@@ -393,9 +393,9 @@ theorem commonPrefix_stops_before_distinct_heads
               | cons yh yt =>
                   simp only [List.nil_append, List.cons_append] at hs ht
                   have hxuh : xh = uh := by
-                    exact congrArg List.head hs
+                    simpa using congrArg List.head? hs
                   have hyuh : yh = uh := by
-                    exact congrArg List.head ht
+                    simpa using congrArg List.head? ht
                   exfalso
                   apply hhead
                   simp [hxuh, hyuh]
@@ -406,7 +406,7 @@ theorem commonPrefix_stops_before_distinct_heads
       | cons uh ut =>
           simp only [List.cons_append] at hs ht
           have hph : ph = uh := by
-            exact congrArg List.head hs
+            simpa using congrArg List.head? hs
           have hsTail :
               pt ++ x ++ q = ut ++ X ++ v := by
             simpa [hph] using congrArg List.tail hs
