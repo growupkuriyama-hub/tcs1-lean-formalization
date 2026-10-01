@@ -89,10 +89,7 @@ arbitrary following suffix.
   | shortcut n =>
       cases n with
       | zero =>
-          simp [LevelTree.serialize, levelShortcutBody,
-            parseLevelTreePrefix,
-            consumeLevelZeros_replicate_append,
-            List.append_assoc]
+          rfl
       | succ n =>
           simp [LevelTree.serialize, levelShortcutBody,
             parseLevelTreePrefix,
@@ -102,11 +99,20 @@ arbitrary following suffix.
   | @node n left right ihL ihR =>
       obtain ⟨leftRest, hstart⟩ :=
         levelTree_serialize_starts_l left
-      have hL :=
-        ihL (right.serialize ++ [r] ++ suffix)
-      have hR :=
-        ihR ([r] ++ suffix)
-      rw [hstart] at hL
+      have hL :
+          parseLevelTreePrefix n
+              (l :: (leftRest ++
+                (right.serialize ++ r :: suffix))) =
+            some (left, right.serialize ++ r :: suffix) := by
+        have h :=
+          ihL (right.serialize ++ r :: suffix)
+        rw [hstart] at h
+        simpa [List.append_assoc] using h
+      have hR :
+          parseLevelTreePrefix n
+              (right.serialize ++ r :: suffix) =
+            some (right, r :: suffix) := by
+        simpa using ihR (r :: suffix)
       simp [LevelTree.serialize, hstart,
         parseLevelTreePrefix, List.append_assoc,
         hL, hR]
