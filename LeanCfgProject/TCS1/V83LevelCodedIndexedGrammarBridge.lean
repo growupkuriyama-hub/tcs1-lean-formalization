@@ -69,8 +69,7 @@ theorem levelCodeZDerives_to_indexed
             (MixedSymbolsDerive.nil))
       have hd :=
         MixedDerives.rule hr hs
-      simpa [fi, levelCodeFinSucc,
-        List.flatten_cons] using hd
+      simpa [fi, levelCodeFinSucc] using hd
 
 /-- Direct A_i derivations are realized by the indexed grammar R_n. -/
 theorem levelCodeADerives_to_indexed
@@ -170,8 +169,7 @@ theorem levelCodeADerives_to_indexed
                 (MixedSymbolsDerive.nil))))
       have hd :=
         MixedDerives.rule hr hs
-      simpa [fi, levelCodeFinSucc,
-        List.flatten_cons, List.append_assoc] using hd
+      simpa [fi, levelCodeFinSucc, List.append_assoc] using hd
 
 /-- Every T_n word is generated from the actual indexed start symbol of R_n. -/
 theorem levelTreeLanguage_to_indexed_start
