@@ -24,11 +24,29 @@ def levelCleanNodeBody : Nat → Word LevelTreeSymbol
   | 0 => [a]
   | i + 1 => cleanLevelTreeWord i ++ cleanLevelTreeWord i
 
+theorem cleanLevelTreeWord_starts_l
+    (i : Nat) :
+    ∃ rest : Word LevelTreeSymbol,
+      cleanLevelTreeWord i =
+        LevelTreeSymbol.l :: rest := by
+  cases i with
+  | zero =>
+      exact ⟨[LevelTreeSymbol.a, LevelTreeSymbol.r], rfl⟩
+  | succ i =>
+      refine
+        ⟨(cleanLevelTree i).serialize ++
+            (cleanLevelTree i).serialize ++
+              [LevelTreeSymbol.r], ?_⟩
+      rfl
+
 @[simp] theorem cleanLevelTreeWord_head
     (i : Nat) :
     (cleanLevelTreeWord i).head? =
       some LevelTreeSymbol.l := by
-  cases i <;> rfl
+  obtain ⟨rest, h⟩ :=
+    cleanLevelTreeWord_starts_l i
+  rw [h]
+  rfl
 
 /-- Shortcut and clean node bodies always begin with different symbols. -/
 theorem levelShortcutBody_head_ne_cleanNodeBody_head
@@ -39,8 +57,10 @@ theorem levelShortcutBody_head_ne_cleanNodeBody_head
   | zero =>
       simp [levelShortcutBody, levelCleanNodeBody]
   | succ i =>
+      obtain ⟨rest, hrest⟩ :=
+        cleanLevelTreeWord_starts_l i
       simp [levelShortcutBody, levelCleanNodeBody,
-        cleanLevelTreeWord_head]
+        hrest]
 
 /-- In particular, the literal shortcut and clean bodies are distinct. -/
 theorem levelShortcutBody_ne_cleanNodeBody
