@@ -180,11 +180,16 @@ theorem levelTree_a_factor_context
         simp at ha
       · rcases hAfterL with
           ⟨p1, q1, hrest, hp, hq⟩
+        have hrest' :
+            left.serialize ++
+                (right.serialize ++ [r]) =
+              p1 ++ a :: q1 := by
+          simpa [List.append_assoc] using hrest
         rcases
             factor_cons_split_append
               a left.serialize
               (right.serialize ++ [r])
-              p1 q1 hrest with
+              p1 q1 hrest' with
           hInLeft | hAfterLeft
         · rcases hInLeft with
             ⟨pL, qL, hLeft, hp1, hq1⟩
