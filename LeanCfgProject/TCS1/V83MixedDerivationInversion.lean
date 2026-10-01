@@ -17,6 +17,18 @@ universe u v
 variable {N : Type u} {α : Type v}
 variable {R : MixedRules N α}
 
+/-- Invert a one-terminal right-hand side. -/
+theorem mixedSymbolsDerive_terminal_inv
+    {a : α} {pieces : List (List α)}
+    (h :
+      MixedSymbolsDerive R
+        [Sum.inr a] pieces) :
+    pieces = [[a]] := by
+  cases h with
+  | terminal tail =>
+      cases tail
+      rfl
+
 /-- Invert a one-nonterminal right-hand side. -/
 theorem mixedSymbolsDerive_unit_inv
     {A : N} {pieces : List (List α)}
