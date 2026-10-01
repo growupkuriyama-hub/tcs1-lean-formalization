@@ -36,7 +36,8 @@ jobs:
             LeanCfgProject.TCS1.V83LevelCodedMinusIndexedGrammarExact \
             LeanCfgProject.TCS1.V83LevelCodedIndexedThickness \
             LeanCfgProject.TCS1.V83LevelCodedIndexedReducedness \
-            LeanCfgProject.TCS1.V83LevelCodedIndexedSize
+            LeanCfgProject.TCS1.V83LevelCodedIndexedSize \
+            LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage
 
       - name: Build TCS1 facade
         run: lake build LeanCfgProject.TCS1.All
