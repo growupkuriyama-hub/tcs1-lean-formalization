@@ -90,7 +90,8 @@ theorem levelCleanTreeLength_eq
       simp only [levelCleanTreeLength, ih, pow_succ]
       have hpow : 2 ≤ 5 * 2^n := by
         have hpos : 1 ≤ 2^n := by
-          exact Nat.one_le_pow n (by omega)
+          have hpos : 0 < 2 ^ n := by positivity
+      omega
         omega
       omega
 
