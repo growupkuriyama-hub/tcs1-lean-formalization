@@ -144,5 +144,93 @@ theorem levelBodyToggleStep_contextual
         (LevelBodyToggleStep.contract
           i (u ++ p) (q ++ v))
 
+
+/-- Finite reflexive-transitive closure of literal body replacements. -/
+inductive LevelBodyToggleReach :
+    Word LevelTreeSymbol →
+      Word LevelTreeSymbol → Prop
+  | refl (w : Word LevelTreeSymbol) :
+      LevelBodyToggleReach w w
+  | step {x y z : Word LevelTreeSymbol} :
+      LevelBodyToggleStep x y →
+      LevelBodyToggleReach y z →
+      LevelBodyToggleReach x z
+
+/-- Concatenate finite literal body-toggle sequences. -/
+theorem levelBodyToggleReach_trans
+    {x y z : Word LevelTreeSymbol}
+    (hxy : LevelBodyToggleReach x y)
+    (hyz : LevelBodyToggleReach y z) :
+    LevelBodyToggleReach x z := by
+  induction hxy with
+  | refl =>
+      exact hyz
+  | @step a b y hab hby ih =>
+      exact LevelBodyToggleReach.step hab (ih hyz)
+
+/-- Reverse a finite literal body-toggle sequence. -/
+theorem levelBodyToggleReach_symm
+    {x y : Word LevelTreeSymbol}
+    (hxy : LevelBodyToggleReach x y) :
+    LevelBodyToggleReach y x := by
+  induction hxy with
+  | refl w =>
+      exact LevelBodyToggleReach.refl w
+  | @step a b y hab hby ih =>
+      exact
+        levelBodyToggleReach_trans
+          ih
+          (LevelBodyToggleReach.step
+            (levelBodyToggleStep_symm hab)
+            (LevelBodyToggleReach.refl a))
+
+/-- Finite body-toggle reachability is stable under fixed external context. -/
+theorem levelBodyToggleReach_contextual
+    {x y : Word LevelTreeSymbol}
+    (hxy : LevelBodyToggleReach x y)
+    (u v : Word LevelTreeSymbol) :
+    LevelBodyToggleReach
+      (u ++ x ++ v)
+      (u ++ y ++ v) := by
+  induction hxy with
+  | refl w =>
+      exact LevelBodyToggleReach.refl _
+  | @step a b y hab hby ih =>
+      exact
+        LevelBodyToggleReach.step
+          (levelBodyToggleStep_contextual hab u v)
+          ih
+
+/--
+A finite parsed-tree toggle sequence becomes a finite literal manuscript
+body-replacement sequence after serialization.
+-/
+theorem levelTreeToggleReach_to_bodyToggleReach
+    {n : Nat}
+    {s t : LevelTree n}
+    (hst : LevelTreeToggleReach s t) :
+    LevelBodyToggleReach s.serialize t.serialize := by
+  induction hst with
+  | refl t =>
+      exact LevelBodyToggleReach.refl _
+  | @step s t u hst htu ih =>
+      exact
+        LevelBodyToggleReach.step
+          (levelTreeToggle_to_bodyToggleStep hst)
+          ih
+
+/-- Any two words of T_n are connected by finite literal s_i <-> b_i moves. -/
+theorem levelTreeLanguage_bodyToggle_connected
+    {n : Nat}
+    {x y : Word LevelTreeSymbol}
+    (hx : x ∈ LevelTreeLanguage n)
+    (hy : y ∈ LevelTreeLanguage n) :
+    LevelBodyToggleReach x y := by
+  rcases hx with ⟨sx, rfl⟩
+  rcases hy with ⟨sy, rfl⟩
+  exact
+    levelTreeToggleReach_to_bodyToggleReach
+      (levelTreeToggleReach_connected sx sy)
+
 end TCS1
 end LeanCfgProject
