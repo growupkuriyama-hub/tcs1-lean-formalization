@@ -16,6 +16,8 @@ length.
 namespace LeanCfgProject
 namespace TCS1
 
+open LevelTreeSymbol
+
 universe u v w
 
 /-- Reachability in the nonterminal dependency graph of an indexed CFG. -/
@@ -132,7 +134,7 @@ theorem levelCodeRIndexed_a_reachable
         IndexedMixedReachable
           (levelCodeRIndexedGrammar n)
           LevelCodeRNT.start
-          (.a (⟨i, by omega⟩ :
+          (.a (⟨i, Nat.lt_succ_of_le hi⟩ :
             Fin (n + 1))))
   · intro i hi hsucc
     exact levelCodeRIndexed_a_reachable_step
@@ -321,7 +323,7 @@ theorem levelCodeRMinusIndexed_am_reachable
         IndexedMixedReachable
           (levelCodeRMinusIndexedGrammar m)
           LevelCodeRMinusNT.start
-          (.am (⟨i, by omega⟩ :
+          (.am (⟨i, Nat.lt_succ_of_le hi⟩ :
             Fin (m + 2))))
   · intro i hi hsucc
     exact
@@ -432,18 +434,20 @@ theorem levelCodeRMinusIndexed_thickness_atMost
       let w :=
         (LevelTree.shortcut (m + 1)).serialize
       refine ⟨w, ?_, ?_⟩
-      · exact
+      · have hshortcut :
+            (LevelTree.shortcut (m + 1)).HasShortcut := by
+          simp [LevelTree.HasShortcut]
+        exact
           levelTreeShortcutLanguage_to_minusIndexed_start
             m
             ⟨
               ⟨LevelTree.shortcut (m + 1), rfl⟩,
-              by simp [LevelTree.serialize,
-                levelShortcutBody]⟩
+              (levelTree_c_mem_serialize_iff_hasShortcut
+                (LevelTree.shortcut (m + 1))).2 hshortcut⟩
       · rw [show w.length = m + 1 + 5 by
           exact
             levelTree_shortcut_serialize_length
               (m + 1)]
-        omega
   | z i =>
       let w :=
         List.replicate (i.1 + 1) zero
