@@ -31,6 +31,21 @@ open LevelTreeSymbol
 def levelShortcutBody (i : Nat) : Word LevelTreeSymbol :=
   c :: (List.replicate (i + 1) zero ++ [d])
 
+@[simp] theorem levelShortcutBody_length
+    (i : Nat) :
+    (levelShortcutBody i).length = i + 3 := by
+  simp [levelShortcutBody]
+  omega
+
+/-- The zero run uniquely records the residual height of a shortcut. -/
+theorem levelShortcutBody_injective :
+    Function.Injective levelShortcutBody := by
+  intro i j hij
+  have hlen :=
+    congrArg List.length hij
+  simp only [levelShortcutBody_length] at hlen
+  omega
+
 /--
 Residual-height-indexed parsed trees.
 
