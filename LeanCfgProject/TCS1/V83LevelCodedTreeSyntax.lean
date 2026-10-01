@@ -191,8 +191,8 @@ theorem cleanLevelTreeWord_length_rec
             levelCleanTreeLength n := by
         simpa [cleanLevelTreeWord] using ih
       simp [cleanLevelTreeWord, cleanLevelTree,
-        LevelTree.serialize, levelCleanTreeLength, ih']
-      omega
+        LevelTree.serialize, levelCleanTreeLength, ih'] <;>
+        omega
 
 /-- Concrete manuscript closed form |z_n| = 5*2^n-2. -/
 theorem cleanLevelTreeWord_length
