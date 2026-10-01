@@ -214,7 +214,6 @@ theorem levelTreeShortcutLanguage_eq_diff_clean
   · rintro ⟨hLang, hnotClean⟩
     refine ⟨hLang, ?_⟩
     by_contra hc
-    push_neg at hc
     rcases hLang with ⟨t, rfl⟩
     have hz :
         t.serialize = cleanLevelTreeWord n :=
