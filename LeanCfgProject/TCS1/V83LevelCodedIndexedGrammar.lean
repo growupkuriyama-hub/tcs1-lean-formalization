@@ -118,5 +118,114 @@ theorem levelCodeRIndexed_rhs_length_le_five
       [Sum.inr zero] := by
   rfl
 
+
+/--
+Nonterminals of R_(m+1)^-.  The ordinary A_i symbols are indexed by
+i < m+1, while A_i^- and Z_i run through i <= m+1.
+-/
+inductive LevelCodeRMinusNT (m : Nat) where
+  | start
+  | z (i : Fin (m + 2))
+  | a (i : Fin (m + 1))
+  | am (i : Fin (m + 2))
+  deriving DecidableEq, Fintype, Repr
+
+/-- Production indices of the displayed R_(m+1)^-. -/
+inductive LevelCodeRMinusProd (m : Nat) where
+  | start
+  | z0
+  | zSucc (i : Fin (m + 1))
+  | a0Clean
+  | aShortcut (i : Fin (m + 1))
+  | aNode (i : Fin m)
+  | amShortcut (i : Fin (m + 2))
+  | amNodeLeft (i : Fin (m + 1))
+  | amNodeRight (i : Fin (m + 1))
+  deriving DecidableEq, Fintype, Repr
+
+/-- Actual finite indexed mixed CFG R_(m+1)^-. -/
+def levelCodeRMinusIndexedGrammar
+    (m : Nat) :
+    IndexedMixedCFG
+      (LevelCodeRMinusNT m)
+      LevelTreeSymbol
+      (LevelCodeRMinusProd m) where
+  lhs
+    | .start =>
+        .start
+    | .z0 =>
+        .z (levelCodeFinZero (m + 1))
+    | .zSucc i =>
+        .z (levelCodeFinSucc i)
+    | .a0Clean =>
+        .a (levelCodeFinZero m)
+    | .aShortcut i =>
+        .a i
+    | .aNode i =>
+        .a (levelCodeFinSucc i)
+    | .amShortcut i =>
+        .am i
+    | .amNodeLeft i =>
+        .am (levelCodeFinSucc i)
+    | .amNodeRight i =>
+        .am (levelCodeFinSucc i)
+  rhs
+    | .start =>
+        [Sum.inl
+          (.am (levelCodeFinTop (m + 1)))]
+    | .z0 =>
+        [Sum.inr zero]
+    | .zSucc i =>
+        [Sum.inl
+          (.z (levelCodeFinEmbed i)),
+          Sum.inr zero]
+    | .a0Clean =>
+        [Sum.inr l, Sum.inr a, Sum.inr r]
+    | .aShortcut i =>
+        [Sum.inr l, Sum.inr c,
+          Sum.inl
+            (.z (levelCodeFinEmbed i)),
+          Sum.inr d, Sum.inr r]
+    | .aNode i =>
+        [Sum.inr l,
+          Sum.inl
+            (.a (levelCodeFinEmbed i)),
+          Sum.inl
+            (.a (levelCodeFinEmbed i)),
+          Sum.inr r]
+    | .amShortcut i =>
+        [Sum.inr l, Sum.inr c,
+          Sum.inl (.z i),
+          Sum.inr d, Sum.inr r]
+    | .amNodeLeft i =>
+        [Sum.inr l,
+          Sum.inl
+            (.am (levelCodeFinEmbed i)),
+          Sum.inl (.a i),
+          Sum.inr r]
+    | .amNodeRight i =>
+        [Sum.inr l,
+          Sum.inl (.a i),
+          Sum.inl
+            (.am (levelCodeFinEmbed i)),
+          Sum.inr r]
+
+/-- Every R_(m+1)^- right-hand side has length at most five. -/
+theorem levelCodeRMinusIndexed_rhs_length_le_five
+    (m : Nat)
+    (p : LevelCodeRMinusProd m) :
+    ((levelCodeRMinusIndexedGrammar m).rhs p).length ≤ 5 := by
+  cases p <;> simp [levelCodeRMinusIndexedGrammar]
+
+/-- The indexed minus start production is S^- -> A^-_(m+1). -/
+@[simp] theorem levelCodeRMinusIndexed_start_rhs
+    (m : Nat) :
+    (levelCodeRMinusIndexedGrammar m).rhs
+        (LevelCodeRMinusProd.start) =
+      [Sum.inl
+        (LevelCodeRMinusNT.am
+          (levelCodeFinTop (m + 1)))] := by
+  rfl
+
 end TCS1
 end LeanCfgProject
