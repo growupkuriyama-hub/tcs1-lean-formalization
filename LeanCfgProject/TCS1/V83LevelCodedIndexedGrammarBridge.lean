@@ -129,8 +129,7 @@ theorem levelCodeADerives_to_indexed
                   (MixedSymbolsDerive.nil)))))
       have hd :=
         MixedDerives.rule hr hs
-      simpa [fi, List.flatten_cons,
-        List.append_assoc] using hd
+      simpa [fi, List.append_assoc] using hd
   | @node i x y dx dy ihX ihY =>
       have hi' : i < n := by omega
       let fi : Fin n := ⟨i, hi'⟩
