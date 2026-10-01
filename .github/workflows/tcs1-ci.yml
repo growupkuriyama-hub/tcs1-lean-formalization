@@ -20,6 +20,14 @@ jobs:
           test: false
           lint: false
 
+      - name: Build v83 level-coded critical path
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V83LevelCodedDifferenceCore \
+            LeanCfgProject.TCS1.V83LevelCodedOccurrenceKernel \
+            LeanCfgProject.TCS1.V83LevelCodedCleanOccurrence \
+            LeanCfgProject.TCS1.V83LevelCodedSubstitutabilityBridge
+
       - name: Build TCS1 facade
         run: lake build LeanCfgProject.TCS1.All
 
