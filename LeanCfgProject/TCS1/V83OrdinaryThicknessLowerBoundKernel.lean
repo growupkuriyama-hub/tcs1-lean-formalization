@@ -88,11 +88,7 @@ theorem levelCleanTreeLength_eq
       simp [levelCleanTreeLength]
   | succ n ih =>
       simp only [levelCleanTreeLength, ih, pow_succ]
-      have hpow : 2 ≤ 5 * 2^n := by
-        have hpos : 1 ≤ 2^n := by
-          have hpos : 0 < 2 ^ n := by positivity
-      omega
-        omega
+      have hpow : 0 < 2 ^ n := by positivity
       omega
 
 /--
@@ -117,10 +113,7 @@ theorem levelCleanTree_characteristicSample_norm_ge
     singletonDifference_characteristicSample_norm_ge
       B hsub hdiff hC hC'
   rw [hzlen, levelCleanTreeLength_eq] at h
-  have hpow : 2 ≤ 5 * 2^n := by
-    have hpos : 1 ≤ 2^n := by
-      exact Nat.one_le_pow n (by omega)
-    omega
+  have hpow : 0 < 2 ^ n := by positivity
   omega
 
 end V83OrdinaryThicknessLowerBoundKernel
