@@ -24,6 +24,12 @@ def levelCleanNodeBody : Nat → Word LevelTreeSymbol
   | 0 => [a]
   | i + 1 => cleanLevelTreeWord i ++ cleanLevelTreeWord i
 
+@[simp] theorem cleanLevelTreeWord_head
+    (i : Nat) :
+    (cleanLevelTreeWord i).head? =
+      some LevelTreeSymbol.l := by
+  cases i <;> rfl
+
 /-- Shortcut and clean node bodies always begin with different symbols. -/
 theorem levelShortcutBody_head_ne_cleanNodeBody_head
     (i : Nat) :
@@ -34,8 +40,7 @@ theorem levelShortcutBody_head_ne_cleanNodeBody_head
       simp [levelShortcutBody, levelCleanNodeBody]
   | succ i =>
       simp [levelShortcutBody, levelCleanNodeBody,
-        cleanLevelTreeWord, cleanLevelTree,
-        LevelTree.serialize]
+        cleanLevelTreeWord_head]
 
 /-- In particular, the literal shortcut and clean bodies are distinct. -/
 theorem levelShortcutBody_ne_cleanNodeBody
