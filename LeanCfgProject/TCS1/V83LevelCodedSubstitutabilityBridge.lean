@@ -22,6 +22,17 @@ namespace LeanCfgProject
 namespace TCS1
 
 /--
+Every legal literal body step can be replayed inside an arbitrary surrounding
+word context without leaving T_n.
+-/
+def LevelBodyToggleAdmissible (n : Nat) : Prop :=
+  ∀ {x y : Word LevelTreeSymbol},
+    LevelBodyToggleStep x y →
+    ∀ (u v : Word LevelTreeSymbol),
+      u ++ x ++ v ∈ LevelTreeLanguage n →
+      u ++ y ++ v ∈ LevelTreeLanguage n
+
+/--
 Recognition statement for a literal shortcut body occurrence in a valid
 level-n serialization: the occurrence is exactly the body of a parsed
 residual-height-i node.
@@ -81,17 +92,6 @@ theorem levelBodyToggleAdmissible_of_recognition
         levelTreeContext_shortcut_mem ctx
       rw [levelTreeContext_shortcut_body_factor] at hshortMem
       simpa [hp, hq, List.append_assoc] using hshortMem
-
-/--
-Every legal literal body step can be replayed inside an arbitrary surrounding
-word context without leaving T_n.
--/
-def LevelBodyToggleAdmissible (n : Nat) : Prop :=
-  ∀ {x y : Word LevelTreeSymbol},
-    LevelBodyToggleStep x y →
-    ∀ (u v : Word LevelTreeSymbol),
-      u ++ x ++ v ∈ LevelTreeLanguage n →
-      u ++ y ++ v ∈ LevelTreeLanguage n
 
 /--
 Common displayed prefix/suffix force the required tree differences to be
