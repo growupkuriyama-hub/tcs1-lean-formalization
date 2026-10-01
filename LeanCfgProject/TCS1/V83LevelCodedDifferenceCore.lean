@@ -43,9 +43,15 @@ theorem levelShortcutBody_reach_cleanBody
     LevelBodyToggleReach
       (levelShortcutBody n)
       (levelCleanNodeBody n) := by
+  have hstep :
+      LevelBodyToggleStep
+        (levelShortcutBody n)
+        (levelCleanNodeBody n) := by
+    simpa using
+      (LevelBodyToggleStep.expand n [] [])
   exact
     LevelBodyToggleReach.step
-      (LevelBodyToggleStep.expand n [] [])
+      hstep
       (LevelBodyToggleReach.refl _)
 
 /--
@@ -125,22 +131,26 @@ theorem levelBodyToggleStep_nonempty
         simp [levelShortcutBody_length] at hlen
       · intro hy
         have hlen := congrArg List.length hy
-        have hb :
-            0 < (levelCleanNodeBody i).length := by
-          exact List.length_pos.mpr
-            (levelCleanNodeBody_ne_nil i)
-        simp only [List.length_append] at hlen
-        omega
+        simp only [List.length_append, List.length_nil] at hlen
+        have hb0 :
+            (levelCleanNodeBody i).length = 0 := by
+          omega
+        have hbnil :
+            levelCleanNodeBody i = [] := by
+          simpa using hb0
+        exact (levelCleanNodeBody_ne_nil i) hbnil
   | contract i p q =>
       constructor
       · intro hx
         have hlen := congrArg List.length hx
-        have hb :
-            0 < (levelCleanNodeBody i).length := by
-          exact List.length_pos.mpr
-            (levelCleanNodeBody_ne_nil i)
-        simp only [List.length_append] at hlen
-        omega
+        simp only [List.length_append, List.length_nil] at hlen
+        have hb0 :
+            (levelCleanNodeBody i).length = 0 := by
+          omega
+        have hbnil :
+            levelCleanNodeBody i = [] := by
+          simpa using hb0
+        exact (levelCleanNodeBody_ne_nil i) hbnil
       · intro hy
         have hlen := congrArg List.length hy
         simp [levelShortcutBody_length] at hlen
@@ -191,7 +201,7 @@ theorem levelTree_difference_core
         LevelBodyToggleReach x y ∧
         x.head? ≠ y.head? ∧
         x.reverse.head? ≠ y.reverse.head? := by
-  induction s generalizing t with
+  induction s with
   | cleanLeaf =>
       cases t with
       | cleanLeaf =>
@@ -219,9 +229,7 @@ theorem levelTree_difference_core
           · exact levelShortcutBody_reach_cleanBody 0
           · simp [levelShortcutBody]
           · simp [levelShortcutBody]
-      | shortcut k' =>
-          have hk : k = k' := by omega
-          subst k'
+      | shortcut _ =>
           exact Or.inl rfl
       | @node j left right =>
           right
@@ -346,9 +354,20 @@ theorem levelTree_difference_core
                 obtain ⟨hxL, hyL⟩ :=
                   levelBodyToggleReach_nonempty_of_head_ne
                     hreachL hheadL
-                rw [List.head?_append_of_ne_nil xL hxL,
+                have hxHead :
+                    (xL ++ (qL ++ pR) ++ xR).head? =
+                      xL.head? := by
+                  rw [List.append_assoc,
+                    List.head?_append_of_ne_nil xL hxL]
+                have hyHead :
+                    (yL ++ (qL ++ pR) ++ yR).head? =
+                      yL.head? := by
+                  rw [List.append_assoc,
                     List.head?_append_of_ne_nil yL hyL]
-                exact hheadL
+                intro hEq
+                apply hheadL
+                rw [← hxHead, ← hyHead]
+                exact hEq
               · dsimp [coreS, coreT, mid]
                 simp only [List.reverse_append]
                 obtain ⟨hxR, hyR⟩ :=
@@ -358,9 +377,26 @@ theorem levelTree_difference_core
                   simpa using hxR
                 have hyRev : yR.reverse ≠ [] := by
                   simpa using hyR
-                rw [List.head?_append_of_ne_nil xR.reverse hxRev,
-                    List.head?_append_of_ne_nil yR.reverse hyRev]
-                exact htailR
+                have hxHead :
+                    (xR.reverse ++
+                      (qL ++ pR).reverse ++
+                      xL.reverse).head? =
+                      xR.reverse.head? := by
+                  rw [List.append_assoc,
+                    List.head?_append_of_ne_nil
+                      xR.reverse hxRev]
+                have hyHead :
+                    (yR.reverse ++
+                      (qL ++ pR).reverse ++
+                      yL.reverse).head? =
+                      yR.reverse.head? := by
+                  rw [List.append_assoc,
+                    List.head?_append_of_ne_nil
+                      yR.reverse hyRev]
+                intro hEq
+                apply htailR
+                rw [← hxHead, ← hyHead]
+                exact hEq
 
 
 /--
@@ -414,7 +450,7 @@ theorem commonPrefix_stops_before_distinct_heads
               pt ++ y ++ q = ut ++ Y ++ v := by
             simpa [hph] using congrArg List.tail ht
           obtain ⟨a, ha⟩ :=
-            ih (u := ut) hx hy hhead hsTail htTail
+            ih (u := ut) hsTail htTail
           refine ⟨a, ?_⟩
           simp [hph, ha]
 
