@@ -84,6 +84,7 @@ import LeanCfgProject.TCS1.V83LevelCodedBracketProjection
 import LeanCfgProject.TCS1.V83LevelCodedTreeLanguage
 import LeanCfgProject.TCS1.V83LevelCodedDisplayedGrammar
 import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammar
+import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarBridge
 import LeanCfgProject.TCS1.V83LevelCodedDisplayedThickness
 import LeanCfgProject.TCS1.V83LevelCodedTreeTyping
 import LeanCfgProject.TCS1.V83LevelCodedLowerBoundBridge
