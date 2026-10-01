@@ -100,6 +100,80 @@ theorem levelShortcutBody_reach_nodeBody
     levelBodyToggleReach_trans hroot
       (levelBodyToggleReach_trans hleft' hright')
 
+/-- The clean node body is never empty. -/
+theorem levelCleanNodeBody_ne_nil
+    (n : Nat) :
+    levelCleanNodeBody n ≠ [] := by
+  cases n with
+  | zero =>
+      simp [levelCleanNodeBody]
+  | succ n =>
+      obtain ⟨rest, hrest⟩ :=
+        cleanLevelTreeWord_starts_l n
+      simp [levelCleanNodeBody, hrest]
+
+/-- A literal body-toggle step has a nonempty source and target. -/
+theorem levelBodyToggleStep_nonempty
+    {x y : Word LevelTreeSymbol}
+    (h : LevelBodyToggleStep x y) :
+    x ≠ [] ∧ y ≠ [] := by
+  cases h with
+  | expand i p q =>
+      constructor
+      · intro hx
+        have hlen := congrArg List.length hx
+        simp [levelShortcutBody_length] at hlen
+      · intro hy
+        have hlen := congrArg List.length hy
+        have hb :
+            0 < (levelCleanNodeBody i).length := by
+          exact List.length_pos.mpr
+            (levelCleanNodeBody_ne_nil i)
+        simp only [List.length_append] at hlen
+        omega
+  | contract i p q =>
+      constructor
+      · intro hx
+        have hlen := congrArg List.length hx
+        have hb :
+            0 < (levelCleanNodeBody i).length := by
+          exact List.length_pos.mpr
+            (levelCleanNodeBody_ne_nil i)
+        simp only [List.length_append] at hlen
+        omega
+      · intro hy
+        have hlen := congrArg List.length hy
+        simp [levelShortcutBody_length] at hlen
+
+/--
+If a finite body-toggle reach has different first symbols, both endpoint
+factors are nonempty.
+-/
+theorem levelBodyToggleReach_nonempty_of_head_ne
+    {x y : Word LevelTreeSymbol}
+    (hreach : LevelBodyToggleReach x y)
+    (hhead : x.head? ≠ y.head?) :
+    x ≠ [] ∧ y ≠ [] := by
+  have hx : x ≠ [] := by
+    intro hx0
+    subst x
+    cases hreach with
+    | refl =>
+        exact hhead rfl
+    | @step _ b z hstep hrest =>
+        exact (levelBodyToggleStep_nonempty hstep).1 rfl
+  have hy : y ≠ [] := by
+    have hsymm :=
+      levelBodyToggleReach_symm hreach
+    intro hy0
+    subst y
+    cases hsymm with
+    | refl =>
+        exact hhead rfl
+    | @step _ b z hstep hrest =>
+        exact (levelBodyToggleStep_nonempty hstep).1 rfl
+  exact ⟨hx, hy⟩
+
 /--
 Canonical serialized difference core.
 
@@ -269,43 +343,23 @@ theorem levelTree_difference_core
               · rw [LevelTree.serialize, htL, htR]
                 simp [coreT, mid, List.append_assoc]
               · dsimp [coreS, coreT, mid]
-                exact
-                  List.head?_append_of_ne_none
-                    (by
-                      intro hx
-                      have hxnil :
-                          xL = [] := by
-                        simpa using
-                          (List.head?_eq_none.mp hx)
-                      subst xL
-                      simp at hheadL)
-                    |>.trans_ne
-                      (by
-                        simpa using hheadL)
+                obtain ⟨hxL, hyL⟩ :=
+                  levelBodyToggleReach_nonempty_of_head_ne
+                    hreachL hheadL
+                rw [List.head?_append_of_ne_nil xL hxL,
+                    List.head?_append_of_ne_nil yL hyL]
+                exact hheadL
               · dsimp [coreS, coreT, mid]
                 simp only [List.reverse_append]
-                have hxRne :
-                    xR.reverse.head? ≠ none := by
-                  intro hx
-                  have hxnil :
-                      xR.reverse = [] :=
-                    List.head?_eq_none.mp hx
-                  have hxRnil : xR = [] := by
-                    simpa using congrArg List.reverse hxnil
-                  subst xR
-                  simp at htailR
-                have hyRne :
-                    yR.reverse.head? ≠ none := by
-                  intro hy
-                  have hynil :
-                      yR.reverse = [] :=
-                    List.head?_eq_none.mp hy
-                  have hyRnil : yR = [] := by
-                    simpa using congrArg List.reverse hynil
-                  subst yR
-                  simp at htailR
-                rw [List.head?_append_of_ne_none hxRne,
-                    List.head?_append_of_ne_none hyRne]
+                obtain ⟨hxR, hyR⟩ :=
+                  levelBodyToggleReach_nonempty_of_head_ne
+                    hreachR hheadR
+                have hxRev : xR.reverse ≠ [] := by
+                  simpa using hxR
+                have hyRev : yR.reverse ≠ [] := by
+                  simpa using hyR
+                rw [List.head?_append_of_ne_nil xR.reverse hxRev,
+                    List.head?_append_of_ne_nil yR.reverse hyRev]
                 exact htailR
 
 end TCS1
