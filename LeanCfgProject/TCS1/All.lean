@@ -78,6 +78,7 @@ import LeanCfgProject.TCS1.SetDrivenCharacteristicObstruction
 import LeanCfgProject.TCS1.V83TypedThicknessWitnessBounds
 import LeanCfgProject.TCS1.V83FixedWindowRefinedBounds
 import LeanCfgProject.TCS1.V83OrdinaryThicknessLowerBoundKernel
+import LeanCfgProject.TCS1.V83LevelCodedTreeSyntax
 import LeanCfgProject.TCS1.ConcreteConservativeLearner
 import LeanCfgProject.TCS1.ConcreteLearnerComplexity
 import LeanCfgProject.TCS1.BinaryMembershipKernel
