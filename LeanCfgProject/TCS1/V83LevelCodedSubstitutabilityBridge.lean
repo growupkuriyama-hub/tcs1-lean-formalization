@@ -1,5 +1,6 @@
 import LeanCfgProject.TCS1.V83LevelCodedNodeBodies
 import LeanCfgProject.TCS1.V83LevelCodedDifferenceCore
+import LeanCfgProject.TCS1.V83LevelCodedCleanOccurrence
 import LeanCfgProject.TCS1.ClarkEyraudSpecialCase
 
 /-!
@@ -207,6 +208,31 @@ theorem levelTree_clarkEyraud_of_admissible_cutLocal
       levelBodyToggleReach_transport
         hadm hyx c.1 c.2 hymem
     simpa [Distribution] using hxmem
+
+
+/-- Literal shortcut/clean body toggles are replay-admissible in every T_n. -/
+theorem levelBodyToggleAdmissible_levelTree
+    (n : Nat) :
+    LevelBodyToggleAdmissible n := by
+  exact
+    levelBodyToggleAdmissible_of_recognition
+      n
+      (levelShortcutBodyRecognition_proved n)
+      (levelCleanBodyRecognition_proved n)
+
+/--
+The Appendix lemma is now unconditional: every level-coded tree language T_n
+is Clark--Eyraud substitutable.
+-/
+theorem levelTree_clarkEyraud
+    (n : Nat) :
+    ClarkEyraudSubstitutableOn
+      (LevelTreeLanguage n) := by
+  exact
+    levelTree_clarkEyraud_of_admissible_cutLocal
+      n
+      (levelBodyToggleAdmissible_levelTree n)
+      (levelBodyToggleCutLocality_levelTree n)
 
 end TCS1
 end LeanCfgProject
