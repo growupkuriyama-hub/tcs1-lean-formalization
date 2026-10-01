@@ -32,7 +32,8 @@ jobs:
             LeanCfgProject.TCS1.V83LevelCodedCleanOccurrence \
             LeanCfgProject.TCS1.V83LevelCodedSubstitutabilityBridge \
             LeanCfgProject.TCS1.V83MixedDerivationInversion \
-            LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarExact
+            LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarExact \
+            LeanCfgProject.TCS1.V83LevelCodedMinusIndexedGrammarExact
 
       - name: Build TCS1 facade
         run: lake build LeanCfgProject.TCS1.All
