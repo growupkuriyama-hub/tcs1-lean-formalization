@@ -354,9 +354,12 @@ theorem levelCodeRMinusIndexed_am_to_direct
                 levelCodeRMinusIndexed_a_to_direct
                   m j.1
                   (show j.1 ≤ m by omega) hy
+              have dy' :
+                  LevelCodeADerives k y := by
+                simpa [hj] using dy
               have dm :=
-                LevelCodeAMinusDerives.nodeLeft dx dy
-              simpa [hj, List.append_assoc] using dm
+                LevelCodeAMinusDerives.nodeLeft dx dy'
+              simpa [List.append_assoc] using dm
           | amNodeRight j =>
               have hval : j.1 + 1 = k + 1 := by
                 injection hLhs with hidx
@@ -383,12 +386,15 @@ theorem levelCodeRMinusIndexed_am_to_direct
                 levelCodeRMinusIndexed_a_to_direct
                   m j.1
                   (show j.1 ≤ m by omega) hx
+              have dx' :
+                  LevelCodeADerives k x := by
+                simpa [hj] using dx
               have dy :
                   LevelCodeAMinusDerives k y :=
                 ih (show k ≤ m + 1 by omega) hy'
               have dm :=
-                LevelCodeAMinusDerives.nodeRight dx dy
-              simpa [hj, List.append_assoc] using dm
+                LevelCodeAMinusDerives.nodeRight dx' dy
+              simpa [List.append_assoc] using dm
 
 /-- Any indexed start derivation of R_(m+1)^- belongs to T_(m+1)^-. -/
 theorem levelCodeRMinusIndexed_start_to_language
