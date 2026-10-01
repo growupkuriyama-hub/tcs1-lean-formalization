@@ -362,5 +362,151 @@ theorem levelTree_difference_core
                     List.head?_append_of_ne_nil yR.reverse hyRev]
                 exact htailR
 
+
+/--
+If two words have the same displayed prefix u, while a smaller common prefix p
+is followed by nonempty factors with different first symbols, then u cannot
+extend into those factors: u is a prefix of p.
+-/
+theorem commonPrefix_stops_before_distinct_heads
+    {α : Type}
+    {p q u v x y X Y : List α}
+    (hx : x ≠ [])
+    (hy : y ≠ [])
+    (hhead : x.head? ≠ y.head?)
+    (hs : p ++ x ++ q = u ++ X ++ v)
+    (ht : p ++ y ++ q = u ++ Y ++ v) :
+    ∃ a : List α, p = u ++ a := by
+  induction p generalizing u with
+  | nil =>
+      cases u with
+      | nil =>
+          exact ⟨[], rfl⟩
+      | cons uh ut =>
+          cases x with
+          | nil =>
+              exact False.elim (hx rfl)
+          | cons xh xt =>
+              cases y with
+              | nil =>
+                  exact False.elim (hy rfl)
+              | cons yh yt =>
+                  simp only [List.nil_append, List.cons_append] at hs ht
+                  have hxuh : xh = uh := by
+                    exact congrArg List.head hs
+                  have hyuh : yh = uh := by
+                    exact congrArg List.head ht
+                  exfalso
+                  apply hhead
+                  simp [hxuh, hyuh]
+  | cons ph pt ih =>
+      cases u with
+      | nil =>
+          exact ⟨ph :: pt, rfl⟩
+      | cons uh ut =>
+          simp only [List.cons_append] at hs ht
+          have hph : ph = uh := by
+            exact congrArg List.head hs
+          have hsTail :
+              pt ++ x ++ q = ut ++ X ++ v := by
+            simpa [hph] using congrArg List.tail hs
+          have htTail :
+              pt ++ y ++ q = ut ++ Y ++ v := by
+            simpa [hph] using congrArg List.tail ht
+          obtain ⟨a, ha⟩ :=
+            ih (u := ut) hx hy hhead hsTail htTail
+          refine ⟨a, ?_⟩
+          simp [hph, ha]
+
+/--
+Dual suffix form of the preceding lemma, obtained by reversing the two
+factorizations.
+-/
+theorem commonSuffix_stops_after_distinct_tails
+    {α : Type}
+    {p q u v x y X Y : List α}
+    (hx : x ≠ [])
+    (hy : y ≠ [])
+    (htail : x.reverse.head? ≠ y.reverse.head?)
+    (hs : p ++ x ++ q = u ++ X ++ v)
+    (ht : p ++ y ++ q = u ++ Y ++ v) :
+    ∃ b : List α, q = b ++ v := by
+  have hsR :
+      q.reverse ++ x.reverse ++ p.reverse =
+        v.reverse ++ X.reverse ++ u.reverse := by
+    simpa [List.reverse_append, List.append_assoc] using
+      congrArg List.reverse hs
+  have htR :
+      q.reverse ++ y.reverse ++ p.reverse =
+        v.reverse ++ Y.reverse ++ u.reverse := by
+    simpa [List.reverse_append, List.append_assoc] using
+      congrArg List.reverse ht
+  have hxR : x.reverse ≠ [] := by
+    simpa using hx
+  have hyR : y.reverse ≠ [] := by
+    simpa using hy
+  obtain ⟨a, ha⟩ :=
+    commonPrefix_stops_before_distinct_heads
+      hxR hyR htail hsR htR
+  refine ⟨a.reverse, ?_⟩
+  have hrev := congrArg List.reverse ha
+  simpa [List.reverse_append] using hrev
+
+/--
+A difference core whose endpoints disagree must lie inside every other common
+prefix/suffix factorization of the same two words.
+-/
+theorem differenceCore_nested_in_common_factor
+    {α : Type}
+    {A B p q u v x y X Y : List α}
+    (hx : x ≠ [])
+    (hy : y ≠ [])
+    (hhead : x.head? ≠ y.head?)
+    (htail : x.reverse.head? ≠ y.reverse.head?)
+    (hAcore : A = p ++ x ++ q)
+    (hBcore : B = p ++ y ++ q)
+    (hAouter : A = u ++ X ++ v)
+    (hBouter : B = u ++ Y ++ v) :
+    ∃ a b : List α,
+      X = a ++ x ++ b ∧
+      Y = a ++ y ++ b := by
+  have hs :
+      p ++ x ++ q = u ++ X ++ v :=
+    hAcore.symm.trans hAouter
+  have ht :
+      p ++ y ++ q = u ++ Y ++ v :=
+    hBcore.symm.trans hBouter
+  obtain ⟨a, hp⟩ :=
+    commonPrefix_stops_before_distinct_heads
+      hx hy hhead hs ht
+  obtain ⟨b, hq⟩ :=
+    commonSuffix_stops_after_distinct_tails
+      hx hy htail hs ht
+  have hs' :
+      u ++ (a ++ x ++ b) ++ v =
+        u ++ X ++ v := by
+    simpa [hp, hq, List.append_assoc] using hs
+  have ht' :
+      u ++ (a ++ y ++ b) ++ v =
+        u ++ Y ++ v := by
+    simpa [hp, hq, List.append_assoc] using ht
+  have hsLeft :
+      (a ++ x ++ b) ++ v = X ++ v := by
+    exact
+      List.append_right_injective u
+        (by simpa [List.append_assoc] using hs')
+  have htLeft :
+      (a ++ y ++ b) ++ v = Y ++ v := by
+    exact
+      List.append_right_injective u
+        (by simpa [List.append_assoc] using ht')
+  have hxEq :
+      a ++ x ++ b = X :=
+    List.append_left_injective v hsLeft
+  have hyEq :
+      a ++ y ++ b = Y :=
+    List.append_left_injective v htLeft
+  exact ⟨a, b, hxEq.symm, hyEq.symm⟩
+
 end TCS1
 end LeanCfgProject
