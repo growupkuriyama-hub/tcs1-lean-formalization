@@ -1,5 +1,6 @@
 import LeanCfgProject.TCS1.LinearRegularIntersection
 import LeanCfgProject.TCS1.FixedHSubstitutability
+import LeanCfgProject.TCS1.FixedHTypeFiberRestriction
 import LeanCfgProject.TCS1.FixedHomEvaluation
 import LeanCfgProject.TCS1.FixedHTypingRefinement
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
@@ -73,6 +74,7 @@ import LeanCfgProject.TCS1.ReducednessWitnessChoices
 import LeanCfgProject.TCS1.MinimalReducedWitnessChoices
 import LeanCfgProject.TCS1.GoldConvergenceClosure
 import LeanCfgProject.TCS1.GoldCharacteristicBridge
+import LeanCfgProject.TCS1.SetDrivenCharacteristicObstruction
 import LeanCfgProject.TCS1.ConcreteConservativeLearner
 import LeanCfgProject.TCS1.ConcreteLearnerComplexity
 import LeanCfgProject.TCS1.BinaryMembershipKernel
@@ -203,14 +205,15 @@ import LeanCfgProject.TCS1.V79ManuscriptClaimAudit
 import LeanCfgProject.TCS1.V79FrontBackAppendixAudit
 import LeanCfgProject.TCS1.V79FullManuscriptAudit
 /-!
-# TCS #1 v79 Lean verification facade
+# TCS #1 archived v79 facade with v83 re-verification delta
 
-This module imports every theorem-facing kernel maintained for the current
-TCS #1 v79 working baseline.  The v79 manuscript is a non-mathematical
-micro-revision of v78, so the theorem surface is inherited unchanged while
-this facade tracks the current submission-candidate source. Building this one target is the fast integration
-check; CI separately rejects placeholder proofs and project-level axiom declarations
-inside the TCS1 namespace.
+The archival v79 theorem-facing surface remains imported unchanged.  The
+current branch additionally imports the first v83 delta modules while the new
+typed-thickness and operator-independent ordinary-thickness results are being
+re-verified.  Thus v79 remains the completed archival baseline; v83 coverage
+is explicitly in progress rather than silently inherited. Building this one
+target is the fast integration check; CI separately rejects placeholder proofs
+and project-level axiom declarations inside the TCS1 namespace.
 -/
 
 namespace LeanCfgProject
@@ -234,6 +237,10 @@ theorem v78_facade_loaded : True :=
 
 /-- Marker theorem for the current v79 verification facade. -/
 theorem v79_facade_loaded : True :=
+  True.intro
+
+/-- Marker theorem: the v83 delta re-verification branch has been started. -/
+theorem v83_reverification_started : True :=
   True.intro
 
 end TCS1
