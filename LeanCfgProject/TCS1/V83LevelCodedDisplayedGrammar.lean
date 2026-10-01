@@ -31,6 +31,19 @@ inductive LevelCodeZDerives : Nat → Word LevelTreeSymbol → Prop
       (d : LevelCodeZDerives i w) :
       LevelCodeZDerives (i + 1) (w ++ [zero])
 
+/-- Right-appending one zero realizes the successor replicate block. -/
+@[simp] theorem replicate_zero_succ_right
+    (i : Nat) :
+    List.replicate (i + 1) zero =
+      List.replicate i zero ++ [zero] := by
+  calc
+    List.replicate (i + 1) zero =
+        List.replicate i zero ++
+          List.replicate 1 zero := by
+            rw [List.replicate_add]
+    _ = List.replicate i zero ++ [zero] := by
+          simp
+
 /-- Every Z_i derivation is the intended zero block. -/
 theorem levelCodeZDerives_shape
     {i : Nat} {w : Word LevelTreeSymbol}
@@ -40,10 +53,12 @@ theorem levelCodeZDerives_shape
   | zero =>
       simp
   | @succ i w d ih =>
-      rw [ih]
-      rw [show i + 1 + 1 = (i + 1) + 1 by omega]
-      rw [List.replicate_add]
-      simp
+      calc
+        w ++ [zero] =
+            List.replicate (i + 1) zero ++ [zero] := by
+              rw [ih]
+        _ = List.replicate ((i + 1) + 1) zero :=
+          (replicate_zero_succ_right (i + 1)).symm
 
 /-- The intended zero block is derivable from Z_i. -/
 theorem levelCodeZDerives_replicate
@@ -58,13 +73,8 @@ theorem levelCodeZDerives_replicate
           LevelCodeZDerives (i + 1)
             (List.replicate (i + 1) zero ++ [zero]) :=
         LevelCodeZDerives.succ ih
-      have hw :
-          List.replicate (i + 1) zero ++ [zero] =
-            List.replicate (Nat.succ i + 1) zero := by
-        rw [show Nat.succ i + 1 = (i + 1) + 1 by omega]
-        rw [List.replicate_add]
-        simp
-      rw [← hw]
+      rw [show Nat.succ i + 1 = (i + 1) + 1 by omega,
+        replicate_zero_succ_right (i + 1)]
       simpa [Nat.succ_eq_add_one] using h
 
 /-- Direct semantics of the displayed A_i rules of R_n. -/
@@ -240,7 +250,6 @@ theorem levelTree_shortcut_serialize_length
     (i : Nat) :
     (LevelTree.shortcut i).serialize.length = i + 5 := by
   simp [LevelTree.serialize, levelShortcutBody]
-  omega
 
 /-- Explicit short productive witness for A_i. -/
 theorem levelCodeADerives_shortcut_witness
