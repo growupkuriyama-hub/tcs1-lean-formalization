@@ -94,5 +94,35 @@ theorem levelTree_lowerBound_package_of_appendix_obligations
         n hadm hlocal)
       hC hCminus
 
+
+/--
+Unconditional concrete lower-bound package for the level-coded tree family.
+The Appendix substitutability lemma is discharged by the occurrence and
+cut-locality formalization.
+-/
+theorem levelTree_lowerBound_package
+    (n : Nat)
+    (B :
+      Finset (Word LevelTreeSymbol) →
+        Set (Word LevelTreeSymbol))
+    {C Cminus : Finset (Word LevelTreeSymbol)}
+    (hC :
+      IsSetDrivenCharacteristicSample
+        B (LevelTreeLanguage n) C)
+    (hCminus :
+      IsSetDrivenCharacteristicSample
+        B (LevelTreeShortcutLanguage n) Cminus) :
+    FixedHSubstitutable
+        levelTreeTyping (LevelTreeLanguage n)
+      ∧
+    FixedHSubstitutable
+        levelTreeTyping (LevelTreeShortcutLanguage n)
+      ∧
+    5 * 2^n - 1 ≤ reconstructionSampleNorm C := by
+  exact
+    levelTree_lowerBound_package_of_clarkEyraud
+      n B (levelTree_clarkEyraud n)
+      hC hCminus
+
 end TCS1
 end LeanCfgProject
