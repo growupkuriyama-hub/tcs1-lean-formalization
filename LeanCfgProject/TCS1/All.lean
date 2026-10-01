@@ -88,6 +88,7 @@ import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarBridge
 import LeanCfgProject.TCS1.V83MixedDerivationInversion
 import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarExact
 import LeanCfgProject.TCS1.V83LevelCodedIndexedThickness
+import LeanCfgProject.TCS1.V83LevelCodedIndexedReducedness
 import LeanCfgProject.TCS1.V83LevelCodedMinusIndexedGrammarExact
 import LeanCfgProject.TCS1.V83LevelCodedDisplayedThickness
 import LeanCfgProject.TCS1.V83LevelCodedTreeTyping
