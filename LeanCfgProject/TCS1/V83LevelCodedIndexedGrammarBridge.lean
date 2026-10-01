@@ -28,7 +28,7 @@ theorem levelCodeZDerives_to_indexed
     MixedDerives
       (levelCodeRIndexedGrammar n).toMixedRules
       (.z ⟨i, by omega⟩) w := by
-  induction d with
+  induction d generalizing n with
   | zero =>
       have hr :
           (levelCodeRIndexedGrammar n).toMixedRules
@@ -51,7 +51,7 @@ theorem levelCodeZDerives_to_indexed
             (levelCodeRIndexedGrammar n).toMixedRules
             (.z (levelCodeFinEmbed fi)) w := by
         simpa [fi, levelCodeFinEmbed] using
-          (ih (show i ≤ n by omega))
+          (ih (n := n) (show i ≤ n by omega))
       have hr :
           (levelCodeRIndexedGrammar n).toMixedRules
             (.z (levelCodeFinSucc fi))
@@ -80,7 +80,7 @@ theorem levelCodeADerives_to_indexed
     MixedDerives
       (levelCodeRIndexedGrammar n).toMixedRules
       (.a ⟨i, by omega⟩) w := by
-  induction d with
+  induction d generalizing n with
   | clean0 =>
       have hr :
           (levelCodeRIndexedGrammar n).toMixedRules
@@ -138,13 +138,13 @@ theorem levelCodeADerives_to_indexed
             (levelCodeRIndexedGrammar n).toMixedRules
             (.a (levelCodeFinEmbed fi)) x := by
         simpa [fi, levelCodeFinEmbed] using
-          (ihX (show i ≤ n by omega))
+          (ihX (n := n) (show i ≤ n by omega))
       have hy :
           MixedDerives
             (levelCodeRIndexedGrammar n).toMixedRules
             (.a (levelCodeFinEmbed fi)) y := by
         simpa [fi, levelCodeFinEmbed] using
-          (ihY (show i ≤ n by omega))
+          (ihY (n := n) (show i ≤ n by omega))
       have hr :
           (levelCodeRIndexedGrammar n).toMixedRules
             (.a (levelCodeFinSucc fi))
