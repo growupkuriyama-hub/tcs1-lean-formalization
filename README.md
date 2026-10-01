@@ -1,22 +1,26 @@
-# TCS #1 Lean formalization (v79)
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22939434.svg)](https://doi.org/10.5281/zenodo.22939434)
+# TCS #1 Lean formalization (v83 re-verification)
 
 Standalone Lean formalization accompanying:
 
 **Takayuki Kuriyama, _Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing_.**
 
-The archival release is preserved on Zenodo at DOI `10.5281/zenodo.22939434`.
+## Current manuscript baseline
 
-This repository is intentionally restricted to the TCS #1 artifact. It excludes the unrelated JALC, MCFG, ORC, build-log, and historical project files contained in the broader research repository.
+- internal manuscript version: **v83**
+- paper repository: `growupkuriyama-hub/Papers`
+- source: `01_fixed-h-cfg/main.tex`
+- manuscript commit audited: `ca7b5d901cbdd1965e0897d4c9ef55e7eb7dbaf8`
+- Lean re-verification branch: `tcs1-v83-reverification`
+- integration PR: **#1**
 
-## Manuscript baseline
+The earlier v79 artifact is preserved as an immutable archival release on
+Zenodo:
 
-- Manuscript version: **v79**
-- Manuscript SHA-256: `3d54aaea1c945e4b9bbdabe92a88f229096d94c93fa3045a3bfda5dfd22426d2`
-- Verified theorem-facing head in the original integration repository: `c6fe72e31a305b159d93afd82c731c603125d907`
-- Final pre-merge CI-guard head: `49556ddca69b6fb056d3d12880066d1d56315db8`
-- Original integration PR #5 merge commit: `356bf51d3cded68a1a29d2957b656b25a693f7c6`
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22939434.svg)](https://doi.org/10.5281/zenodo.22939434)
+
+DOI: `10.5281/zenodo.22939434`
+
+The v83 work does **not** rewrite or move that historical release.
 
 ## Build
 
@@ -24,25 +28,63 @@ This repository is intentionally restricted to the TCS #1 artifact. It excludes 
 lake build LeanCfgProject.TCS1.All
 ```
 
-or simply
+or
 
 ```bash
 lake build
 ```
 
-The Lean toolchain and Mathlib dependency are pinned by `lean-toolchain` and `lake-manifest.json`.
+The Lean toolchain and Mathlib dependency are pinned by `lean-toolchain`
+and `lake-manifest.json`.
+
+## v83 verification status
+
+The v83 re-verification closes the revised theorem-facing delta, including:
+
+- restriction of fixed-h substitutability to recognized unions of h-fibres;
+- the generic set-driven nested-target characteristic-sample obstruction;
+- sharpened typed-thickness context/witness/sample-norm bounds;
+- refined fixed-window constants;
+- the complete level-coded Appendix argument, culminating in the
+  unconditional theorem `levelTree_clarkEyraud`;
+- concrete finite indexed CFG presentations of `R_n` and `R_n^-`;
+- exact generated languages `T_n` and `T_n^-`;
+- reducedness of both indexed grammar families;
+- ordinary thickness at most `n+5`;
+- linear finite-presentation encoding-size bounds; and
+- the exponential characteristic-sample norm lower bound
+  `5 * 2^n - 1`.
+
+The final aggregate theorem for the ordinary-thickness construction is:
+
+`levelCode_indexed_ordinaryThickness_lowerBound_package`
 
 ## Main files
 
 - `LeanCfgProject/TCS1/All.lean` — integrated formalization facade
-- `LeanCfgProject/TCS1/V79FullManuscriptAudit.lean` — manuscript-order audit
-- `FORMALIZATION_TCS1_V79.md` — coverage report
-- `FORMALIZATION_TCS1_V79_BOUNDARY_AUDIT.md` — explicitly external boundary
+- `LeanCfgProject/TCS1/V83FullManuscriptAudit.lean` — v83 theorem-facing audit
+- `FORMALIZATION_TCS1_V83.md` — v83 coverage report
+- `FORMALIZATION_TCS1_V79.md` — archived-baseline coverage report
+- `FORMALIZATION_TCS1_V79_BOUNDARY_AUDIT.md` — explicit historical scope boundary
+
+## CI
+
+The TCS1 CI checks:
+
+1. the dedicated v83 critical path;
+2. the full `LeanCfgProject.TCS1.All` facade;
+3. that the TCS1 source contains no `sorry`; and
+4. that it contains no project-level axioms.
+
+A green CI run is therefore the repository-level verification checkpoint for
+the current branch.
 
 ## Scope
 
-The artifact covers fixed finite-monoid substitutability, exact reconstruction, canonical finite witnesses, conservative Gold identification, executable CYK membership, materialized production tables and learner, paper-facing polynomial combinatorial bounds, fixed-window and linear-subclass results, and the Section 9 expressiveness examples.
+This repository is intentionally restricted to the TCS #1 artifact.  It
+contains the manuscript-facing Lean development, reproducibility metadata,
+coverage reports, and CI definition.
 
-The remaining non-internal material is limited to cited literature/background, representation conventions, explicit open problems, and low-level runtime cost semantics outside the manuscript's abstraction level.
-
-This standalone repository contains only the TCS #1 source, reproducibility metadata, and its CI definition.
+Cited literature/background, representation conventions, and explicitly open
+problems are kept separate from internally proved manuscript claims rather
+than being silently promoted to Lean theorems.

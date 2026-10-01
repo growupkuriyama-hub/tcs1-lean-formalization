@@ -5,6 +5,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: tcs1-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tcs1:
     runs-on: ubuntu-latest
@@ -19,6 +23,21 @@ jobs:
           build: false
           test: false
           lint: false
+
+      - name: Build v83 level-coded critical path
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V83LevelCodedDifferenceCore \
+            LeanCfgProject.TCS1.V83LevelCodedOccurrenceKernel \
+            LeanCfgProject.TCS1.V83LevelCodedCleanOccurrence \
+            LeanCfgProject.TCS1.V83LevelCodedSubstitutabilityBridge \
+            LeanCfgProject.TCS1.V83MixedDerivationInversion \
+            LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarExact \
+            LeanCfgProject.TCS1.V83LevelCodedMinusIndexedGrammarExact \
+            LeanCfgProject.TCS1.V83LevelCodedIndexedThickness \
+            LeanCfgProject.TCS1.V83LevelCodedIndexedReducedness \
+            LeanCfgProject.TCS1.V83LevelCodedIndexedSize \
+            LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage
 
       - name: Build TCS1 facade
         run: lake build LeanCfgProject.TCS1.All

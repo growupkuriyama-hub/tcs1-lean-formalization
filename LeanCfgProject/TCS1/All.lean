@@ -1,5 +1,6 @@
 import LeanCfgProject.TCS1.LinearRegularIntersection
 import LeanCfgProject.TCS1.FixedHSubstitutability
+import LeanCfgProject.TCS1.FixedHTypeFiberRestriction
 import LeanCfgProject.TCS1.FixedHomEvaluation
 import LeanCfgProject.TCS1.FixedHTypingRefinement
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
@@ -73,6 +74,33 @@ import LeanCfgProject.TCS1.ReducednessWitnessChoices
 import LeanCfgProject.TCS1.MinimalReducedWitnessChoices
 import LeanCfgProject.TCS1.GoldConvergenceClosure
 import LeanCfgProject.TCS1.GoldCharacteristicBridge
+import LeanCfgProject.TCS1.SetDrivenCharacteristicObstruction
+import LeanCfgProject.TCS1.V83TypedThicknessWitnessBounds
+import LeanCfgProject.TCS1.V83FixedWindowRefinedBounds
+import LeanCfgProject.TCS1.V83OrdinaryThicknessLowerBoundKernel
+import LeanCfgProject.TCS1.V83OrdinaryThicknessDirectPackage
+import LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage
+import LeanCfgProject.TCS1.V83LevelCodedTreeSyntax
+import LeanCfgProject.TCS1.V83LevelCodedBracketProjection
+import LeanCfgProject.TCS1.V83LevelCodedTreeLanguage
+import LeanCfgProject.TCS1.V83LevelCodedDisplayedGrammar
+import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammar
+import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarBridge
+import LeanCfgProject.TCS1.V83MixedDerivationInversion
+import LeanCfgProject.TCS1.V83LevelCodedIndexedGrammarExact
+import LeanCfgProject.TCS1.V83LevelCodedIndexedThickness
+import LeanCfgProject.TCS1.V83LevelCodedIndexedReducedness
+import LeanCfgProject.TCS1.V83LevelCodedIndexedSize
+import LeanCfgProject.TCS1.V83LevelCodedMinusIndexedGrammarExact
+import LeanCfgProject.TCS1.V83LevelCodedDisplayedThickness
+import LeanCfgProject.TCS1.V83LevelCodedTreeTyping
+import LeanCfgProject.TCS1.V83LevelCodedLowerBoundBridge
+import LeanCfgProject.TCS1.V83LevelCodedTreeParsing
+import LeanCfgProject.TCS1.V83LevelCodedNodeBodies
+import LeanCfgProject.TCS1.V83LevelCodedDifferenceCore
+import LeanCfgProject.TCS1.V83LevelCodedOccurrenceKernel
+import LeanCfgProject.TCS1.V83LevelCodedCleanOccurrence
+import LeanCfgProject.TCS1.V83LevelCodedSubstitutabilityBridge
 import LeanCfgProject.TCS1.ConcreteConservativeLearner
 import LeanCfgProject.TCS1.ConcreteLearnerComplexity
 import LeanCfgProject.TCS1.BinaryMembershipKernel
@@ -202,15 +230,20 @@ import LeanCfgProject.TCS1.V79PreliminariesAudit
 import LeanCfgProject.TCS1.V79ManuscriptClaimAudit
 import LeanCfgProject.TCS1.V79FrontBackAppendixAudit
 import LeanCfgProject.TCS1.V79FullManuscriptAudit
+import LeanCfgProject.TCS1.V83FullManuscriptAudit
 /-!
-# TCS #1 v79 Lean verification facade
+# TCS #1 integrated facade: archived v79 baseline plus completed v83 delta
 
-This module imports every theorem-facing kernel maintained for the current
-TCS #1 v79 working baseline.  The v79 manuscript is a non-mathematical
-micro-revision of v78, so the theorem surface is inherited unchanged while
-this facade tracks the current submission-candidate source. Building this one target is the fast integration
-check; CI separately rejects placeholder proofs and project-level axiom declarations
-inside the TCS1 namespace.
+The archival v79 theorem-facing surface remains imported unchanged.  The
+current v83 re-verification adds the revised typed-thickness, fixed-window,
+level-coded Appendix, and ordinary-thickness lower-bound development,
+including exact finite indexed grammars, reducedness, thickness, and linear
+presentation-size certificates.
+
+`V83FullManuscriptAudit` is the final theorem-facing audit facade for this
+delta.  Building this target through `TCS1.All` is the integration check;
+CI separately rejects placeholder proofs and project-level axiom declarations
+inside the TCS1 source tree.
 -/
 
 namespace LeanCfgProject
@@ -234,6 +267,14 @@ theorem v78_facade_loaded : True :=
 
 /-- Marker theorem for the current v79 verification facade. -/
 theorem v79_facade_loaded : True :=
+  True.intro
+
+/-- Compatibility marker retained from the start of the v83 audit. -/
+theorem v83_reverification_started : True :=
+  True.intro
+
+/-- Marker theorem: the v83 theorem-facing re-verification is integrated. -/
+theorem v83_reverification_completed : True :=
   True.intro
 
 end TCS1
