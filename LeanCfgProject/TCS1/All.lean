@@ -81,6 +81,7 @@ import LeanCfgProject.TCS1.V83OrdinaryThicknessLowerBoundKernel
 import LeanCfgProject.TCS1.V83LevelCodedTreeSyntax
 import LeanCfgProject.TCS1.V83LevelCodedTreeLanguage
 import LeanCfgProject.TCS1.V83LevelCodedDisplayedGrammar
+import LeanCfgProject.TCS1.V83LevelCodedDisplayedThickness
 import LeanCfgProject.TCS1.V83LevelCodedTreeTyping
 import LeanCfgProject.TCS1.V83LevelCodedLowerBoundBridge
 import LeanCfgProject.TCS1.V83LevelCodedTreeParsing
