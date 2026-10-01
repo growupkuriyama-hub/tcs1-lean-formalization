@@ -80,7 +80,12 @@ theorem levelBodyToggleAdmissible_of_recognition
       have hcleanMem :=
         levelTreeContext_clean_mem ctx
       rw [levelTreeContext_clean_body_factor] at hcleanMem
-      simpa [hp, hq, List.append_assoc] using hcleanMem
+      have hrepl :
+          (u ++ p) ++ levelCleanNodeBody i ++
+              (q ++ v) ∈ LevelTreeLanguage n := by
+        rw [hp, hq]
+        exact hcleanMem
+      simpa [List.append_assoc] using hrepl
   | contract i p q =>
       have hwhole :
           (u ++ p) ++ levelCleanNodeBody i ++
@@ -91,7 +96,12 @@ theorem levelBodyToggleAdmissible_of_recognition
       have hshortMem :=
         levelTreeContext_shortcut_mem ctx
       rw [levelTreeContext_shortcut_body_factor] at hshortMem
-      simpa [hp, hq, List.append_assoc] using hshortMem
+      have hrepl :
+          (u ++ p) ++ levelShortcutBody i ++
+              (q ++ v) ∈ LevelTreeLanguage n := by
+        rw [hp, hq]
+        exact hshortMem
+      simpa [List.append_assoc] using hrepl
 
 /--
 Common displayed prefix/suffix force the required tree differences to be
