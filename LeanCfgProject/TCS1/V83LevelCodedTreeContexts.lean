@@ -84,6 +84,78 @@ theorem levelTreeContext_serialize_plug
         LevelTreeContext.prefix, LevelTreeContext.suffix,
         ih, List.append_assoc]
 
+/--
+A parsed tree has a shortcut exactly when some typed tree context focuses a
+shortcut node.  This is the tree-level version of the Appendix statement that
+shortcut nodes form explicit replacement sites.
+-/
+theorem levelTree_hasShortcut_iff_exists_context
+    {n : Nat}
+    (t : LevelTree n) :
+    t.HasShortcut ↔
+      ∃ i : Nat, ∃ ctx : LevelTreeContext n i,
+        t = ctx.plug (.shortcut i) := by
+  induction t with
+  | cleanLeaf =>
+      constructor
+      · intro h
+        simp [LevelTree.HasShortcut] at h
+      · rintro ⟨i, ctx, h⟩
+        have hc :
+            LevelTreeSymbol.c ∈
+              (LevelTree.cleanLeaf).serialize := by
+          rw [h]
+          have hs :
+              (ctx.plug (.shortcut i)).HasShortcut := by
+            rw [← levelTree_c_mem_serialize_iff_hasShortcut]
+            rw [levelTreeContext_serialize_plug]
+            simp [LevelTree.serialize, levelShortcutBody]
+          exact
+            (levelTree_c_mem_serialize_iff_hasShortcut
+              LevelTree.cleanLeaf).2 hs
+        simp [LevelTree.serialize] at hc
+  | shortcut n =>
+      constructor
+      · intro _
+        exact ⟨n, LevelTreeContext.hole n, rfl⟩
+      · intro _
+        simp [LevelTree.HasShortcut]
+  | @node n left right ihL ihR =>
+      constructor
+      · intro h
+        change left.HasShortcut ∨ right.HasShortcut at h
+        rcases h with hL | hR
+        · obtain ⟨i, ctx, hctx⟩ := ihL.mp hL
+          refine
+            ⟨i, LevelTreeContext.left ctx right, ?_⟩
+          simp [LevelTreeContext.plug, hctx]
+        · obtain ⟨i, ctx, hctx⟩ := ihR.mp hR
+          refine
+            ⟨i, LevelTreeContext.right left ctx, ?_⟩
+          simp [LevelTreeContext.plug, hctx]
+      · rintro ⟨i, ctx, hctx⟩
+        have hc :
+            LevelTreeSymbol.c ∈
+              (LevelTree.node left right).serialize := by
+          rw [hctx, levelTreeContext_serialize_plug]
+          simp [LevelTree.serialize, levelShortcutBody]
+        exact
+          (levelTree_c_mem_serialize_iff_hasShortcut
+            (LevelTree.node left right)).1 hc
+
+/--
+Occurrence of the distinguished letter c in a valid serialization therefore
+certifies the existence of a parsed shortcut replacement site.
+-/
+theorem levelTree_c_mem_serialize_iff_exists_shortcut_context
+    {n : Nat}
+    (t : LevelTree n) :
+    LevelTreeSymbol.c ∈ t.serialize ↔
+      ∃ i : Nat, ∃ ctx : LevelTreeContext n i,
+        t = ctx.plug (.shortcut i) := by
+  rw [levelTree_c_mem_serialize_iff_hasShortcut]
+  exact levelTree_hasShortcut_iff_exists_context t
+
 /-- A shortcut plugged at any parsed node remains in the outer tree language. -/
 theorem levelTreeContext_shortcut_mem
     {n i : Nat}
