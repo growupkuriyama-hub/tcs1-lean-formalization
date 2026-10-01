@@ -1,4 +1,5 @@
 import LeanCfgProject.TCS1.V83LevelCodedNodeBodies
+import LeanCfgProject.TCS1.V83LevelCodedDifferenceCore
 import LeanCfgProject.TCS1.ClarkEyraudSpecialCase
 
 /-!
@@ -112,6 +113,46 @@ def LevelBodyToggleCutLocality (n : Nat) : Prop :=
     u ++ x ++ v ∈ LevelTreeLanguage n →
     u ++ y ++ v ∈ LevelTreeLanguage n →
     LevelBodyToggleReach x y
+
+/--
+The Appendix cut-locality statement is a theorem: every canonical structural
+difference core lies inside the displayed factor between a common prefix and
+suffix.
+-/
+theorem levelBodyToggleCutLocality_levelTree
+    (n : Nat) :
+    LevelBodyToggleCutLocality n := by
+  intro u v x y hux huy
+  rcases hux with ⟨s, hs⟩
+  rcases huy with ⟨t, ht⟩
+  rcases levelTree_difference_core s t with hEq | hDiff
+  · subst t
+    have hxy :
+        u ++ x ++ v = u ++ y ++ v := by
+      exact hs.symm.trans ht
+    have hxyLeft :
+        x ++ v = y ++ v :=
+      List.append_right_injective u
+        (by simpa [List.append_assoc] using hxy)
+    have hxyCore : x = y :=
+      List.append_left_injective v hxyLeft
+    subst y
+    exact LevelBodyToggleReach.refl x
+  · rcases hDiff with
+      ⟨p, q, coreX, coreY,
+        hsCore, htCore, hreach,
+        hhead, htail⟩
+    obtain ⟨hxne, hyne⟩ :=
+      levelBodyToggleReach_nonempty_of_head_ne
+        hreach hhead
+    obtain ⟨a, b, hx, hy⟩ :=
+      differenceCore_nested_in_common_factor
+        hxne hyne hhead htail
+        hsCore htCore hs ht
+    rw [hx, hy]
+    exact
+      levelBodyToggleReach_contextual
+        hreach a b
 
 /-- Admissibility transports language membership along a finite body sequence. -/
 theorem levelBodyToggleReach_transport
