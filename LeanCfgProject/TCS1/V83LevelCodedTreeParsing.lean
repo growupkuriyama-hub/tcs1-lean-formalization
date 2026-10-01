@@ -63,8 +63,8 @@ def parseLevelTreePrefix :
       | some (d :: r :: suffix) =>
           some (.shortcut (n + 1), suffix)
       | _ => none
-  | n + 1, l :: xs =>
-      match parseLevelTreePrefix n xs with
+  | n + 1, l :: l :: xs =>
+      match parseLevelTreePrefix n (l :: xs) with
       | some (left, ys) =>
           match parseLevelTreePrefix n ys with
           | some (right, r :: suffix) =>
@@ -113,8 +113,8 @@ arbitrary following suffix.
               (right.serialize ++ r :: suffix) =
             some (right, r :: suffix) := by
         simpa using ihR (r :: suffix)
-      simp [LevelTree.serialize, hstart,
-        parseLevelTreePrefix, List.append_assoc,
+      rw [LevelTree.serialize, hstart]
+      simp [parseLevelTreePrefix, List.append_assoc,
         hL, hR]
 
 @[simp] theorem parseLevelTreePrefix_serialize
