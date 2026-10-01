@@ -145,6 +145,21 @@ theorem levelCodeADerives_iff_language
   · rintro ⟨t, rfl⟩
     exact levelTree_to_levelCodeADerives t
 
+/-- Start language of the displayed grammar R_n. -/
+def LevelCodeRStartLanguage
+    (n : Nat) :
+    Set (Word LevelTreeSymbol) :=
+  {w | LevelCodeADerives n w}
+
+/-- The displayed R_n generates exactly T_n. -/
+theorem levelCodeRStartLanguage_eq
+    (n : Nat) :
+    LevelCodeRStartLanguage n =
+      LevelTreeLanguage n := by
+  apply Set.ext
+  intro w
+  exact levelCodeADerives_iff_language n w
+
 /-- Direct semantics of the displayed A_i^- rules of R_n^-. -/
 inductive LevelCodeAMinusDerives :
     Nat → Word LevelTreeSymbol → Prop
@@ -244,6 +259,21 @@ theorem levelCodeAMinusDerives_iff_shortcutLanguage
     exact
       levelTree_to_levelCodeAMinusDerives_of_hasShortcut
         t hs
+
+/-- Start language of the displayed grammar R_n^-. -/
+def LevelCodeRMinusStartLanguage
+    (n : Nat) :
+    Set (Word LevelTreeSymbol) :=
+  {w | LevelCodeAMinusDerives n w}
+
+/-- The displayed R_n^- generates exactly T_n^-. -/
+theorem levelCodeRMinusStartLanguage_eq
+    (n : Nat) :
+    LevelCodeRMinusStartLanguage n =
+      LevelTreeShortcutLanguage n := by
+  apply Set.ext
+  intro w
+  exact levelCodeAMinusDerives_iff_shortcutLanguage n w
 
 /-- Length of the explicit shortcut yield at residual height i. -/
 theorem levelTree_shortcut_serialize_length
