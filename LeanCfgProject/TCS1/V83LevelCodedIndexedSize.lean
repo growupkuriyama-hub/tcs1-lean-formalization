@@ -153,6 +153,7 @@ theorem levelCodeRIndexed_encodingScale_linear
     indexedMixed_totalRhsLength_le_five_card
       (levelCodeRIndexedGrammar n)
       (levelCodeRIndexed_rhs_length_le_five n)
+  rw [levelCodeRProd_card] at hRhs
   unfold IndexedMixedCFG.encodingScale
   rw [levelCodeRNT_card, levelCodeRProd_card]
   omega
@@ -349,6 +350,7 @@ theorem levelCodeRMinusIndexed_encodingScale_linear
     indexedMixed_totalRhsLength_le_five_card
       (levelCodeRMinusIndexedGrammar m)
       (levelCodeRMinusIndexed_rhs_length_le_five m)
+  rw [levelCodeRMinusProd_card] at hRhs
   unfold IndexedMixedCFG.encodingScale
   rw [levelCodeRMinusNT_card,
       levelCodeRMinusProd_card]
