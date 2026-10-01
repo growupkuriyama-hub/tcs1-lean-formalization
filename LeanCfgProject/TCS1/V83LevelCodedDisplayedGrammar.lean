@@ -54,8 +54,18 @@ theorem levelCodeZDerives_replicate
   | zero =>
       simpa using LevelCodeZDerives.zero
   | succ i ih =>
-      have h := LevelCodeZDerives.succ ih
-      convert h using 1 <;> omega
+      have h :
+          LevelCodeZDerives (i + 1)
+            (List.replicate (i + 1) zero ++ [zero]) :=
+        LevelCodeZDerives.succ ih
+      have hw :
+          List.replicate (i + 1) zero ++ [zero] =
+            List.replicate (Nat.succ i + 1) zero := by
+        rw [show Nat.succ i + 1 = (i + 1) + 1 by omega]
+        rw [List.replicate_add]
+        simp
+      rw [← hw]
+      simpa [Nat.succ_eq_add_one] using h
 
 /-- Direct semantics of the displayed A_i rules of R_n. -/
 inductive LevelCodeADerives : Nat → Word LevelTreeSymbol → Prop
