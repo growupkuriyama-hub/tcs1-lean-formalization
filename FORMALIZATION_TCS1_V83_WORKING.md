@@ -112,3 +112,56 @@ theorem still needs the displayed compact grammar families `R_n` and
 Finally, a v83 manuscript-audit facade should replace the temporary
 working-status marker.  Until those obligations close, this branch must not be
 described as a complete v83 formalization.
+
+## Additional v83 work after the initial checkpoint
+
+The re-verification has now been pushed further into the new
+ordinary-thickness lower-bound argument.
+
+### CI-confirmed layers
+
+The residual-height prefix parser and unique-parse layer now builds in the
+integrated TCS1 facade. The direct displayed-grammar semantics and the n+5
+productive-witness bounds have also passed earlier integration builds.
+
+### Current working layers
+
+The branch additionally contains the following theorem-facing layers; these
+remain marked working until the latest full-facade CI run is green.
+
+- V83LevelCodedBracketProjection.lean formalizes the l/r projection to the
+  already verified one-bracket Dyck scanner, making the Appendix's
+  bracket-matching argument explicit.
+- V83LevelCodedIndexedGrammar.lean packages the displayed R_n and R_n^-
+  families as actual finite IndexedMixedCFG objects.
+- V83LevelCodedIndexedGrammarBridge.lean starts the semantic transport from
+  the paper-facing derivation relations to generic MixedDerives, for both
+  grammar families.
+- V83OrdinaryThicknessDirectPackage.lean collects exact target-language
+  equalities, direct n+5 thickness witnesses, linear displayed symbol counts,
+  fixed-h class membership, and the exponential characteristic-sample lower
+  bound, conditional only on the remaining Appendix combinatorics.
+
+The shortcut-containing target is also identified explicitly with
+T_n minus {z_n}.
+
+### Exact remaining Appendix core
+
+The substitutability proof has been decomposed into:
+
+1. literal occurrence recognition: an occurrence of s_i or b_i in a valid
+   serialization is the body of a genuine residual-height-i parsed node; and
+2. cut locality: for u x v and u y v in T_n, all differing node-body
+   replacements can be performed wholly inside the displayed factor.
+
+The second formulation is intentionally body-level. This is slightly more
+precise than saying that the whole differing node lies between the two cuts:
+a cut may sit immediately after the common opening l or immediately before
+the common closing r, while the replaceable body is still wholly inside the
+factor. The Lean zipper/body factorization records exactly this boundary
+case.
+
+Until the occurrence-recognition/cut-locality proof and the converse indexed
+grammar semantics/reducedness transport are closed, the branch remains a
+working v83 re-verification rather than a completed v83 release.
+
