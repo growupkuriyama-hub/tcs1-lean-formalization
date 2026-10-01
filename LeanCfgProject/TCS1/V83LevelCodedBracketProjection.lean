@@ -51,6 +51,8 @@ theorem dyckOne_append_mem
     (hx : x ∈ DyckOne.Language)
     (hy : y ∈ DyckOne.Language) :
     x ++ y ∈ DyckOne.Language := by
+  change DyckOne.scan 0 x = some 0 at hx
+  change DyckOne.scan 0 y = some 0 at hy
   change DyckOne.scan 0 (x ++ y) = some 0
   rw [DyckOne.scan_append, hx]
   exact hy
