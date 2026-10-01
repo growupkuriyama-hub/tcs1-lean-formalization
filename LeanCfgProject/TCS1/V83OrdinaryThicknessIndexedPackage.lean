@@ -62,7 +62,7 @@ theorem levelCode_indexed_ordinaryThickness_lowerBound_package
       ∧
     ((levelCodeRIndexedGrammar n).encodingScale +
         (levelCodeRMinusIndexedGrammar (n - 1)).encodingScale
-      ≤ 49 * n + 61)
+      ≤ 59 * n + 48)
       ∧
     FixedHSubstitutable
         levelTreeTyping (LevelTreeLanguage n)
