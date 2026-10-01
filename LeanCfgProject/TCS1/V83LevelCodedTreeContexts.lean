@@ -84,6 +84,19 @@ theorem levelTreeContext_serialize_plug
         LevelTreeContext.prefix, LevelTreeContext.suffix,
         ih, List.append_assoc]
 
+/-- Plugging a shortcut into any parsed context produces a tree with a shortcut. -/
+theorem levelTreeContext_plug_shortcut_hasShortcut
+    {n i : Nat}
+    (ctx : LevelTreeContext n i) :
+    (ctx.plug (.shortcut i)).HasShortcut := by
+  induction ctx with
+  | hole i =>
+      simp [LevelTreeContext.plug, LevelTree.HasShortcut]
+  | @left j i ctx sibling ih =>
+      simp [LevelTreeContext.plug, LevelTree.HasShortcut, ih]
+  | @right j i sibling ctx ih =>
+      simp [LevelTreeContext.plug, LevelTree.HasShortcut, ih]
+
 /--
 A parsed tree has a shortcut exactly when some typed tree context focuses a
 shortcut node.  This is the tree-level version of the Appendix statement that
@@ -101,19 +114,11 @@ theorem levelTree_hasShortcut_iff_exists_context
       · intro h
         simp [LevelTree.HasShortcut] at h
       · rintro ⟨i, ctx, h⟩
-        have hc :
-            LevelTreeSymbol.c ∈
-              (LevelTree.cleanLeaf).serialize := by
-          rw [h]
-          have hs :
-              (ctx.plug (.shortcut i)).HasShortcut := by
-            rw [← levelTree_c_mem_serialize_iff_hasShortcut]
-            rw [levelTreeContext_serialize_plug]
-            simp [LevelTree.serialize, levelShortcutBody]
-          exact
-            (levelTree_c_mem_serialize_iff_hasShortcut
-              LevelTree.cleanLeaf).2 hs
-        simp [LevelTree.serialize] at hc
+        have hs :
+            (ctx.plug (.shortcut i)).HasShortcut :=
+          levelTreeContext_plug_shortcut_hasShortcut ctx
+        rw [← h] at hs
+        simpa [LevelTree.HasShortcut] using hs
   | shortcut n =>
       constructor
       · intro _
