@@ -1,4 +1,5 @@
 import LeanCfgProject.TCS1.V83LevelCodedTreeTyping
+import LeanCfgProject.TCS1.V83LevelCodedTreeToggles
 
 /-!
 # TCS #1 v83: level-coded lower-bound bridge
