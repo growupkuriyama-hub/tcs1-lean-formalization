@@ -34,8 +34,7 @@ def levelShortcutBody (i : Nat) : Word LevelTreeSymbol :=
 @[simp] theorem levelShortcutBody_length
     (i : Nat) :
     (levelShortcutBody i).length = i + 3 := by
-  simp [levelShortcutBody]
-  omega
+  simp [levelShortcutBody] <;> omega
 
 /-- The zero run uniquely records the residual height of a shortcut. -/
 theorem levelShortcutBody_injective :
