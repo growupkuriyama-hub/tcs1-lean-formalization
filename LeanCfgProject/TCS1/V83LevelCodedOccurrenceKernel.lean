@@ -220,13 +220,25 @@ theorem zeroRun_d_injective
           simp at h
           exact ⟨rfl, h⟩
       | succ m =>
-          have hhead := congrArg List.head? h
-          simp at hhead
+          have h' :
+              d :: q =
+                zero ::
+                  (List.replicate m zero ++ d :: s) := by
+            simpa [List.replicate_succ] using h
+          have hbad : d = zero := by
+            simpa using congrArg List.head? h'
+          simp at hbad
   | succ k ih =>
       cases m with
       | zero =>
-          have hhead := congrArg List.head? h
-          simp at hhead
+          have h' :
+              zero ::
+                  (List.replicate k zero ++ d :: q) =
+                d :: s := by
+            simpa [List.replicate_succ] using h
+          have hbad : zero = d := by
+            simpa using congrArg List.head? h'
+          simp at hbad
       | succ m =>
           simp only [List.replicate_succ,
             List.cons_append] at h
