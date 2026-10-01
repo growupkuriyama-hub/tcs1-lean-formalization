@@ -1,5 +1,6 @@
 import LeanCfgProject.TCS1.V83LevelCodedTreeTyping
 import LeanCfgProject.TCS1.V83LevelCodedTreeToggles
+import LeanCfgProject.TCS1.V83LevelCodedSubstitutabilityBridge
 
 /-!
 # TCS #1 v83: level-coded lower-bound bridge
@@ -58,6 +59,40 @@ theorem levelTree_lowerBound_package_of_clarkEyraud
   · exact levelTreeLanguage_diff_shortcut_eq_singleton n
   · exact hC
   · exact hCminus
+
+
+/--
+The concrete fixed-h/lower-bound package follows once the two Appendix
+combinatorial obligations (literal admissibility and cut-locality) are
+discharged.
+-/
+theorem levelTree_lowerBound_package_of_appendix_obligations
+    (n : Nat)
+    (B :
+      Finset (Word LevelTreeSymbol) →
+        Set (Word LevelTreeSymbol))
+    (hadm : LevelBodyToggleAdmissible n)
+    (hlocal : LevelBodyToggleCutLocality n)
+    {C Cminus : Finset (Word LevelTreeSymbol)}
+    (hC :
+      IsSetDrivenCharacteristicSample
+        B (LevelTreeLanguage n) C)
+    (hCminus :
+      IsSetDrivenCharacteristicSample
+        B (LevelTreeShortcutLanguage n) Cminus) :
+    FixedHSubstitutable
+        levelTreeTyping (LevelTreeLanguage n)
+      ∧
+    FixedHSubstitutable
+        levelTreeTyping (LevelTreeShortcutLanguage n)
+      ∧
+    5 * 2^n - 1 ≤ reconstructionSampleNorm C := by
+  exact
+    levelTree_lowerBound_package_of_clarkEyraud
+      n B
+      (levelTree_clarkEyraud_of_admissible_cutLocal
+        n hadm hlocal)
+      hC hCminus
 
 end TCS1
 end LeanCfgProject
