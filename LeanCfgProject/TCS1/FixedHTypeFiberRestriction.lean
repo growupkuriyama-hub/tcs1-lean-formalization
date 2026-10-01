@@ -52,17 +52,19 @@ theorem fixedHSubstitutable_inter_recognizedPreimage
         H.h (c.1 ++ (y ++ c.2)) := by
     simpa only [List.append_assoc] using htype
   change
-    ((c.1 ++ x ++ c.2 ∈ L) ∧
-      H.h (c.1 ++ (x ++ c.2)) ∈ F) ↔
-    ((c.1 ++ y ++ c.2 ∈ L) ∧
-      H.h (c.1 ++ (y ++ c.2)) ∈ F)
+    (c.1 ++ x ++ c.2 ∈ L ∩ RecognizedPreimage H F) ↔
+    (c.1 ++ y ++ c.2 ∈ L ∩ RecognizedPreimage H F)
   constructor
   · rintro ⟨hxL, hxF⟩
     refine ⟨hL.mp hxL, ?_⟩
+    change H.h (c.1 ++ (x ++ c.2)) ∈ F at hxF
+    change H.h (c.1 ++ (y ++ c.2)) ∈ F
     rw [← htype']
     exact hxF
   · rintro ⟨hyL, hyF⟩
     refine ⟨hL.mpr hyL, ?_⟩
+    change H.h (c.1 ++ (y ++ c.2)) ∈ F at hyF
+    change H.h (c.1 ++ (x ++ c.2)) ∈ F
     rw [htype']
     exact hyF
 
