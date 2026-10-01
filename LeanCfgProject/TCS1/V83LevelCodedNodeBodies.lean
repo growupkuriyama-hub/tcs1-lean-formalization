@@ -24,6 +24,30 @@ def levelCleanNodeBody : Nat → Word LevelTreeSymbol
   | 0 => [a]
   | i + 1 => cleanLevelTreeWord i ++ cleanLevelTreeWord i
 
+/-- Shortcut and clean node bodies always begin with different symbols. -/
+theorem levelShortcutBody_head_ne_cleanNodeBody_head
+    (i : Nat) :
+    (levelShortcutBody i).head? ≠
+      (levelCleanNodeBody i).head? := by
+  cases i with
+  | zero =>
+      simp [levelShortcutBody, levelCleanNodeBody]
+  | succ i =>
+      simp [levelShortcutBody, levelCleanNodeBody,
+        cleanLevelTreeWord, cleanLevelTree,
+        LevelTree.serialize]
+
+/-- In particular, the literal shortcut and clean bodies are distinct. -/
+theorem levelShortcutBody_ne_cleanNodeBody
+    (i : Nat) :
+    levelShortcutBody i ≠
+      levelCleanNodeBody i := by
+  intro h
+  have hh :=
+    congrArg List.head? h
+  exact
+    (levelShortcutBody_head_ne_cleanNodeBody_head i) hh
+
 /-- The clean residual-height-i tree is l b_i r. -/
 theorem cleanLevelTree_serialize_eq_bracket_body
     (i : Nat) :
