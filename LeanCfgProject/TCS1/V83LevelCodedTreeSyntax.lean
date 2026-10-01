@@ -191,6 +191,37 @@ theorem levelTreeLanguage_diff_shortcut_eq_singleton
     intro hShort
     exact (c_not_mem_cleanLevelTreeWord n) hShort.2
 
+/--
+The shortcut-containing language is exactly the manuscript target
+T_n \ {z_n}.
+-/
+theorem levelTreeShortcutLanguage_eq_diff_clean
+    (n : Nat) :
+    LevelTreeShortcutLanguage n =
+      LevelTreeLanguage n \
+        ({cleanLevelTreeWord n} :
+          Set (Word LevelTreeSymbol)) := by
+  apply Set.ext
+  intro w
+  constructor
+  · rintro ⟨hLang, hc⟩
+    refine ⟨hLang, ?_⟩
+    intro hz
+    have hw : w = cleanLevelTreeWord n := by
+      simpa using hz
+    subst w
+    exact (c_not_mem_cleanLevelTreeWord n) hc
+  · rintro ⟨hLang, hnotClean⟩
+    refine ⟨hLang, ?_⟩
+    by_contra hc
+    push_neg at hc
+    rcases hLang with ⟨t, rfl⟩
+    have hz :
+        t.serialize = cleanLevelTreeWord n :=
+      levelTree_serialize_eq_clean_of_c_not_mem t hc
+    apply hnotClean
+    simpa [hz]
+
 /-- Recursive length equation for the concrete clean serialization. -/
 theorem cleanLevelTreeWord_length_rec
     (n : Nat) :
