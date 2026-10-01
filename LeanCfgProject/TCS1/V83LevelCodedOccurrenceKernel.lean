@@ -34,23 +34,23 @@ theorem factor_cons_split_append
   | nil =>
       right
       exact ⟨p, q, by simpa using h, rfl, rfl⟩
-  | cons ah at ih =>
+  | cons ah tail ih =>
       cases p with
       | nil =>
           left
           simp only [List.cons_append, List.nil_append] at h
           have hah : ah = a := by
             simpa using congrArg List.head? h
-          have htail : at ++ B = q := by
+          have htail : tail ++ B = q := by
             simpa [hah] using congrArg List.tail h
           subst ah
-          exact ⟨[], at, rfl, rfl, htail.symm⟩
+          exact ⟨[], tail, rfl, rfl, htail.symm⟩
       | cons ph pt =>
           simp only [List.cons_append] at h
           have hah : ah = ph := by
             simpa using congrArg List.head? h
           have htail :
-              at ++ B = pt ++ a :: q := by
+              tail ++ B = pt ++ a :: q := by
             simpa [hah] using congrArg List.tail h
           rcases ih pt htail with hleft | hright
           · left
@@ -154,11 +154,16 @@ theorem levelTree_c_factor_context
         exact False.elim (no_c_factor_in_l hbad)
       · rcases hAfterL with
           ⟨p1, q1, hrest, hp, hq⟩
+        have hrest' :
+            left.serialize ++
+                (right.serialize ++ [r]) =
+              p1 ++ c :: q1 := by
+          simpa [List.append_assoc] using hrest
         rcases
             factor_cons_split_append
               c left.serialize
               (right.serialize ++ [r])
-              p1 q1 hrest with
+              p1 q1 hrest' with
           hInLeft | hAfterLeft
         · rcases hInLeft with
             ⟨pL, qL, hLeft, hp1, hq1⟩
@@ -215,11 +220,13 @@ theorem zeroRun_d_injective
           simp at h
           exact ⟨rfl, h⟩
       | succ m =>
-          simp at h
+          have hhead := congrArg List.head? h
+          simp at hhead
   | succ k ih =>
       cases m with
       | zero =>
-          simp at h
+          have hhead := congrArg List.head? h
+          simp at hhead
       | succ m =>
           simp only [List.replicate_succ,
             List.cons_append] at h
