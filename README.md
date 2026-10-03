@@ -1,4 +1,4 @@
-# TCS #1 Lean formalization (v83 re-verification)
+# TCS #1 Lean formalization (v86 manuscript synchronization)
 
 Standalone Lean formalization accompanying:
 
@@ -6,12 +6,14 @@ Standalone Lean formalization accompanying:
 
 ## Current manuscript baseline
 
-- internal manuscript version: **v83**
+- internal manuscript version: **v86**
 - paper repository: `growupkuriyama-hub/Papers`
 - source: `01_fixed-h-cfg/main.tex`
-- manuscript commit audited: `ca7b5d901cbdd1965e0897d4c9ef55e7eb7dbaf8`
-- Lean re-verification branch: `tcs1-v83-reverification`
-- integration PR: **#1**
+- repository state audited: `1c1222d10cbba4317c71c27752de2efce24dff7c`
+- last commit changing `main.tex`: `8a0107c619bcc84c7dcd8f36422ebdf9db2da604`
+- manuscript SHA-256: `4418a5c18e120f6216dec3b0c985d3c64832b2ff80075fccc2627cf21863d6d4`
+- v86 synchronization branch: `tcs1-v86-reverification`
+- v83 proof layer remains the completed formal mathematical baseline; v86 is the current manuscript synchronization target.
 
 The earlier v79 artifact is preserved as an immutable archival release on
 Zenodo:
@@ -37,9 +39,9 @@ lake build
 The Lean toolchain and Mathlib dependency are pinned by `lean-toolchain`
 and `lake-manifest.json`.
 
-## v83 verification status
+## v86 verification status
 
-The v83 re-verification closes the revised theorem-facing delta, including:
+The completed v83 proof layer already closes the revised theorem-facing mathematics. The v86 synchronization audit confirms that the current manuscript adds no new theorem-facing mathematical statement and rechecks the principal formalized claims, including:
 
 - restriction of fixed-h substitutability to recognized unions of h-fibres;
 - the generic set-driven nested-target characteristic-sample obstruction;
@@ -62,8 +64,10 @@ The final aggregate theorem for the ordinary-thickness construction is:
 ## Main files
 
 - `LeanCfgProject/TCS1/All.lean` — integrated formalization facade
-- `LeanCfgProject/TCS1/V83FullManuscriptAudit.lean` — v83 theorem-facing audit
+- `LeanCfgProject/TCS1/V83FullManuscriptAudit.lean` — completed v83 proof-layer audit
+- `LeanCfgProject/TCS1/V86FullManuscriptAudit.lean` — current v86 manuscript-version synchronization audit
 - `FORMALIZATION_TCS1_V83.md` — v83 coverage report
+- `FORMALIZATION_TCS1_V86.md` — v86 source-delta and synchronization report
 - `FORMALIZATION_TCS1_V79.md` — archived-baseline coverage report
 - `FORMALIZATION_TCS1_V79_BOUNDARY_AUDIT.md` — explicit historical scope boundary
 
@@ -71,10 +75,11 @@ The final aggregate theorem for the ordinary-thickness construction is:
 
 The TCS1 CI checks:
 
-1. the dedicated v83 critical path;
-2. the full `LeanCfgProject.TCS1.All` facade;
-3. that the TCS1 source contains no `sorry`; and
-4. that it contains no project-level axioms.
+1. the level-coded critical path inherited from the completed v83 development;
+2. `LeanCfgProject.TCS1.V86FullManuscriptAudit`;
+3. the full `LeanCfgProject.TCS1.All` facade;
+4. that the TCS1 source contains no `sorry`; and
+5. that it contains no project-level axioms.
 
 A green CI run is therefore the repository-level verification checkpoint for
 the current branch.
