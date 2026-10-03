@@ -8,6 +8,7 @@ authors:
 version: "tcs1-v87-formalization-2.0.0"
 date-released: 2026-10-03
 repository-code: "https://github.com/growupkuriyama-hub/tcs1-lean-formalization"
+doi: "10.5281/zenodo.23114558"
 keywords:
   - Lean
   - formal verification
