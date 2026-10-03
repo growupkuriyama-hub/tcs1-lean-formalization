@@ -440,8 +440,8 @@ Fully internal nonlinearity result for the v88 witness.  No external
 homomorphism-closure theorem is required.
 -/
 theorem centerMarkerProduct_not_rawLinearInitialRepresentable :
-    not (RawLinearInitialRepresentable
-      CenterMarkerProductLanguage) := by
+    ¬ RawLinearInitialRepresentable
+      CenterMarkerProductLanguage := by
   intro hrep
   obtain ⟨p, hpump⟩ :=
     rawLinearInitialRepresentable_pumping hrep
