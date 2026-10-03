@@ -10,12 +10,12 @@ Fixed Finite-Monoid Typing_.**
 
 - paper repository: `growupkuriyama-hub/Papers`
 - manuscript source: `01_fixed-h-cfg/main.tex`
-- repository state audited: `5369c43feecfbfb23e4076356e7a0e264306b928`
+- repository state audited: `910e2ae3065a30f602bd5f9584d4019962f51bf7`
 - last commit changing `main.tex`:
-  `43b1dd71ff57000dacbf303ca1a3c48d541fd5b4`
+  `79bc92aee2f2167285442617cbd8ad450fe64e91`
 - internal manuscript version: **v87**
 - manuscript SHA-256 recorded in `PAPER.yaml`:
-  `991d0ea355a130abe60d2b2204a287d5e6b6b7522f5f2dce87ca6fa3a6ba358f`
+  `76f94836cdb9b9684911970c7e8511dbb5688a730aa8b410fd31d9661949374c`
 - prior exact-version Lean synchronization: internal **v86**
 - v86 manuscript source commit:
   `8a0107c619bcc84c7dcd8f36422ebdf9db2da604`
@@ -52,7 +52,7 @@ The v87 manuscript edits are confined to human-readable proof exposition:
 3. the Appendix difference-core induction is reorganized by residual height
    and root constructor, matching the formal case split.
 
-These are proof-explication changes only.  A later v87 Data availability edit records the public Zenodo/GitHub artifact and likewise changes no theorem-facing statement.
+These are proof-explication changes only.  Subsequent v87 edits to Data availability and the response letter record the public artifact and polish external presentation; they change no theorem-facing statement.
 
 ## 3. Lean correspondence for the v87 edits
 
