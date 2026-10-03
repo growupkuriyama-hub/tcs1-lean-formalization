@@ -237,6 +237,7 @@ import LeanCfgProject.TCS1.V88CenterMarkerBase
 import LeanCfgProject.TCS1.V88CenterMarkerProduct
 import LeanCfgProject.TCS1.V88CenterMarkerGrammar
 import LeanCfgProject.TCS1.V88CenterMarkerNonlinear
+import LeanCfgProject.TCS1.V88FullManuscriptAudit
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
@@ -249,12 +250,13 @@ presentation-size certificates.
 `V83FullManuscriptAudit` remains the completed proof-layer audit.  The v86
 module re-anchored that theorem surface after the larger revision delta, and
 `V87FullManuscriptAudit` re-anchors it to the exact v87 manuscript after
-proof-exposition-only edits.  The v88 re-verification has now restarted with
-the corrected endpoint-complete center-marker argument in Section 10.1:
-`V88CenterMarkerBase` verifies the direct substitutability proof for
-P = {a^n c b^n : n >= 0}.  Building these targets through `TCS1.All` is the
-integration check;
-CI separately rejects placeholder proofs and project-level axiom declarations
+proof-exposition-only edits.  The v88 synchronization closes the corrected
+endpoint-complete center-marker comparison in Section 10.1: the base language
+P = {a^n c b^n : n >= 0}, the marked product L_x = P d P, its displayed CFG,
+the erasing image onto Double-Delta, and an internal nonlinearity proof are all
+machine-checked.  `V88FullManuscriptAudit` is the exact-version checkpoint.
+Building these targets through `TCS1.All` is the integration check; CI
+separately rejects placeholder proofs and project-level axiom declarations
 inside the TCS1 source tree.
 -/
 
@@ -298,8 +300,8 @@ theorem v87_reverification_completed : True :=
   v87_full_manuscript_audited
 
 /-- Marker theorem: v88 re-verification has restarted with the center-marker base. -/
-theorem v88_reverification_started : True := by
-  exact True.intro
+theorem v88_reverification_completed : True :=
+  v88_full_manuscript_audited
 
 end TCS1
 end LeanCfgProject
