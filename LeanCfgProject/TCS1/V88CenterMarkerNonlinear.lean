@@ -69,7 +69,7 @@ def centerMarkerErase :
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [List.replicate_succ, centerMarkerErase, ih]
+      simp [List.replicate_succ, centerMarkerEraseLetter, ih]
 
 @[simp] theorem centerMarkerErase_replicate_b
     (n : Nat) :
@@ -78,14 +78,14 @@ def centerMarkerErase :
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [List.replicate_succ, centerMarkerErase, ih]
+      simp [List.replicate_succ, centerMarkerEraseLetter, ih]
 
 @[simp] theorem centerMarkerErase_lpmCore
     (n : Nat) :
     centerMarkerErase (lpmCore n LpmSymbol.c) =
       DeltaStar.balancedBlock n := by
   simp [lpmCore, DeltaStar.balancedBlock,
-    centerMarkerErase, List.append_assoc]
+    centerMarkerErase, centerMarkerEraseLetter, List.append_assoc]
 
 /-- The manuscript's erasing homomorphism maps L_x exactly onto Double-Delta. -/
 theorem centerMarkerProduct_erase_image_eq_doubleDelta :
@@ -99,16 +99,16 @@ theorem centerMarkerProduct_erase_image_eq_doubleDelta :
   constructor
   · rintro ⟨x, ⟨n, m, rfl⟩, rfl⟩
     exact ⟨n, m, by
-      simp [centerMarkerErase, DeltaStar.balancedBlock,
-        List.append_assoc]⟩
+      simp [centerMarkerErase, centerMarkerEraseLetter,
+        DeltaStar.balancedBlock, List.append_assoc]⟩
   · rintro ⟨n, m, rfl⟩
     refine
       ⟨lpmCore n LpmSymbol.c ++ [LpmSymbol.d] ++
           lpmCore m LpmSymbol.c,
         ⟨n, m, rfl⟩,
         ?_⟩
-    simp [centerMarkerErase, DeltaStar.balancedBlock,
-      List.append_assoc]
+    simp [centerMarkerErase, centerMarkerEraseLetter,
+      DeltaStar.balancedBlock, List.append_assoc]
 
 /-- Symmetric long witness used in the direct pumping contradiction. -/
 def centerMarkerProductWitness
@@ -231,19 +231,19 @@ theorem centerMarkerProduct_pumpDown_shape
     simpa [List.length_append, Nat.add_comm] using h
 
   have hu_all :
-      forall t ∈ u, t = LpmSymbol.a := by
+      ∀ t ∈ u, t = LpmSymbol.a := by
     intro t ht
     exact
       List.eq_of_mem_replicate
         (huv ▸ List.mem_append_left v ht)
   have hv_all :
-      forall t ∈ v, t = LpmSymbol.a := by
+      ∀ t ∈ v, t = LpmSymbol.a := by
     intro t ht
     exact
       List.eq_of_mem_replicate
         (huv ▸ List.mem_append_right u ht)
   have hy_all :
-      forall t ∈ y, t = LpmSymbol.b := by
+      ∀ t ∈ y, t = LpmSymbol.b := by
     intro t ht
     have htRev :
         t ∈ (y ++ z).reverse :=
@@ -253,7 +253,7 @@ theorem centerMarkerProduct_pumpDown_shape
       List.eq_of_mem_replicate
         (hyzRev ▸ htRev)
   have hz_all :
-      forall t ∈ z, t = LpmSymbol.b := by
+      ∀ t ∈ z, t = LpmSymbol.b := by
     intro t ht
     have htRev :
         t ∈ (y ++ z).reverse :=
