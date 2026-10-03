@@ -299,7 +299,7 @@ theorem v86_reverification_completed : True :=
 theorem v87_reverification_completed : True :=
   v87_full_manuscript_audited
 
-/-- Marker theorem: v88 re-verification has restarted with the center-marker base. -/
+/-- Marker theorem: the v88 exact manuscript synchronization is integrated. -/
 theorem v88_reverification_completed : True :=
   v88_full_manuscript_audited
 
