@@ -232,8 +232,9 @@ import LeanCfgProject.TCS1.V79FrontBackAppendixAudit
 import LeanCfgProject.TCS1.V79FullManuscriptAudit
 import LeanCfgProject.TCS1.V83FullManuscriptAudit
 import LeanCfgProject.TCS1.V86FullManuscriptAudit
+import LeanCfgProject.TCS1.V87FullManuscriptAudit
 /-!
-# TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v86 synchronization
+# TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v87 synchronization
 
 The archival v79 theorem-facing surface remains imported unchanged.  The
 current v83 re-verification adds the revised typed-thickness, fixed-window,
@@ -241,10 +242,11 @@ level-coded Appendix, and ordinary-thickness lower-bound development,
 including exact finite indexed grammars, reducedness, thickness, and linear
 presentation-size certificates.
 
-`V83FullManuscriptAudit` remains the completed proof-layer audit, while
-`V86FullManuscriptAudit` re-anchors that theorem surface to the current v86
-manuscript after auditing the intervening source delta. Building these targets
-through `TCS1.All` is the integration check;
+`V83FullManuscriptAudit` remains the completed proof-layer audit.  The v86
+module re-anchored that theorem surface after the larger revision delta, and
+`V87FullManuscriptAudit` now re-anchors it to the exact v87 manuscript after
+proof-exposition-only edits. Building these targets through `TCS1.All` is the
+integration check;
 CI separately rejects placeholder proofs and project-level axiom declarations
 inside the TCS1 source tree.
 -/
@@ -283,6 +285,10 @@ theorem v83_reverification_completed : True :=
 /-- Marker theorem: the v86 manuscript synchronization audit is integrated. -/
 theorem v86_reverification_completed : True :=
   v86_full_manuscript_audited
+
+/-- Marker theorem: the v87 exact manuscript synchronization audit is integrated. -/
+theorem v87_reverification_completed : True :=
+  v87_full_manuscript_audited
 
 end TCS1
 end LeanCfgProject
