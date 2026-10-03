@@ -24,7 +24,7 @@ jobs:
           test: false
           lint: false
 
-      - name: Build v83 level-coded critical path
+      - name: Build theorem-facing critical path
         run: |
           lake build \
             LeanCfgProject.TCS1.V83LevelCodedDifferenceCore \
@@ -37,7 +37,8 @@ jobs:
             LeanCfgProject.TCS1.V83LevelCodedIndexedThickness \
             LeanCfgProject.TCS1.V83LevelCodedIndexedReducedness \
             LeanCfgProject.TCS1.V83LevelCodedIndexedSize \
-            LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage
+            LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage \
+            LeanCfgProject.TCS1.V86FullManuscriptAudit
 
       - name: Build TCS1 facade
         run: lake build LeanCfgProject.TCS1.All
