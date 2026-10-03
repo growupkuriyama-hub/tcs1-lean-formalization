@@ -9,20 +9,22 @@ Standalone Lean formalization accompanying:
 - internal manuscript version: **v87**
 - paper repository: `growupkuriyama-hub/Papers`
 - source: `01_fixed-h-cfg/main.tex`
-- repository state audited: `1b26c2fbaaadc0c3268ee84533eef1da3013e0b1`
-- last commit changing `main.tex`: `9377366545e48a405a6f59ea5cda3b02096166ac`
-- manuscript SHA-256: `efa8d3eb321e82d7d5c72d4f4fd8d6c7077b4051ac456309349118472ddeeb96`
+- repository state audited: `5369c43feecfbfb23e4076356e7a0e264306b928`
+- last commit changing `main.tex`: `43b1dd71ff57000dacbf303ca1a3c48d541fd5b4`
+- manuscript SHA-256: `991d0ea355a130abe60d2b2204a287d5e6b6b7522f5f2dce87ca6fa3a6ba358f`
 - v87 synchronization branch: `tcs1-v87-reverification`
 - v83 remains the completed formal mathematical proof layer; v87 is the current exact manuscript synchronization target.
 
-The earlier v79 artifact is preserved as an immutable archival release on
-Zenodo:
+The current v87 theorem-facing verification is archived on Zenodo as
+`tcs1-v87-formalization-2.0.0`:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22939434.svg)](https://doi.org/10.5281/zenodo.22939434)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23114558.svg)](https://doi.org/10.5281/zenodo.23114558)
 
-DOI: `10.5281/zenodo.22939434`
+DOI: `10.5281/zenodo.23114558`
 
-The v83 work does **not** rewrite or move that historical release.
+The earlier v79 artifact remains preserved as the immutable historical release
+`tcs1-v79-formalization-1.0.0` (DOI:
+`10.5281/zenodo.22939434`).
 
 ## Build
 
@@ -41,7 +43,7 @@ and `lake-manifest.json`.
 
 ## v87 verification status
 
-The completed v83 proof layer closes the theorem-facing mathematics. The v86 synchronization re-anchored that proof layer after the larger revision delta. The v87 source changes only proof exposition: a direct comparison found 34 theorem/proposition/lemma/corollary environments in both v86 and v87 and no changes to any of those environment contents. The v87 audit rechecks the formal theorems corresponding to the edited proof regions, including:
+The completed v83 proof layer closes the theorem-facing mathematics. The v86 synchronization re-anchored that proof layer after the larger revision delta. The v87 mathematical revision changes only proof exposition, and the later Data availability update changes no theorem-facing mathematics: a direct comparison still finds the same 34 theorem/proposition/lemma/corollary environments with no changes to their contents. The v87 audit rechecks the formal theorems corresponding to the edited proof regions, including:
 
 - explicit ordinary-thickness witnesses and reducedness for the indexed `R_n` and `R_n^-` grammars;
 - literal clean-node-body occurrence recognition;
