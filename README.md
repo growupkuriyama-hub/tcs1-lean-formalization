@@ -1,4 +1,4 @@
-# TCS #1 Lean formalization (v87 manuscript synchronization)
+# TCS #1 Lean formalization (v88 manuscript synchronization)
 
 Standalone Lean formalization accompanying:
 
@@ -6,16 +6,16 @@ Standalone Lean formalization accompanying:
 
 ## Current manuscript baseline
 
-- internal manuscript version: **v87**
+- internal manuscript version: **v88**
 - paper repository: `growupkuriyama-hub/Papers`
 - source: `01_fixed-h-cfg/main.tex`
-- repository state audited: `910e2ae3065a30f602bd5f9584d4019962f51bf7`
-- last commit changing `main.tex`: `79bc92aee2f2167285442617cbd8ad450fe64e91`
-- manuscript SHA-256: `76f94836cdb9b9684911970c7e8511dbb5688a730aa8b410fd31d9661949374c`
-- v87 synchronization branch: `tcs1-v87-reverification`
-- v83 remains the completed formal mathematical proof layer; v87 is the current exact manuscript synchronization target.
+- repository state audited: `9440e3753cbeefc88b88c92c2b16d494eb875568`
+- last commit changing `main.tex`: `00b7d6cb5bf72208ed78b05c21fb2ba8ab88a659`
+- manuscript SHA-256: `ebe9db2b8677fb48112174e6f44bd8c554cee00ac45a18b500c3d051fc207d16`
+- v88 synchronization branch: `tcs1-v88-reverification`
+- v83 remains the completed core proof layer; v88 is the current exact manuscript synchronization target.
 
-The current v87 theorem-facing verification is archived on Zenodo as
+The preceding v87 theorem-facing verification is archived on Zenodo as
 `tcs1-v87-formalization-2.0.0`:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23114558.svg)](https://doi.org/10.5281/zenodo.23114558)
@@ -41,30 +41,46 @@ lake build
 The Lean toolchain and Mathlib dependency are pinned by `lean-toolchain`
 and `lake-manifest.json`.
 
-## v87 verification status
+## v88 verification status
 
-The completed v83 proof layer closes the theorem-facing mathematics. The v86 synchronization re-anchored that proof layer after the larger revision delta. The v87 mathematical revision changes only proof exposition; subsequent Data availability wording and response-letter polishing change no theorem-facing mathematics. The manuscript still has the same 34 theorem/proposition/lemma/corollary environments with no changes to their contents. The v87 audit rechecks the formal theorems corresponding to the edited proof regions, including:
+The v88 numbered theorem/proposition/lemma/corollary surface is unchanged from
+v87 (34 environments in each source, with identical contents).  The new
+theorem-facing work is the corrected unnumbered Section 10.1 center-marker
+comparison.  The v88 layer now verifies:
 
-- explicit ordinary-thickness witnesses and reducedness for the indexed `R_n` and `R_n^-` grammars;
-- literal clean-node-body occurrence recognition;
-- replay admissibility of shortcut/clean body toggles;
-- the residual-height difference-core theorem;
-- the complete level-coded Appendix argument, culminating in the unconditional theorem `levelTree_clarkEyraud`; and
-- the aggregate indexed ordinary-thickness lower-bound package, including the exponential characteristic-sample norm lower bound `5 * 2^n - 1`.
+- ordinary substitutability of the endpoint-complete language
+  `P = {a^n c b^n : n >= 0}` and its `(0,0)` fixed-window membership;
+- prefix- and suffix-freeness of `P`;
+- ordinary substitutability and `(0,0)` membership of
+  `L_x = P d P`, including the endpoint cases;
+- exact semantics of the displayed grammar `S -> X d X`,
+  `X -> a X b | c`;
+- the erasing-homomorphism image of `L_x` onto Double-Delta; and
+- an unconditional internal proof that `L_x` is not raw-linearly
+  representable, using the verified bounded pumping theorem.
 
-The final aggregate theorem for the ordinary-thickness construction is:
+The later v88 parity-typing footnote is also anchored to the existing
+yield-typed lifting and yield-invariant theorems.
 
-`levelCode_indexed_ordinaryThickness_lowerBound_package`
+The exact-version checkpoint is:
+
+`v88_full_manuscript_audited`
 
 ## Main files
 
 - `LeanCfgProject/TCS1/All.lean` — integrated formalization facade
 - `LeanCfgProject/TCS1/V83FullManuscriptAudit.lean` — completed v83 proof-layer audit
 - `LeanCfgProject/TCS1/V86FullManuscriptAudit.lean` — completed v86 manuscript-version synchronization audit
-- `LeanCfgProject/TCS1/V87FullManuscriptAudit.lean` — current v87 exact-version synchronization audit
+- `LeanCfgProject/TCS1/V87FullManuscriptAudit.lean` — completed v87 exact-version synchronization audit
+- `LeanCfgProject/TCS1/V88CenterMarkerBase.lean` — endpoint-complete base language
+- `LeanCfgProject/TCS1/V88CenterMarkerProduct.lean` — marked-product substitutability
+- `LeanCfgProject/TCS1/V88CenterMarkerGrammar.lean` — exact displayed CFG semantics
+- `LeanCfgProject/TCS1/V88CenterMarkerNonlinear.lean` — erasing image and internal nonlinearity proof
+- `LeanCfgProject/TCS1/V88FullManuscriptAudit.lean` — current v88 exact-version synchronization audit
 - `FORMALIZATION_TCS1_V83.md` — v83 coverage report
 - `FORMALIZATION_TCS1_V86.md` — v86 source-delta and synchronization report
 - `FORMALIZATION_TCS1_V87.md` — v87 exact-source synchronization report
+- `FORMALIZATION_TCS1_V88.md` — v88 exact-source synchronization report
 - `FORMALIZATION_TCS1_V79.md` — archived-baseline coverage report
 - `FORMALIZATION_TCS1_V79_BOUNDARY_AUDIT.md` — explicit historical scope boundary
 
@@ -73,7 +89,7 @@ The final aggregate theorem for the ordinary-thickness construction is:
 The TCS1 CI checks:
 
 1. the level-coded critical path inherited from the completed v83 development;
-2. `LeanCfgProject.TCS1.V86FullManuscriptAudit` and `LeanCfgProject.TCS1.V87FullManuscriptAudit`;
+2. `LeanCfgProject.TCS1.V86FullManuscriptAudit`, `LeanCfgProject.TCS1.V87FullManuscriptAudit`, and `LeanCfgProject.TCS1.V88FullManuscriptAudit`;
 3. the full `LeanCfgProject.TCS1.All` facade;
 4. that the TCS1 source contains no `sorry`; and
 5. that it contains no project-level axioms.

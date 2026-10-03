@@ -233,8 +233,13 @@ import LeanCfgProject.TCS1.V79FullManuscriptAudit
 import LeanCfgProject.TCS1.V83FullManuscriptAudit
 import LeanCfgProject.TCS1.V86FullManuscriptAudit
 import LeanCfgProject.TCS1.V87FullManuscriptAudit
+import LeanCfgProject.TCS1.V88CenterMarkerBase
+import LeanCfgProject.TCS1.V88CenterMarkerProduct
+import LeanCfgProject.TCS1.V88CenterMarkerGrammar
+import LeanCfgProject.TCS1.V88CenterMarkerNonlinear
+import LeanCfgProject.TCS1.V88FullManuscriptAudit
 /-!
-# TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v87 synchronization
+# TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
 The archival v79 theorem-facing surface remains imported unchanged.  The
 current v83 re-verification adds the revised typed-thickness, fixed-window,
@@ -244,10 +249,14 @@ presentation-size certificates.
 
 `V83FullManuscriptAudit` remains the completed proof-layer audit.  The v86
 module re-anchored that theorem surface after the larger revision delta, and
-`V87FullManuscriptAudit` now re-anchors it to the exact v87 manuscript after
-proof-exposition-only edits. Building these targets through `TCS1.All` is the
-integration check;
-CI separately rejects placeholder proofs and project-level axiom declarations
+`V87FullManuscriptAudit` re-anchors it to the exact v87 manuscript after
+proof-exposition-only edits.  The v88 synchronization closes the corrected
+endpoint-complete center-marker comparison in Section 10.1: the base language
+P = {a^n c b^n : n >= 0}, the marked product L_x = P d P, its displayed CFG,
+the erasing image onto Double-Delta, and an internal nonlinearity proof are all
+machine-checked.  `V88FullManuscriptAudit` is the exact-version checkpoint.
+Building these targets through `TCS1.All` is the integration check; CI
+separately rejects placeholder proofs and project-level axiom declarations
 inside the TCS1 source tree.
 -/
 
@@ -289,6 +298,10 @@ theorem v86_reverification_completed : True :=
 /-- Marker theorem: the v87 exact manuscript synchronization audit is integrated. -/
 theorem v87_reverification_completed : True :=
   v87_full_manuscript_audited
+
+/-- Marker theorem: the v88 exact manuscript synchronization is integrated. -/
+theorem v88_reverification_completed : True :=
+  v88_full_manuscript_audited
 
 end TCS1
 end LeanCfgProject

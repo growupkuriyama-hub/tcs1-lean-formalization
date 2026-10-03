@@ -1,0 +1,31 @@
+name: TCS1 v88 fast check
+
+on:
+  push:
+    branches:
+      - tcs1-v88-reverification
+  workflow_dispatch:
+
+jobs:
+  v88:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+
+      - name: Build v88 delta
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V88CenterMarkerBase \
+            LeanCfgProject.TCS1.V88CenterMarkerProduct \
+            LeanCfgProject.TCS1.V88CenterMarkerGrammar \
+            LeanCfgProject.TCS1.V88CenterMarkerNonlinear \
+            LeanCfgProject.TCS1.V88FullManuscriptAudit

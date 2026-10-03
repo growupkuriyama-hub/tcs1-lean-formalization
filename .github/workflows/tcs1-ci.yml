@@ -39,7 +39,8 @@ jobs:
             LeanCfgProject.TCS1.V83LevelCodedIndexedSize \
             LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage \
             LeanCfgProject.TCS1.V86FullManuscriptAudit \
-            LeanCfgProject.TCS1.V87FullManuscriptAudit
+            LeanCfgProject.TCS1.V87FullManuscriptAudit \
+            LeanCfgProject.TCS1.V88FullManuscriptAudit
 
       - name: Build TCS1 facade
         run: lake build LeanCfgProject.TCS1.All
