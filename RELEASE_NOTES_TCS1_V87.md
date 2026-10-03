@@ -60,4 +60,4 @@ has been formalized.
 lake build LeanCfgProject.TCS1.All
 ```
 
-Release tag: `tcs1-v87-formalization-2.0.0`.
+Release tag: `tcs1-v87-formalization-2.0.0`.  Zenodo DOI: `10.5281/zenodo.23114558`.
