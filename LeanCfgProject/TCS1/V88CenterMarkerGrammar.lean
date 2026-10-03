@@ -19,6 +19,12 @@ namespace TCS1
 
 open LpmSymbol
 
+private theorem replicate_succ_last
+    (s : LpmSymbol) (n : Nat) :
+    List.replicate n s ++ [s] =
+      List.replicate (n + 1) s := by
+  simpa using (List.replicate_add n 1 s).symm
+
 inductive CenterMarkerProductNT where
   | s | x | r | y | ta | tb | td
   deriving DecidableEq, Fintype, Repr
@@ -72,7 +78,15 @@ theorem centerMarkerProduct_binaryDerives_shape
   induction deriv with
   | terminal h =>
       change CenterMarkerProductTerminalRule _ _ at h
-      cases h <;> simp [CenterMarkerProductBinaryShape, lpmCore]
+      cases h with
+      | xCenter =>
+          exact ⟨0, by simp [lpmCore]⟩
+      | aWrap =>
+          rfl
+      | bWrap =>
+          rfl
+      | dWrap =>
+          rfl
   | epsilon h =>
       exact False.elim h
   | unit h child ih =>
@@ -87,7 +101,7 @@ theorem centerMarkerProduct_binaryDerives_shape
           subst wB
           refine ⟨n + 1, ?_⟩
           simp [lpmCore, List.replicate_succ,
-            replicate_succ_right, List.append_assoc]
+            replicate_succ_last, List.append_assoc]
       | rRule =>
           change ∃ n : Nat, wB = lpmCore n c at ihB
           change wC = [b] at ihC
@@ -138,7 +152,7 @@ theorem centerMarkerProduct_x_derives
         BinaryNullableDerives.binary
           CenterMarkerProductBinaryRule.xRule da dr
       simpa [lpmCore, List.replicate_succ,
-        replicate_succ_right, List.append_assoc] using dx
+        replicate_succ_last, List.append_assoc] using dx
 
 /-- The auxiliary Y derives d followed by an arbitrary P-word. -/
 theorem centerMarkerProduct_y_derives
