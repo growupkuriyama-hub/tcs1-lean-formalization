@@ -406,22 +406,22 @@ theorem centerMarker_clarkEyraud :
   by_cases hcx : c ∈ x
   · have hcy : c ∈ y := by
       have hxpos : 0 < x.count c :=
-        List.count_pos.mpr hcx
+        List.count_pos_iff.mpr hcx
       have hypos : 0 < y.count c := by
         rw [← hcount]
         exact hxpos
-      exact List.count_pos.mp hypos
+      exact List.count_pos_iff.mp hypos
     exact
       centerMarker_center_factors_distribution_eq
         hcx hcy hshared
   · have hcy : c ∉ y := by
       intro hcy
       have hypos : 0 < y.count c :=
-        List.count_pos.mpr hcy
+        List.count_pos_iff.mpr hcy
       have hxpos : 0 < x.count c := by
         rw [hcount]
         exact hypos
-      exact hcx (List.count_pos.mp hxpos)
+      exact hcx (List.count_pos_iff.mp hxpos)
     have hxy :=
       centerMarker_boundary_factors_eq
         hxne hyne hcx hcy hshared
