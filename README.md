@@ -9,9 +9,9 @@ Standalone Lean formalization accompanying:
 - internal manuscript version: **v87**
 - paper repository: `growupkuriyama-hub/Papers`
 - source: `01_fixed-h-cfg/main.tex`
-- repository state audited: `5369c43feecfbfb23e4076356e7a0e264306b928`
-- last commit changing `main.tex`: `43b1dd71ff57000dacbf303ca1a3c48d541fd5b4`
-- manuscript SHA-256: `991d0ea355a130abe60d2b2204a287d5e6b6b7522f5f2dce87ca6fa3a6ba358f`
+- repository state audited: `910e2ae3065a30f602bd5f9584d4019962f51bf7`
+- last commit changing `main.tex`: `79bc92aee2f2167285442617cbd8ad450fe64e91`
+- manuscript SHA-256: `76f94836cdb9b9684911970c7e8511dbb5688a730aa8b410fd31d9661949374c`
 - v87 synchronization branch: `tcs1-v87-reverification`
 - v83 remains the completed formal mathematical proof layer; v87 is the current exact manuscript synchronization target.
 
@@ -43,7 +43,7 @@ and `lake-manifest.json`.
 
 ## v87 verification status
 
-The completed v83 proof layer closes the theorem-facing mathematics. The v86 synchronization re-anchored that proof layer after the larger revision delta. The v87 mathematical revision changes only proof exposition, and the later Data availability update changes no theorem-facing mathematics: a direct comparison still finds the same 34 theorem/proposition/lemma/corollary environments with no changes to their contents. The v87 audit rechecks the formal theorems corresponding to the edited proof regions, including:
+The completed v83 proof layer closes the theorem-facing mathematics. The v86 synchronization re-anchored that proof layer after the larger revision delta. The v87 mathematical revision changes only proof exposition; subsequent Data availability wording and response-letter polishing change no theorem-facing mathematics. The manuscript still has the same 34 theorem/proposition/lemma/corollary environments with no changes to their contents. The v87 audit rechecks the formal theorems corresponding to the edited proof regions, including:
 
 - explicit ordinary-thickness witnesses and reducedness for the indexed `R_n` and `R_n^-` grammars;
 - literal clean-node-body occurrence recognition;
