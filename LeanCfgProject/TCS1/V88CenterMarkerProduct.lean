@@ -170,16 +170,20 @@ theorem centerMarker_prefix_free
   have hp0 := centerMarkerBalance_mem_zero hp
   have hq0 := centerMarkerBalance_mem_zero hq
   rcases hp with ⟨n, hpShape⟩
+  have hpRest :
+      p ++ rest ∈ CenterMarkerLanguage := by
+    rw [hqeq]
+    exact hq
   have hctx :
       ([] : Word LpmSymbol) ++ lpmOneCenter n c n ++ rest ∈
         CenterMarkerLanguage := by
-    rw [← hpShape]
-    simpa [List.append_assoc] using hq
+    rw [lpmOneCenter_balanced, ← hpShape]
+    simpa using hpRest
   obtain ⟨_m, k, _hempty, hrest⟩ :=
     centerMarker_context_shape hctx
   have hrestBal :
       lpmBalance rest = 0 := by
-    rw [hqeq] at hq0
+    rw [← hqeq] at hq0
     simpa [lpmBalance_append, hp0] using hq0
   rw [hrest] at hrestBal
   simp at hrestBal
@@ -187,7 +191,7 @@ theorem centerMarker_prefix_free
   subst k
   simp at hrest
   subst rest
-  simpa using hqeq.symm
+  simpa using hqeq
 
 /-- P is suffix-free. -/
 theorem centerMarker_suffix_free
@@ -200,16 +204,20 @@ theorem centerMarker_suffix_free
   have hp0 := centerMarkerBalance_mem_zero hp
   have hq0 := centerMarkerBalance_mem_zero hq
   rcases hp with ⟨n, hpShape⟩
+  have hleftP :
+      left ++ p ∈ CenterMarkerLanguage := by
+    rw [hqeq]
+    exact hq
   have hctx :
       left ++ lpmOneCenter n c n ++ ([] : Word LpmSymbol) ∈
         CenterMarkerLanguage := by
-    rw [← hpShape]
-    simpa [List.append_assoc] using hq
+    rw [lpmOneCenter_balanced, ← hpShape]
+    simpa using hleftP
   obtain ⟨k, _m, hleft, _hempty⟩ :=
     centerMarker_context_shape hctx
   have hleftBal :
       lpmBalance left = 0 := by
-    rw [hqeq] at hq0
+    rw [← hqeq] at hq0
     simpa [lpmBalance_append, hp0] using hq0
   rw [hleft] at hleftBal
   simp at hleftBal
@@ -217,7 +225,7 @@ theorem centerMarker_suffix_free
   subst k
   simp at hleft
   subst left
-  simpa using hqeq.symm
+  simpa using hqeq
 
 /--
 Substitutability of P can also be used when the compared factors might be
@@ -488,7 +496,9 @@ theorem centerMarkerProduct_containing_d_distribution_eq
       have hpref :
           u <+: u ++ y1 := ⟨y1, rfl⟩
       have heq :=
-        centerMarker_prefix_free hxparts.1 hyparts.1 hpref
+        centerMarker_prefix_free
+          (by simpa using hxparts.1)
+          hyparts.1 hpref
       have : y1 = [] := by
         apply List.eq_nil_of_length_eq_zero
         have hlen := congrArg List.length heq
@@ -500,7 +510,9 @@ theorem centerMarkerProduct_containing_d_distribution_eq
       have hpref :
           u <+: u ++ x1 := ⟨x1, rfl⟩
       have heq :=
-        centerMarker_prefix_free hyparts.1 hxparts.1 hpref
+        centerMarker_prefix_free
+          (by simpa using hyparts.1)
+          hxparts.1 hpref
       have : x1 = [] := by
         apply List.eq_nil_of_length_eq_zero
         have hlen := congrArg List.length heq
@@ -515,7 +527,9 @@ theorem centerMarkerProduct_containing_d_distribution_eq
       have hsuf :
           v <:+ y2 ++ v := ⟨y2, rfl⟩
       have heq :=
-        centerMarker_suffix_free hxparts.2 hyparts.2 hsuf
+        centerMarker_suffix_free
+          (by simpa using hxparts.2)
+          hyparts.2 hsuf
       have : y2 = [] := by
         apply List.eq_nil_of_length_eq_zero
         have hlen := congrArg List.length heq
@@ -527,7 +541,9 @@ theorem centerMarkerProduct_containing_d_distribution_eq
       have hsuf :
           v <:+ x2 ++ v := ⟨x2, rfl⟩
       have heq :=
-        centerMarker_suffix_free hyparts.2 hxparts.2 hsuf
+        centerMarker_suffix_free
+          (by simpa using hyparts.2)
+          hxparts.2 hsuf
       have : x2 = [] := by
         apply List.eq_nil_of_length_eq_zero
         have hlen := congrArg List.length heq
