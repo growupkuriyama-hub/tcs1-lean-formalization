@@ -105,7 +105,7 @@ theorem unique_singleton_split
             intro hz
             exact hzl' (by simp [hz])
           obtain ⟨hl, hr⟩ :=
-            ih hzlTail hzr hzl'Tail hzr' htail
+            ih hzlTail hzl'Tail htail
           subst t'
           subst l'
           exact ⟨rfl, hr⟩
@@ -147,8 +147,7 @@ theorem centerMarkerProduct_outer_d_free
     d ∉ left ∧ d ∉ right := by
   have hcount := centerMarkerProduct_count_d_eq_one hw
   rw [hword] at hcount
-  simp only [List.count_append, List.count_cons, List.count_nil,
-    if_pos rfl, Nat.add_zero] at hcount
+  simp [List.count_append] at hcount
   constructor
   · intro hd
     have hpos : 0 < left.count d :=
@@ -499,12 +498,11 @@ theorem centerMarkerProduct_containing_d_distribution_eq
         centerMarker_prefix_free
           (by simpa using hxparts.1)
           hyparts.1 hpref
-      have : y1 = [] := by
-        apply List.eq_nil_of_length_eq_zero
-        have hlen := congrArg List.length heq
-        simp at hlen
-        omega
-      exact this
+      have hEq :
+          u ++ ([] : Word LpmSymbol) = u ++ y1 := by
+        simpa using heq
+      have hnil := List.append_cancel_left hEq
+      exact hnil.symm
     · intro hy1
       subst y1
       have hpref :
@@ -513,12 +511,11 @@ theorem centerMarkerProduct_containing_d_distribution_eq
         centerMarker_prefix_free
           (by simpa using hyparts.1)
           hxparts.1 hpref
-      have : x1 = [] := by
-        apply List.eq_nil_of_length_eq_zero
-        have hlen := congrArg List.length heq
-        simp at hlen
-        omega
-      exact this
+      have hEq :
+          u ++ ([] : Word LpmSymbol) = u ++ x1 := by
+        simpa using heq
+      have hnil := List.append_cancel_left hEq
+      exact hnil.symm
 
   have hrightEmpty : x2 = [] ↔ y2 = [] := by
     constructor
@@ -530,12 +527,11 @@ theorem centerMarkerProduct_containing_d_distribution_eq
         centerMarker_suffix_free
           (by simpa using hxparts.2)
           hyparts.2 hsuf
-      have : y2 = [] := by
-        apply List.eq_nil_of_length_eq_zero
-        have hlen := congrArg List.length heq
-        simp at hlen
-        omega
-      exact this
+      have hEq :
+          ([] : Word LpmSymbol) ++ v = y2 ++ v := by
+        simpa using heq
+      have hnil := List.append_cancel_right hEq
+      exact hnil.symm
     · intro hy2
       subst y2
       have hsuf :
@@ -544,12 +540,11 @@ theorem centerMarkerProduct_containing_d_distribution_eq
         centerMarker_suffix_free
           (by simpa using hyparts.2)
           hxparts.2 hsuf
-      have : x2 = [] := by
-        apply List.eq_nil_of_length_eq_zero
-        have hlen := congrArg List.length heq
-        simp at hlen
-        omega
-      exact this
+      have hEq :
+          ([] : Word LpmSymbol) ++ v = x2 ++ v := by
+        simpa using heq
+      have hnil := List.append_cancel_right hEq
+      exact hnil.symm
 
   have hdistLeft :
       Distribution CenterMarkerLanguage x1 =
