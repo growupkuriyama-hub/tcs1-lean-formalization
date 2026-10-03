@@ -236,6 +236,7 @@ import LeanCfgProject.TCS1.V87FullManuscriptAudit
 import LeanCfgProject.TCS1.V88CenterMarkerBase
 import LeanCfgProject.TCS1.V88CenterMarkerProduct
 import LeanCfgProject.TCS1.V88CenterMarkerGrammar
+import LeanCfgProject.TCS1.V88CenterMarkerNonlinear
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
