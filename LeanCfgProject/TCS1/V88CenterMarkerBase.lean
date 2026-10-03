@@ -1,5 +1,6 @@
 import LeanCfgProject.TCS1.LinearSeparatorBalance
 import LeanCfgProject.TCS1.ClarkEyraudSpecialCase
+import LeanCfgProject.TCS1.ZeroWindowEndpoint
 
 /-!
 # TCS #1 v88: endpoint-complete center-marker base
