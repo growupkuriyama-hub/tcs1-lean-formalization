@@ -383,9 +383,75 @@ theorem centerMarkerProduct_pumpDown_shape
         N - y.length := by
     rw [hkzEq]
     omega
-  simp only [List.append_assoc]
-  rw [← List.replicate_add, ha]
-  rw [← List.replicate_add, hb]
+  calc
+    List.replicate u.length LpmSymbol.a ++
+        (List.replicate (N - ku) LpmSymbol.a ++
+          [LpmSymbol.c] ++
+            List.replicate N LpmSymbol.b ++
+              [LpmSymbol.d] ++
+                List.replicate N LpmSymbol.a ++
+                  [LpmSymbol.c] ++
+                    List.replicate (N - kz) LpmSymbol.b) ++
+      List.replicate z.length LpmSymbol.b
+      =
+    (List.replicate u.length LpmSymbol.a ++
+        List.replicate (N - ku) LpmSymbol.a) ++
+      ([LpmSymbol.c] ++
+        List.replicate N LpmSymbol.b ++
+          [LpmSymbol.d] ++
+            List.replicate N LpmSymbol.a ++
+              [LpmSymbol.c] ++
+                List.replicate (N - kz) LpmSymbol.b) ++
+      List.replicate z.length LpmSymbol.b := by
+        simp only [List.append_assoc]
+    _ =
+    List.replicate (u.length + (N - ku)) LpmSymbol.a ++
+      ([LpmSymbol.c] ++
+        List.replicate N LpmSymbol.b ++
+          [LpmSymbol.d] ++
+            List.replicate N LpmSymbol.a ++
+              [LpmSymbol.c] ++
+                List.replicate (N - kz) LpmSymbol.b) ++
+      List.replicate z.length LpmSymbol.b := by
+        rw [List.replicate_add]
+    _ =
+    List.replicate (N - v.length) LpmSymbol.a ++
+      ([LpmSymbol.c] ++
+        List.replicate N LpmSymbol.b ++
+          [LpmSymbol.d] ++
+            List.replicate N LpmSymbol.a ++
+              [LpmSymbol.c] ++
+                List.replicate (N - kz) LpmSymbol.b) ++
+      List.replicate z.length LpmSymbol.b := by
+        rw [ha]
+    _ =
+    List.replicate (N - v.length) LpmSymbol.a ++
+      [LpmSymbol.c] ++
+        List.replicate N LpmSymbol.b ++
+          [LpmSymbol.d] ++
+            List.replicate N LpmSymbol.a ++
+              [LpmSymbol.c] ++
+                (List.replicate (N - kz) LpmSymbol.b ++
+                  List.replicate z.length LpmSymbol.b) := by
+        simp only [List.append_assoc]
+    _ =
+    List.replicate (N - v.length) LpmSymbol.a ++
+      [LpmSymbol.c] ++
+        List.replicate N LpmSymbol.b ++
+          [LpmSymbol.d] ++
+            List.replicate N LpmSymbol.a ++
+              [LpmSymbol.c] ++
+                List.replicate ((N - kz) + z.length) LpmSymbol.b := by
+        rw [List.replicate_add]
+    _ =
+    List.replicate (N - v.length) LpmSymbol.a ++
+      [LpmSymbol.c] ++
+        List.replicate N LpmSymbol.b ++
+          [LpmSymbol.d] ++
+            List.replicate N LpmSymbol.a ++
+              [LpmSymbol.c] ++
+                List.replicate (N - y.length) LpmSymbol.b := by
+        rw [hb]
 
 /--
 A word already displayed in the six-block center-marker shape belongs to L_x
