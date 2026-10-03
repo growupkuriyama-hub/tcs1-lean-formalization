@@ -10,7 +10,7 @@ Fixed Finite-Monoid Typing_.**
 
 - paper repository: `growupkuriyama-hub/Papers`
 - manuscript source: `01_fixed-h-cfg/main.tex`
-- repository state audited: `9440e3753cbeefc88b88c92c2b16d494eb875568`
+- repository state checked after synchronization: `11ca0908b6f4d52af7a4150295f37c333fdba9bc`
 - last commit changing `main.tex`:
   `00b7d6cb5bf72208ed78b05c21fb2ba8ab88a659`
 - internal manuscript version: **v88**
@@ -19,13 +19,23 @@ Fixed Finite-Monoid Typing_.**
 - prior exact-version Lean synchronization: internal **v87**
 - v87 archival tag: `tcs1-v87-formalization-2.0.0`
 - v87 Zenodo DOI: `10.5281/zenodo.23114558`
-- v88 verification branch: `tcs1-v88-reverification`
-- v88 verification PR: **#5**
+- v88 verification PR: **#5**, merged to `main` as
+  `bb0f8f5feacda2d616b6aebfca272a7a206e8351`
+- planned archival tag/release: `tcs1-v88-formalization-3.0.0`
 
 The v83 development remains the completed core proof layer.  The v86 and v87
 passes synchronized that layer to their exact manuscript sources.  The v88
 pass adds a new formal layer for the revised unnumbered center-marker
 comparison and rechecks the later yield-typing exposition edit.
+
+After the original v88 Lean audit, the paper repository advanced from
+`9440e3753cbeefc88b88c92c2b16d494eb875568` to
+`11ca0908b6f4d52af7a4150295f37c333fdba9bc`.  The intervening commits changed
+only `01_fixed-h-cfg/PAPER.yaml`, `01_fixed-h-cfg/README.md`, and the Japanese
+reference translation.  The English source of truth `01_fixed-h-cfg/main.tex`
+remained unchanged, with the same recorded SHA-256 above.  Therefore no new
+Lean theorem/proof synchronization was required for those later repository
+updates.
 
 ## 2. v87 -> v88 theorem-surface audit
 
@@ -172,7 +182,7 @@ This remains a **theorem-facing** verification.  It does not claim that every
 sentence, citation, bibliographic assertion, or formatting choice in the
 article is formalized.
 
-Once the v88 branch has green full CI, the supported wording is:
+With the v88 verification merged to `main` and full CI green, the supported wording is:
 
 > The theorem-facing mathematical content of the internal v88 revision has
 > been machine-checked in Lean 4.
