@@ -27,4 +27,5 @@ jobs:
             LeanCfgProject.TCS1.V88CenterMarkerBase \
             LeanCfgProject.TCS1.V88CenterMarkerProduct \
             LeanCfgProject.TCS1.V88CenterMarkerGrammar \
-            LeanCfgProject.TCS1.V88CenterMarkerNonlinear
+            LeanCfgProject.TCS1.V88CenterMarkerNonlinear \
+            LeanCfgProject.TCS1.V88FullManuscriptAudit
