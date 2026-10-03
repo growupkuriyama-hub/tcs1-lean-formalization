@@ -23,8 +23,8 @@ fixed-window bounds, the unconditional level-coded substitutability theorem,
 and the indexed ordinary-thickness lower-bound package.
 
 Building this module through `LeanCfgProject.TCS1.All`, together with the CI
-no-`sorry` and no-project-`axiom` gates, is the repository checkpoint for
-v86 theorem-facing synchronization.
+placeholder-proof and no-project-`axiom` gates, is the repository checkpoint
+for v86 theorem-facing synchronization.
 -/
 
 namespace LeanCfgProject
