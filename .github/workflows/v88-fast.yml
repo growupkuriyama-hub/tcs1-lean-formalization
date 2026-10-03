@@ -26,4 +26,5 @@ jobs:
           lake build \
             LeanCfgProject.TCS1.V88CenterMarkerBase \
             LeanCfgProject.TCS1.V88CenterMarkerProduct \
-            LeanCfgProject.TCS1.V88CenterMarkerGrammar
+            LeanCfgProject.TCS1.V88CenterMarkerGrammar \
+            LeanCfgProject.TCS1.V88CenterMarkerNonlinear
