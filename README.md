@@ -4,27 +4,28 @@ Standalone Lean formalization accompanying:
 
 **Takayuki Kuriyama, _Distributional Learning of Context-Free Languages under Fixed Finite-Monoid Typing_.**
 
-## Current manuscript baseline
+## Archived theorem-facing baseline
 
-- internal manuscript version: **v88**
+- exact manuscript synchronization target: **v88**
+- current paper working version: **v98** (later presentation, notation, and source-audit revisions; not claimed to be exactly synchronized here)
 - paper repository: `growupkuriyama-hub/Papers`
-- source: `01_fixed-h-cfg/main.tex`
-- repository state checked after synchronization: `11ca0908b6f4d52af7a4150295f37c333fdba9bc`
-- last commit changing `main.tex`: `00b7d6cb5bf72208ed78b05c21fb2ba8ab88a659`
-- manuscript SHA-256: `ebe9db2b8677fb48112174e6f44bd8c554cee00ac45a18b500c3d051fc207d16`
+- v88 source: `01_fixed-h-cfg/main.tex` at the archived synchronization state
+- repository state checked after v88 synchronization: `11ca0908b6f4d52af7a4150295f37c333fdba9bc`
+- last v88 commit changing `main.tex`: `00b7d6cb5bf72208ed78b05c21fb2ba8ab88a659`
+- v88 manuscript SHA-256: `ebe9db2b8677fb48112174e6f44bd8c554cee00ac45a18b500c3d051fc207d16`
 - v88 verification PR: `#5`, merged to `main` as `bb0f8f5feacda2d616b6aebfca272a7a206e8351`
-- planned archival tag/release: `tcs1-v88-formalization-3.0.0`
-- the paper-repository commits after the original v88 audit changed only `PAPER.yaml`, the paper README, and the Japanese reference translation; the English source `main.tex` did not change.
-- v83 remains the completed core proof layer; v88 is the current exact manuscript synchronization target.
+- archival tag/release: `tcs1-v88-formalization-3.0.0`
+- v83 remains the completed core proof layer; v88 remains the archived theorem-facing verification baseline.
 
-The preceding v87 theorem-facing verification is archived on Zenodo as
-`tcs1-v87-formalization-2.0.0`.  The v88 release candidate is prepared as
-`tcs1-v88-formalization-3.0.0`; its Zenodo DOI will be recorded after the
-new Zenodo version is minted:
+The v88 theorem-facing archive is published on Zenodo as
+`tcs1-v88-formalization-3.0.0`:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23114558.svg)](https://doi.org/10.5281/zenodo.23114558)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23120560.svg)](https://doi.org/10.5281/zenodo.23120560)
 
-DOI: `10.5281/zenodo.23114558`
+DOI: `10.5281/zenodo.23120560`
+
+The preceding v87 archive remains available as
+`tcs1-v87-formalization-2.0.0` (DOI: `10.5281/zenodo.23114558`).
 
 The earlier v79 artifact remains preserved as the immutable historical release
 `tcs1-v79-formalization-1.0.0` (DOI:
