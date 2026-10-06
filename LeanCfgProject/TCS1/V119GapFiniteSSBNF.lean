@@ -64,9 +64,9 @@ def v119GapBinary (n : Nat) :
 theorem v119GapEDerives_to_source
     {i : Nat} {w : Word V117GapLetter}
     (d : V117GapEDerives i w) :
-    ∀ (n : Nat), i ≤ n →
+    ∀ (n : Nat) (hi : i ≤ n),
       UntypedDerives (v119GapTerminal n) (v119GapBinary n)
-        (.e (⟨i, by omega⟩ : Fin (n + 1))) w := by
+        (.e (⟨i, Nat.lt_succ_of_le hi⟩ : Fin (n + 1))) w := by
   induction d with
   | base =>
       intro n hi
