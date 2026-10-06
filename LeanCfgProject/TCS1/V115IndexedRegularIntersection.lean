@@ -111,6 +111,132 @@ theorem v115_indexedRegularIntersection_nonempty
       v115_ssbnf_regular_filter_fixedH
         H G Acc t b s eps hsubNorm
 
+
+/-- Degenerate terminal relation used for the empty/epsilon-only branch. -/
+def v115TrivialTerminal {α : Type u} :
+    Unit → α → Prop :=
+  fun _ _ => False
+
+/-- Degenerate binary relation used for the empty/epsilon-only branch. -/
+def v115TrivialBinary :
+    Unit → Unit → Unit → Prop :=
+  fun _ _ _ => False
+
+/-- No nonempty start branch in the degenerate grammar. -/
+def v115TrivialStart :
+    Unit → Prop :=
+  fun _ => False
+
+/-- The degenerate grammar generates exactly epsilon when eps holds. -/
+theorem v115TrivialStartLanguage_iff
+    {α : Type u}
+    (eps : Prop)
+    (word : Word α) :
+    word ∈
+      UntypedStartLanguage
+        (v115TrivialTerminal (α := α))
+        v115TrivialBinary
+        v115TrivialStart
+        eps
+      ↔
+    word = [] ∧ eps := by
+  constructor
+  · intro d
+    cases d with
+    | nonempty hstart _ =>
+        exact False.elim hstart
+    | epsilon heps =>
+        exact ⟨rfl, heps⟩
+  · rintro ⟨rfl, heps⟩
+    exact UntypedStartDerives.epsilon heps
+
+/--
+The complementary source-CFG branch: if the source language contains no
+nonempty word, the regular intersection is represented by the trivial
+epsilon-only grammar above.  This covers both the empty language and {epsilon}.
+-/
+theorem v115_indexedRegularIntersection_no_nonempty
+    (R : IndexedMixedCFG N α P)
+    (sourceStart : N)
+    (H : FixedFiniteMonoidHom α M)
+    (G : FixedFiniteMonoidHom α F)
+    (Acc : Set F)
+    (hno :
+      ∀ w : Word α,
+        w ∈ LeastClosedLanguage R.toMixedRules sourceStart →
+        w = [])
+    (hsub :
+      FixedHSubstitutable
+        H (LeastClosedLanguage R.toMixedRules sourceStart)) :
+    let eps :=
+      ([] : Word α) ∈
+        LeastClosedLanguage R.toMixedRules sourceStart
+        ∧ (1 : F) ∈ Acc
+    let filtered :=
+      UntypedStartLanguage
+        (v115TrivialTerminal (α := α))
+        v115TrivialBinary
+        v115TrivialStart
+        eps
+    filtered =
+      LeastClosedLanguage R.toMixedRules sourceStart
+        ∩ RecognizedPreimage G Acc
+    ∧
+    FixedHSubstitutable
+      (productFixedFiniteMonoidHom H G) filtered := by
+  let eps :=
+    ([] : Word α) ∈
+      LeastClosedLanguage R.toMixedRules sourceStart
+      ∧ (1 : F) ∈ Acc
+  let filtered :=
+    UntypedStartLanguage
+      (v115TrivialTerminal (α := α))
+      v115TrivialBinary
+      v115TrivialStart
+      eps
+  change
+    filtered =
+      LeastClosedLanguage R.toMixedRules sourceStart
+        ∩ RecognizedPreimage G Acc
+    ∧
+    FixedHSubstitutable
+      (productFixedFiniteMonoidHom H G) filtered
+  have heq :
+      filtered =
+        LeastClosedLanguage R.toMixedRules sourceStart
+          ∩ RecognizedPreimage G Acc := by
+    apply Set.ext
+    intro word
+    constructor
+    · intro hw
+      have hshape :=
+        (v115TrivialStartLanguage_iff
+          (α := α) eps word).mp hw
+      rcases hshape with ⟨rfl, heps⟩
+      constructor
+      · exact heps.1
+      · change G.h ([] : Word α) ∈ Acc
+        simpa only [G.map_nil] using heps.2
+    · rintro ⟨hsrc, hreg⟩
+      have hnil : word = [] :=
+        hno word hsrc
+      subst word
+      apply
+        (v115TrivialStartLanguage_iff
+          (α := α) eps []).mpr
+      constructor
+      · rfl
+      · constructor
+        · exact hsrc
+        · change G.h ([] : Word α) ∈ Acc at hreg
+          simpa only [G.map_nil] using hreg
+  constructor
+  · exact heq
+  · rw [heq]
+    exact
+      fixedHSubstitutable_inter_recognized_product
+        H G Acc hsub
+
 end V115IndexedRegularIntersection
 
 end TCS1
