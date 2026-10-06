@@ -41,4 +41,5 @@ jobs:
             LeanCfgProject.TCS1.V115SSBNFRegularIntersection \
             LeanCfgProject.TCS1.V115IndexedRegularIntersection \
             LeanCfgProject.TCS1.V115CFGHomomorphicImage \
+            LeanCfgProject.TCS1.V115MixedDerivationLeastClosed \
             LeanCfgProject.TCS1.V115TheoremSurfaceAudit
