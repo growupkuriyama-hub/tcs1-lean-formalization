@@ -32,4 +32,5 @@ jobs:
             LeanCfgProject.TCS1.V115PositiveIdempotentIdeal \
             LeanCfgProject.TCS1.V115FinitePositivePowers \
             LeanCfgProject.TCS1.V115PositiveImageCardinal \
-            LeanCfgProject.TCS1.V115LocalConsequences
+            LeanCfgProject.TCS1.V115LocalConsequences \
+            LeanCfgProject.TCS1.V115LocalThicknessBound
