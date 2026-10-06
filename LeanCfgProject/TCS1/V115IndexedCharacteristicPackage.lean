@@ -31,7 +31,7 @@ variable [Fintype N] [Fintype α] [Fintype P]
 variable [DecidableEq N] [DecidableEq α] [Nonempty α]
 
 /-- Explicit polynomial for the indexed source-CFG sample norm, at fixed h. -/
-def v115IndexedNormEnvelope
+noncomputable def v115IndexedNormEnvelope
     (H : FixedFiniteMonoidHom α M)
     (G : IndexedMixedCFG N α P)
     (τR : Nat) : Nat :=
