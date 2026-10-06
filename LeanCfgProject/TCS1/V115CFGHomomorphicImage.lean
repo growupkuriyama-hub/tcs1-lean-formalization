@@ -78,14 +78,14 @@ theorem v115_rhsRealizes_terminalList_append
         exact ⟨v, by simp, h⟩
       · rintro ⟨tail, hv, htail⟩
         simpa using hv ▸ htail
-  | cons a prefix ih =>
+  | cons a restPref ih =>
       constructor
       · intro h
         change
           ∃ rest,
             v = a :: rest ∧
             RhsRealizes L
-              (pref.map Sum.inr ++ rhs) rest at h
+              (restPref.map Sum.inr ++ rhs) rest at h
         rcases h with ⟨rest, rfl, hrest⟩
         rcases (ih rest).mp hrest with
           ⟨tail, hrestEq, htail⟩
@@ -96,10 +96,10 @@ theorem v115_rhsRealizes_terminalList_append
           ∃ rest,
             v = a :: rest ∧
             RhsRealizes L
-              (pref.map Sum.inr ++ rhs) rest
-        refine ⟨pref ++ tail, ?_, ?_⟩
+              (restPref.map Sum.inr ++ rhs) rest
+        refine ⟨restPref ++ tail, ?_, ?_⟩
         · simpa using hv
-        · exact (ih (pref ++ tail)).mpr
+        · exact (ih (restPref ++ tail)).mpr
             ⟨tail, rfl, htail⟩
 
 /--
