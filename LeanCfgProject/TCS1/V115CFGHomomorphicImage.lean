@@ -75,9 +75,12 @@ theorem v115_rhsRealizes_terminalList_append
   | nil =>
       constructor
       · intro h
-        exact ⟨v, by simp, h⟩
+        exact ⟨v, by simp, by simpa using h⟩
       · rintro ⟨tail, hv, htail⟩
-        simpa using hv ▸ htail
+        have hvt : v = tail := by
+          simpa using hv
+        subst v
+        simpa using htail
   | cons a restPref ih =>
       constructor
       · intro h
