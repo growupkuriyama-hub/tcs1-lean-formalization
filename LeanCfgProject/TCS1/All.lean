@@ -15,6 +15,7 @@ import LeanCfgProject.TCS1.V115LocalConsequences
 import LeanCfgProject.TCS1.V115LocalThicknessBound
 import LeanCfgProject.TCS1.V115IndexedNormalizationYieldBridge
 import LeanCfgProject.TCS1.V115IndexedCharacteristicData
+import LeanCfgProject.TCS1.V115IndexedCharacteristicPackage
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
