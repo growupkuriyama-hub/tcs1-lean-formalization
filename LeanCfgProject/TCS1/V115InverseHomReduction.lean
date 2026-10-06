@@ -67,8 +67,15 @@ def v115InverseEncoding
       (v115InverseEncodingLetter φ b)
       =
     φ b := by
-  simp [v115InverseEncodingLetter,
-    v115IntermediateErase, v115WordSubstitution]
+  have hmap (xs : Word α) :
+      (xs.map Sum.inr).flatMap
+        (v115IntermediateErase (α := α) (β := β)) = xs := by
+    induction xs with
+    | nil => rfl
+    | cons a rest ih =>
+        simp [v115IntermediateErase, ih]
+  simpa [v115InverseEncodingLetter,
+    v115IntermediateErase, v115WordSubstitution] using hmap (φ b)
 
 @[simp] theorem v115IntermediateProject_encodingLetter
     (φ : β → Word α)
@@ -189,15 +196,14 @@ theorem v115SubstitutionPreimage_factorization
     have hxw : x = w := by
       rw [v115IntermediateProject_encoding] at hproj
       exact hproj
-    subst w
-    change v115WordSubstitution φ x ∈ L
+    change v115WordSubstitution φ w ∈ L
+    rw [← hxw]
     change
       v115WordSubstitution
         (v115IntermediateErase (α := α) (β := β))
         (v115InverseEncoding φ x) ∈ L
       at herase
-    rw [v115IntermediateErase_encoding] at herase
-    exact herase
+    simpa only [v115IntermediateErase_encoding] using herase
 
 end V115InverseHomReduction
 
