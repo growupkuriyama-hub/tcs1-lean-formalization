@@ -21,6 +21,7 @@ import LeanCfgProject.TCS1.V115SSBNFRegularIntersection
 import LeanCfgProject.TCS1.V115IndexedRegularIntersection
 import LeanCfgProject.TCS1.V115CFGHomomorphicImage
 import LeanCfgProject.TCS1.V115MixedDerivationLeastClosed
+import LeanCfgProject.TCS1.V115InverseHomReduction
 import LeanCfgProject.TCS1.V115TheoremSurfaceAudit
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
