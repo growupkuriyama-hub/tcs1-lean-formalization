@@ -91,10 +91,10 @@ def dpdaRun :
     DPDAConfiguration → Word Symbol →
       Option DPDAConfiguration
   | c, [] => some c
-  | c, a :: w =>
-      match dpdaStep c a with
+  | c, letter :: rest =>
+      match dpdaStep c letter with
       | none => none
-      | some d => dpdaRun d w
+      | some d => dpdaRun d rest
 
 /--
 Encode the three reference scanner modes using physical stacks.
@@ -109,31 +109,31 @@ def dpdaEncode : Mode → DPDAConfiguration
 /-- The finite-control pushdown step simulates the reference step. -/
 theorem dpda_step_encode
     (q : Mode)
-    (a : Symbol) :
-    dpdaStep (dpdaEncode q) a =
-      (step q a).map dpdaEncode := by
+    (letter : Symbol) :
+    dpdaStep (dpdaEncode q) letter =
+      (step q letter).map dpdaEncode := by
   cases q with
   | zero =>
-      cases a <;>
+      cases letter <;>
         simp [dpdaStep, dpdaEncode, dpdaInstruction, step]
   | rising n =>
       cases n with
       | zero =>
-          cases a <;>
+          cases letter <;>
             simp [dpdaStep, dpdaEncode, dpdaInstruction,
               step, List.replicate_succ]
       | succ n =>
-          cases a <;>
+          cases letter <;>
             simp [dpdaStep, dpdaEncode, dpdaInstruction,
               step, List.replicate_succ]
   | falling n =>
       cases n with
       | zero =>
-          cases a <;>
+          cases letter <;>
             simp [dpdaStep, dpdaEncode, dpdaInstruction,
               step, List.replicate_succ]
       | succ n =>
-          cases a <;>
+          cases letter <;>
             simp [dpdaStep, dpdaEncode, dpdaInstruction,
               step, List.replicate_succ]
 
@@ -146,13 +146,14 @@ theorem dpda_run_encode
   induction w generalizing q with
   | nil =>
       rfl
-  | cons a w ih =>
-      simp only [dpdaRun, scan, dpda_step_encode]
-      cases hs : step q a with
+  | cons letter rest ih =>
+      simp only [dpdaRun, scan]
+      rw [dpda_step_encode]
+      cases hs : step q letter with
       | none =>
           simp [hs]
-      | some q' =>
-          simpa [hs] using ih q'
+      | some next =>
+          simpa [hs] using ih next
 
 /-- Acceptance at the initial and final bottom-stack configuration. -/
 def DPDALanguage : Set (Word Symbol) :=
