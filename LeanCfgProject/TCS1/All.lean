@@ -30,6 +30,8 @@ import LeanCfgProject.TCS1.V118LinearFilterShapeBridge
 import LeanCfgProject.TCS1.V119GapFiniteSSBNF
 import LeanCfgProject.TCS1.V119GapExactSource
 import LeanCfgProject.TCS1.V119GapSourceReduced
+import LeanCfgProject.TCS1.V119GapRuleIndex
+import LeanCfgProject.TCS1.V119GapQuantitativeCertificate
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
