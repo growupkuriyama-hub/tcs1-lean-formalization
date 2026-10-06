@@ -36,4 +36,5 @@ jobs:
             LeanCfgProject.TCS1.V115LocalThicknessBound \
             LeanCfgProject.TCS1.V115IndexedNormalizationYieldBridge \
             LeanCfgProject.TCS1.V115IndexedCharacteristicData \
-            LeanCfgProject.TCS1.V115IndexedCharacteristicPackage
+            LeanCfgProject.TCS1.V115IndexedCharacteristicPackage \
+            LeanCfgProject.TCS1.V115DeltaStarDPDA
