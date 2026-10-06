@@ -25,4 +25,5 @@ jobs:
         run: |
           lake build \
             LeanCfgProject.TCS1.V115FiniteInformationClosure \
-            LeanCfgProject.TCS1.V115InverseHomClosure
+            LeanCfgProject.TCS1.V115InverseHomClosure \
+            LeanCfgProject.TCS1.V115LocallyTrivialWindows
