@@ -23,8 +23,9 @@ type-checks an already defined Lean statement.
 
 Explicit remaining gaps:
 * Proposition 3.2(ii): DFA-product regular filtering of start-separated
-  SSBNF and of finite indexed source CFGs with a nonempty productive start
-  is formalized. The empty-only source branch remains to be packaged.
+  SSBNF and finite indexed source CFGs is formalized in two exhaustive
+  source branches: a nonempty productive branch and an empty/epsilon-only
+  degenerate branch.
 * Proposition 3.2(iii): arbitrary erasing inverse-image preservation of
   CFG language remains OPEN (the RS_h semantic part IS formalized).
 * Theorem 3.4: verify the exact complete conjunction of all
