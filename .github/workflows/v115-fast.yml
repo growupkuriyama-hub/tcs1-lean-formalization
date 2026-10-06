@@ -45,4 +45,6 @@ jobs:
             LeanCfgProject.TCS1.V115InverseHomReduction \
             LeanCfgProject.TCS1.V115TheoremSurfaceAudit \
             LeanCfgProject.TCS1.V116SubstringQuotient \
-            LeanCfgProject.TCS1.V117TypedThicknessGapCore
+            LeanCfgProject.TCS1.V117TypedThicknessGapCore \
+            LeanCfgProject.TCS1.V118WindowSourceBridge \
+            LeanCfgProject.TCS1.V118LinearFilterShapeBridge
