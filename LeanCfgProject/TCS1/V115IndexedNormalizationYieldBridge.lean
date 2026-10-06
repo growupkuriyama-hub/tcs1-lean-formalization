@@ -36,6 +36,22 @@ variable [Fintype N] [Fintype α] [Fintype P]
 variable [DecidableEq N] [DecidableEq α]
 
 /--
+The normalized non-start state type is a finite subtype of the
+finite front-end grammar. Install that derived finiteness instance
+globally so the indexed canonical-witness statement itself can name
+the actual finite witness set without an additional assumption.
+-/
+noncomputable instance v115IndexedReducedStateFintype
+    (G : IndexedMixedCFG N α P)
+    (start :
+      ProductiveUnitFreeState
+        (indexedFiniteFrontEndGrammar G)) :
+    Fintype
+      (ReducedUnitFreeState
+        (indexedFiniteFrontEndGrammar G) start) :=
+  Fintype.ofFinite _
+
+/--
 No epsilon or unit derivation can occur in the final concrete
 productive/reachable trim. Its terminal language embeds directly
 into the SSBNF non-start derivation relation used by the learner.
