@@ -13,6 +13,7 @@ import LeanCfgProject.TCS1.V115FinitePositivePowers
 import LeanCfgProject.TCS1.V115PositiveImageCardinal
 import LeanCfgProject.TCS1.V115LocalConsequences
 import LeanCfgProject.TCS1.V115LocalThicknessBound
+import LeanCfgProject.TCS1.V115IndexedNormalizationYieldBridge
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
