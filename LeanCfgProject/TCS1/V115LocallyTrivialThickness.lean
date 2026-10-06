@@ -1,5 +1,6 @@
 import LeanCfgProject.TCS1.V115LocallyTrivialForwardReduction
 import LeanCfgProject.TCS1.ConcreteTypedTrimming
+import LeanCfgProject.TCS1.V83TypedThicknessWitnessBounds
 
 /-!
 # TCS #1 v115: productive/reachable typed-refinement transfer
@@ -230,6 +231,139 @@ theorem v115_locallyTrivial_active_yield_bound
       (v115_windowRefinement_of_lengthIdempotence
         H n hn hlocal hidempotent)
       B hFineBound hactive
+
+
+/--
+The length-minimal canonical yield at every active coarse symbol is no
+longer than the transferred fine yield bound. This is the missing bridge
+from arbitrary short productive derivations to the *actual* chosen omega
+in the canonical characteristic sample.
+-/
+theorem v115_canonicalOmega_length_le_of_refinement
+    (H : FixedFiniteMonoidHom α M)
+    (G : FixedFiniteMonoidHom α F)
+    (terminalRule : NT → α → Prop)
+    (binaryRule : NT → NT → NT → Prop)
+    (startRule : NT → Prop)
+    (epsilonStart : Prop)
+    (C :
+      ReducedWitnessChoices
+        H terminalRule binaryRule startRule epsilonStart
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule))
+    (minimal :
+      CanonicalChoiceMinimality
+        H terminalRule binaryRule startRule epsilonStart
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule) C)
+    (hrefines : V115NonemptyKernelRefines G H)
+    (B : Nat)
+    (hFineBound :
+      ∀ (A : NT) (ν : F),
+        ConcreteTypedActive
+          G terminalRule binaryRule startRule (A, ν) →
+        ∃ v : Word α,
+          TypedDerives G terminalRule binaryRule (A, ν) v
+            ∧ v.length ≤ B)
+    (X : NT × M)
+    (hactive :
+      ConcreteTypedActive
+        H terminalRule binaryRule startRule X) :
+    (C.omega X).length ≤ B := by
+  rcases X with ⟨A, μ⟩
+  obtain ⟨v, dH, hv⟩ :=
+    v115_active_yield_bound_of_refinement
+      H G terminalRule binaryRule startRule
+      hrefines B hFineBound hactive
+  have dTrim :
+      ReducedTypedDerives
+        H terminalRule binaryRule
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule)
+        (A, μ) v :=
+    (concreteTypedActive_trimClosure
+      H terminalRule binaryRule startRule).restrict
+        hactive dH
+  exact
+    (minimal.omega_minimal (A, μ) hactive v dTrim).trans hv
+
+/--
+The entire canonical witness family has the standard v83 common length
+bound (Nt+1)*B, assuming the fine active productive yields have length at
+most B and the fine positive kernel refines the coarse one.
+
+This is a semantic/length statement: the quantitative witness-count
+and grammar-normalization bounds still need to be connected to the
+locally-trivial finite-semigroup lemma to finish v115 Corollary 7.5.
+-/
+theorem v115_canonicalWitnessWords_length_le_of_refinement
+    [Fintype NT]
+    (H : FixedFiniteMonoidHom α M)
+    (G : FixedFiniteMonoidHom α F)
+    (terminalRule : NT → α → Prop)
+    (binaryRule : NT → NT → NT → Prop)
+    (startRule : NT → Prop)
+    (epsilonStart : Prop)
+    [Fintype
+      (ActiveTypedSymbol
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule))]
+    (C :
+      ReducedWitnessChoices
+        H terminalRule binaryRule startRule epsilonStart
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule))
+    (minimal :
+      CanonicalChoiceMinimality
+        H terminalRule binaryRule startRule epsilonStart
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule) C)
+    (hrefines : V115NonemptyKernelRefines G H)
+    (B : Nat)
+    (hB : 1 ≤ B)
+    (hFineBound :
+      ∀ (A : NT) (ν : F),
+        ConcreteTypedActive
+          G terminalRule binaryRule startRule (A, ν) →
+        ∃ v : Word α,
+          TypedDerives G terminalRule binaryRule (A, ν) v
+            ∧ v.length ≤ B)
+    {word : Word α}
+    (hword :
+      word ∈
+        CanonicalWitnessWords
+          H terminalRule binaryRule startRule epsilonStart
+          (ConcreteTypedActive
+            H terminalRule binaryRule startRule) C) :
+    word.length ≤
+      (Fintype.card
+          (ActiveTypedSymbol
+            (ConcreteTypedActive
+              H terminalRule binaryRule startRule)) + 1) * B := by
+  have hOmega :
+      ∀ X : NT × M,
+        ConcreteTypedActive
+          H terminalRule binaryRule startRule X →
+        (C.omega X).length ≤ B := by
+    intro X hX
+    exact
+      v115_canonicalOmega_length_le_of_refinement
+        H G terminalRule binaryRule startRule epsilonStart
+        C minimal hrefines B hFineBound X hX
+  have hReach :
+      ActiveTypedStructuralReachability
+        H terminalRule binaryRule startRule
+        (ConcreteTypedActive
+          H terminalRule binaryRule startRule) :=
+    concreteTypedActive_structuralReachability
+      H terminalRule binaryRule startRule epsilonStart C
+  exact
+    canonicalWitnessWords_length_le_typedThickness
+      (ConcreteTypedActive
+        H terminalRule binaryRule startRule)
+      H terminalRule binaryRule startRule epsilonStart
+      C minimal hReach B hB hOmega hword
+
 
 end V115LocallyTrivialThickness
 
