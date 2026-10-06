@@ -6,6 +6,7 @@ import LeanCfgProject.TCS1.FixedHTypingRefinement
 import LeanCfgProject.TCS1.V115FiniteInformationClosure
 import LeanCfgProject.TCS1.V115InverseHomClosure
 import LeanCfgProject.TCS1.V115LocallyTrivialWindows
+import LeanCfgProject.TCS1.V115LocallyTrivialForwardReduction
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
