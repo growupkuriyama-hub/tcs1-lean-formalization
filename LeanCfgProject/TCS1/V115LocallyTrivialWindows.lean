@@ -16,9 +16,8 @@ As a corollary, the positive image semigroup of every concrete fixed-window
 typing h_{k,l} is locally trivial.
 
 The forward implication (locally trivial positive image => the n,n window
-kernel refines h, with n = |h(Sigma+)|) depends on the finite-semigroup
-factorization used in Pin XI.4.17 / XIV.1.20 and is intentionally left for the
-next v115 layer rather than hidden behind an axiom.
+kernel refines h, with n = |h(Sigma+)|) is proved separately, using the
+finite-semigroup argument, in V115PositiveImageCardinal.
 -/
 
 namespace LeanCfgProject
