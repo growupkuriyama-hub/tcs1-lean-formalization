@@ -11,6 +11,7 @@ import LeanCfgProject.TCS1.V115LocallyTrivialThickness
 import LeanCfgProject.TCS1.V115PositiveIdempotentIdeal
 import LeanCfgProject.TCS1.V115FinitePositivePowers
 import LeanCfgProject.TCS1.V115PositiveImageCardinal
+import LeanCfgProject.TCS1.V115LocalConsequences
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
