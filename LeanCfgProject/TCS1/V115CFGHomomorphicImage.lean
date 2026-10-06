@@ -62,16 +62,16 @@ whatever the remaining RHS realizes.
 -/
 theorem v115_rhsRealizes_terminalList_append
     (L : N → Set (Word β))
-    (prefix : Word β)
+    (pref : Word β)
     (rhs : List (MixedSymbol N β))
     (v : Word β) :
     RhsRealizes L
-        (prefix.map Sum.inr ++ rhs) v
+        (pref.map Sum.inr ++ rhs) v
       ↔
     ∃ tail,
-      v = prefix ++ tail ∧
+      v = pref ++ tail ∧
       RhsRealizes L rhs tail := by
-  induction prefix generalizing v with
+  induction pref generalizing v with
   | nil =>
       constructor
       · intro h
@@ -85,7 +85,7 @@ theorem v115_rhsRealizes_terminalList_append
           ∃ rest,
             v = a :: rest ∧
             RhsRealizes L
-              (prefix.map Sum.inr ++ rhs) rest at h
+              (pref.map Sum.inr ++ rhs) rest at h
         rcases h with ⟨rest, rfl, hrest⟩
         rcases (ih rest).mp hrest with
           ⟨tail, hrestEq, htail⟩
@@ -96,10 +96,10 @@ theorem v115_rhsRealizes_terminalList_append
           ∃ rest,
             v = a :: rest ∧
             RhsRealizes L
-              (prefix.map Sum.inr ++ rhs) rest
-        refine ⟨prefix ++ tail, ?_, ?_⟩
+              (pref.map Sum.inr ++ rhs) rest
+        refine ⟨pref ++ tail, ?_, ?_⟩
         · simpa using hv
-        · exact (ih (prefix ++ tail)).mpr
+        · exact (ih (pref ++ tail)).mpr
             ⟨tail, rfl, htail⟩
 
 /--
@@ -124,12 +124,13 @@ theorem v115_mapMixedRhs_realizes_iff
   | nil =>
       constructor
       · intro hv
-        refine ⟨[], ?_, ?_⟩
-        · exact rfl
-        · simpa [v115WordSubstitution] using hv.symm
+        change v = [] at hv
+        refine ⟨[], rfl, ?_⟩
+        simpa [v115WordSubstitution] using hv.symm
       · rintro ⟨w, hw, hmap⟩
-        have hw0 : w = [] := hw
+        change w = [] at hw
         subst w
+        change v = []
         simpa [v115WordSubstitution] using hmap.symm
   | cons s rhs ih =>
       cases s with
@@ -253,11 +254,27 @@ theorem v115_homPreimageFamily_closed
   refine
     ⟨v115MapMixedRhs ψ rhs,
       ⟨rhs, hR, rfl⟩, ?_⟩
-  exact
+  have hImage :
+      RhsRealizes
+        (v115HomImageFamily ψ
+          (v115HomPreimageFamily ψ Q))
+        (v115MapMixedRhs ψ rhs)
+        (v115WordSubstitution ψ w) :=
     (v115_mapMixedRhs_realizes_iff
       ψ (v115HomPreimageFamily ψ Q)
       rhs (v115WordSubstitution ψ w)).mpr
       ⟨w, hReal, rfl⟩
+  have hsub :
+      ∀ B,
+        v115HomImageFamily ψ
+            (v115HomPreimageFamily ψ Q) B
+          ⊆ Q B := by
+    intro B z hz
+    rcases hz with ⟨x, hxQ, hxz⟩
+    change v115WordSubstitution ψ x ∈ Q B at hxQ
+    rw [← hxz]
+    exact hxQ
+  exact rhsRealizes_mono hsub hImage
 
 /--
 Exact homomorphic-image closure for arbitrary mixed CFG semantics.
@@ -318,10 +335,10 @@ theorem indexed_v115HomImage_rules
   · rintro ⟨p, hpA, hpRhs⟩
     refine ⟨G.rhs p, ?_, ?_⟩
     · exact ⟨p, hpA, rfl⟩
-    · exact hpRhs
+    · exact hpRhs.symm
   · rintro ⟨rhs, ⟨p, hpA, hpRhs⟩, hmap⟩
     subst rhs
-    exact ⟨p, hpA, hmap⟩
+    exact ⟨p, hpA, hmap.symm⟩
 
 /-- Finite indexed source grammars are constructively closed under homomorphic image. -/
 theorem indexed_v115HomImage_language
