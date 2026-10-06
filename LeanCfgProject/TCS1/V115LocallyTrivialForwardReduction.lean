@@ -13,10 +13,10 @@ This file proves two exact bridges:
 * if all words of length n have idempotent h-image, local triviality implies
   the (n,n) fixed-window kernel refines h on nonempty words.
 
-The remaining algebraic lemma -- that an n-fold product of positive-image
-elements is idempotent for n=|S| in a finite locally trivial semigroup -- is
-NOT assumed by an axiom and is NOT claimed here to be proved.  This file
-records the exact outstanding bridge without using any placeholder proofs.
+The algebraic lemma -- that an n-fold product of positive-image
+elements is idempotent for n=|S| in a finite locally trivial semigroup --
+is discharged in V115PositiveImageCardinal.  This intermediate module
+isolates the boundary-erasure reduction without circular dependencies.
 -/
 
 namespace LeanCfgProject
