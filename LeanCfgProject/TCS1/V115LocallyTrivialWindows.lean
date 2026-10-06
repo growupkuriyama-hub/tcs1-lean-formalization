@@ -187,12 +187,10 @@ theorem v115_positiveImageLocallyTrivial_of_fixedWindow_refinement
     by_cases hsum : k + l = 0
     · have hk0 : k = 0 := by omega
       have hl0 : l = 0 := by omega
-      subst k
-      subst l
-      exact
-        zero_words_sameFixedWindowSummary
+      simpa only [hk0, hl0] using
+        (zero_words_sameFixedWindowSummary
           (List.length_pos_of_ne_nil hxne)
-          (List.length_pos_of_ne_nil hyne)
+          (List.length_pos_of_ne_nil hyne))
     · have hpos : 0 < k + l :=
         Nat.pos_of_ne_zero hsum
       have hbase :=
