@@ -23,6 +23,7 @@ import LeanCfgProject.TCS1.V115CFGHomomorphicImage
 import LeanCfgProject.TCS1.V115MixedDerivationLeastClosed
 import LeanCfgProject.TCS1.V115InverseHomReduction
 import LeanCfgProject.TCS1.V115TheoremSurfaceAudit
+import LeanCfgProject.TCS1.V116SubstringQuotient
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
