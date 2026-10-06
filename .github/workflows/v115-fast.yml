@@ -43,4 +43,5 @@ jobs:
             LeanCfgProject.TCS1.V115CFGHomomorphicImage \
             LeanCfgProject.TCS1.V115MixedDerivationLeastClosed \
             LeanCfgProject.TCS1.V115InverseHomReduction \
-            LeanCfgProject.TCS1.V115TheoremSurfaceAudit
+            LeanCfgProject.TCS1.V115TheoremSurfaceAudit \
+            LeanCfgProject.TCS1.V116SubstringQuotient
