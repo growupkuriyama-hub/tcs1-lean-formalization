@@ -237,6 +237,84 @@ theorem v115_indexedRegularIntersection_no_nonempty
       fixedHSubstitutable_inter_recognized_product
         H G Acc hsub
 
+
+/--
+Exhaustive source-level split for Proposition 3.2(ii).
+Either the source start has a nonempty successful yield and the normalized
+DFA-product grammar applies, or every successful word is epsilon and the
+trivial grammar applies.  These alternatives cover all finite indexed CFGs.
+-/
+theorem v115_indexedRegularIntersection_exhaustive
+    (R : IndexedMixedCFG N α P)
+    (sourceStart : N)
+    (H : FixedFiniteMonoidHom α M)
+    (G : FixedFiniteMonoidHom α F)
+    (Acc : Set F)
+    (hsub :
+      FixedHSubstitutable
+        H (LeastClosedLanguage R.toMixedRules sourceStart)) :
+    (∃ hprod :
+        ∃ w : Word α,
+          w ∈ LeastClosedLanguage R.toMixedRules sourceStart
+            ∧ w ≠ [],
+      let B := indexedFiniteFrontEndGrammar R
+      let start := indexedProductiveUnitFreeState_of_nonempty
+        R sourceStart hprod
+      let t := reducedSSBNFTerminalRule B start
+      let b := reducedSSBNFBinaryRule B start
+      let s := reducedSSBNFStartRule B start
+      let eps := [] ∈ LeastClosedLanguage R.toMixedRules sourceStart
+      let filtered :=
+        UntypedStartLanguage
+          (v115FilterTerminal (v115MonoidTransition G) t)
+          (v115FilterBinary b)
+          (v115FilterStart s 1 (fun m => m ∈ Acc))
+          (eps ∧ (1 : F) ∈ Acc)
+      filtered =
+        LeastClosedLanguage R.toMixedRules sourceStart
+          ∩ RecognizedPreimage G Acc
+      ∧
+      FixedHSubstitutable
+        (productFixedFiniteMonoidHom H G) filtered)
+    ∨
+    (let eps :=
+        ([] : Word α) ∈
+          LeastClosedLanguage R.toMixedRules sourceStart
+          ∧ (1 : F) ∈ Acc
+     let filtered :=
+        UntypedStartLanguage
+          (v115TrivialTerminal (α := α))
+          v115TrivialBinary
+          v115TrivialStart
+          eps
+     filtered =
+       LeastClosedLanguage R.toMixedRules sourceStart
+         ∩ RecognizedPreimage G Acc
+     ∧
+     FixedHSubstitutable
+       (productFixedFiniteMonoidHom H G) filtered) := by
+  classical
+  by_cases hprod :
+      ∃ w : Word α,
+        w ∈ LeastClosedLanguage R.toMixedRules sourceStart
+          ∧ w ≠ []
+  · exact
+      Or.inl
+        ⟨hprod,
+          v115_indexedRegularIntersection_nonempty
+            R sourceStart hprod H G Acc hsub⟩
+  · have hno :
+        ∀ w : Word α,
+          w ∈ LeastClosedLanguage R.toMixedRules sourceStart →
+          w = [] := by
+      intro w hw
+      by_contra hwne
+      exact hprod ⟨w, hw, hwne⟩
+    exact
+      Or.inr
+        (v115_indexedRegularIntersection_no_nonempty
+          R sourceStart H G Acc hno hsub)
+
 end V115IndexedRegularIntersection
 
 end TCS1
