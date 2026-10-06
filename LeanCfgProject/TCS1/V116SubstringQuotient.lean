@@ -138,6 +138,50 @@ theorem v116_batchLanguage_eq_v115
     | epsilon heps =>
         exact V116BatchDerives.epsilon heps
 
+
+/-- Manuscript v116: the substring-indexed constructor is sample-consistent. -/
+theorem v116_sample_consistency
+    (H : FixedFiniteMonoidHom α M)
+    (K : Finset (Word α)) :
+    (↑K : Set (Word α)) ⊆ V116BatchLanguage H K := by
+  rw [v116_batchLanguage_eq_v115 H K]
+  exact sample_consistency H K
+
+/-- Manuscript v116: soundness transfers without a separate new induction. -/
+theorem v116_batchLanguage_sound
+    (H : FixedFiniteMonoidHom α M)
+    (K : Finset (Word α))
+    (L : Set (Word α))
+    (hK : (↑K : Set (Word α)) ⊆ L)
+    (hsub : FixedHSubstitutable H L) :
+    V116BatchLanguage H K ⊆ L := by
+  rw [v116_batchLanguage_eq_v115 H K]
+  exact batchLanguage_sound H K L hK hsub
+
+/--
+The exact Gold-style characteristic-sample condition transfers in BOTH
+directions, uniformly for every finite positive extension K of C.
+-/
+theorem v116_characteristic_sample_iff
+    (H : FixedFiniteMonoidHom α M)
+    (L : Set (Word α))
+    (C : Finset (Word α)) :
+    (∀ K : Finset (Word α),
+      C ⊆ K →
+      (↑K : Set (Word α)) ⊆ L →
+      V116BatchLanguage H K = L) ↔
+    (∀ K : Finset (Word α),
+      C ⊆ K →
+      (↑K : Set (Word α)) ⊆ L →
+      BatchLanguage H K = L) := by
+  constructor
+  · intro h K hC hpos
+    rw [← v116_batchLanguage_eq_v115 H K]
+    exact h K hC hpos
+  · intro h K hC hpos
+    rw [v116_batchLanguage_eq_v115 H K]
+    exact h K hC hpos
+
 end V116SubstringQuotient
 
 end TCS1
