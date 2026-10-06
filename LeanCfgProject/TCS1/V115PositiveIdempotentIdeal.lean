@@ -119,7 +119,7 @@ theorem v115_idempotent_factor_implies_word_idempotent
           H hlocal he hppos hr2
     · have hqpos : V115InPositiveImage H (H.h q) :=
         ⟨q, hq, rfl⟩
-      simpa [H.map_append] using
+      simpa [H.map_append, mul_assoc] using
         v115_positiveImage_idempotent_sandwich
           H hlocal he hppos hqpos hr2
 
