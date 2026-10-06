@@ -67,13 +67,17 @@ theorem v117GapWordType_one_iff
           have hsame :
               v117GapWordType (V117GapLetter.a :: w) =
                 v117GapWordType w := by
-            cases h : v117GapWordType w <;> rfl
+            change V117GapType.one * v117GapWordType w =
+              v117GapWordType w
+            exact one_mul _
           simpa [hsame] using ih
       | c =>
           have hzero :
               v117GapWordType (V117GapLetter.c :: w) =
                 V117GapType.zero := by
-            cases h : v117GapWordType w <;> rfl
+            change V117GapType.zero * v117GapWordType w =
+              V117GapType.zero
+            rfl
           simp [hzero]
 
 /-- Explicit doubling prevents the general simplifier from unfolding replicates. -/
