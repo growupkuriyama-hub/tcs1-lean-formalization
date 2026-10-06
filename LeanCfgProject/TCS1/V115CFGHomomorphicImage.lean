@@ -181,6 +181,7 @@ theorem v115_mapMixedRhs_realizes_iff
               exact hvt.symm
           · rintro ⟨w, hw, hmap⟩
             rcases hw with ⟨y, rfl, hyReal⟩
+            rw [← hmap]
             apply
               (v115_rhsRealizes_terminalList_append
                 (v115HomImageFamily ψ L)
