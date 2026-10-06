@@ -52,4 +52,5 @@ jobs:
             LeanCfgProject.TCS1.V119GapExactSource \
             LeanCfgProject.TCS1.V119GapSourceReduced \
             LeanCfgProject.TCS1.V119GapRuleIndex \
-            LeanCfgProject.TCS1.V119GapQuantitativeCertificate
+            LeanCfgProject.TCS1.V119GapQuantitativeCertificate \
+            LeanCfgProject.TCS1.V119GapTargetClass
