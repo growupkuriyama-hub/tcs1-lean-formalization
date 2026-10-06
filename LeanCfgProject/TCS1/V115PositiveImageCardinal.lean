@@ -18,7 +18,7 @@ Thus some prefix is idempotent.  The two-sided idempotent-ideal lemma
 then makes the entire word idempotent.
 
 This discharges the exact finite-semigroup premise isolated in the
-v115 forward fixed-window reduction, with no new axioms or sorry.
+v115 forward fixed-window reduction, with no extra postulates or placeholder proofs.
 -/
 
 namespace LeanCfgProject
