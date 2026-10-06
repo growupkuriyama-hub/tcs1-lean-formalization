@@ -143,12 +143,23 @@ theorem v115FilterDerives_complete
   | terminal h =>
       exact UntypedDerives.terminal ⟨h, rfl⟩
   | @binary A B C wB wC hr _ _ ihB ihC =>
-      rw [v115AutomatonRead_append]
-      exact
-        UntypedDerives.binary
-          ⟨hr, rfl, rfl, rfl⟩
+      refine
+        @UntypedDerives.binary
+          α (V115FilterState N Q)
+          (v115FilterTerminal δ terminalRule)
+          (v115FilterBinary binaryRule)
+          (A, q, v115AutomatonRead δ q (wB ++ wC))
+          (B, q, v115AutomatonRead δ q wB)
+          (C, v115AutomatonRead δ q wB,
+            v115AutomatonRead δ
+              (v115AutomatonRead δ q wB) wC)
+          wB wC
+          ?_
           (ihB q)
           (ihC (v115AutomatonRead δ q wB))
+      exact
+        ⟨hr, rfl, rfl,
+          (v115AutomatonRead_append δ q wB wC).symm⟩
 
 /--
 Exact regular intersection, including the epsilon-start case.
@@ -187,26 +198,30 @@ theorem v115FilterStartLanguage_eq_inter
             v115AutomatonRead δ q₀ word = X.2.2 := by
           rw [← hinit]
           exact hread
-        exact
-          ⟨UntypedStartDerives.nonempty hs dOld,
-            by rw [hfinal]; exact hacc⟩
+        constructor
+        · exact UntypedStartDerives.nonempty hs dOld
+        · change accept (v115AutomatonRead δ q₀ word)
+          rw [hfinal]
+          exact hacc
     | epsilon heps =>
-        exact
-          ⟨UntypedStartDerives.epsilon heps.1,
-            by simpa only [v115AutomatonRead_nil] using heps.2⟩
+        constructor
+        · exact UntypedStartDerives.epsilon heps.1
+        · change accept q₀
+          exact heps.2
   · rintro ⟨d, hacc⟩
     cases d with
     | @nonempty A word hs dA =>
+        change accept (v115AutomatonRead δ q₀ word) at hacc
         exact
           UntypedStartDerives.nonempty
             ⟨hs, rfl, hacc⟩
             (v115FilterDerives_complete
               δ terminalRule binaryRule dA q₀)
     | epsilon heps =>
+        change accept q₀ at hacc
         exact
           UntypedStartDerives.epsilon
-            ⟨heps,
-              by simpa only [v115AutomatonRead_nil] using hacc⟩
+            ⟨heps, hacc⟩
 
 end V115SSBNFRegularFilter
 
