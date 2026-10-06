@@ -27,6 +27,7 @@ import LeanCfgProject.TCS1.V116SubstringQuotient
 import LeanCfgProject.TCS1.V117TypedThicknessGapCore
 import LeanCfgProject.TCS1.V118WindowSourceBridge
 import LeanCfgProject.TCS1.V118LinearFilterShapeBridge
+import LeanCfgProject.TCS1.V119GapFiniteSSBNF
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
