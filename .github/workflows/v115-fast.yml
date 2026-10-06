@@ -27,4 +27,5 @@ jobs:
             LeanCfgProject.TCS1.V115FiniteInformationClosure \
             LeanCfgProject.TCS1.V115InverseHomClosure \
             LeanCfgProject.TCS1.V115LocallyTrivialWindows \
-            LeanCfgProject.TCS1.V115LocallyTrivialForwardReduction
+            LeanCfgProject.TCS1.V115LocallyTrivialForwardReduction \
+            LeanCfgProject.TCS1.V115LocallyTrivialThickness
