@@ -1,6 +1,7 @@
 import LeanCfgProject.TCS1.V88FullManuscriptAudit
 import LeanCfgProject.TCS1.V79ManuscriptClaimAudit
 import LeanCfgProject.TCS1.V115FiniteInformationClosure
+import LeanCfgProject.TCS1.V115SSBNFRegularIntersection
 import LeanCfgProject.TCS1.V115InverseHomClosure
 import LeanCfgProject.TCS1.V115PositiveImageCardinal
 import LeanCfgProject.TCS1.V115LocalConsequences
@@ -20,9 +21,11 @@ with the whole English-language proposition: it only resolves and
 type-checks an already defined Lean statement.
 
 Explicit remaining gaps:
-* Proposition 3.2: language-family CFL closure under regular
-  intersection and arbitrary erasing inverse homomorphism.
-  The RS_h semantic substitutability portions ARE formalized.
+* Proposition 3.2(ii): finite-automaton product regular filtering of a
+  start-separated SSBNF grammar is formalized, but exact arbitrary source-CFG
+  normal-form transfer remains to be packaged at source level.
+* Proposition 3.2(iii): arbitrary erasing inverse-image preservation of
+  CFG language remains OPEN (the RS_h semantic part IS formalized).
 * Theorem 3.4: verify the exact complete conjunction of all
   assertions, including uniform running-time details in the v115 wording.
 * Proposition 9.1: DPDA recognizer must be integrated with the
