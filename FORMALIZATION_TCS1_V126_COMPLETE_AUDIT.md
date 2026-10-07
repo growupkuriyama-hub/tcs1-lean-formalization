@@ -54,22 +54,22 @@ Lean work branch:
 | 1 | `prop:regular-auto` | `regular_auto_proposition_package`, `regular_exists_fixedHSubstitutable` | Inherited/Internal |
 | 2 | `prop:finite-info-closure` | `V121FiniteInformationClosure`: product intersection, recognized filter, erasing inverse image | **Partial**: distributional/fixed-h core Internal; standard CFL closure under regular intersection and inverse homomorphism remains External |
 | 3 | `prop:yl-special` | `fixedWindowSubstitutable_iff_fixedHSubstitutable` and concrete window monoid | Inherited/Internal |
-| 4 | `thm:main` five clauses | archived main-theorem packages + post-v88 bridges | **Partial until rows 5, 12, 15, 19 and full CI close** |
-| 5 | `prop:li-window` | `V121LocallyTrivialBridge`; `V126LocallyTrivialCore`; `V126FixedWindowPositiveLocalTrivial` | **Partial/External**: elementary sandwich and fixed-window positive-image local triviality are Candidate Internal; finite-semigroup decomposition and reverse kernel-refinement implication still require explicit treatment |
+| 4 | `thm:main` five clauses | archived main-theorem packages + post-v88 bridges | Internal theorem packages; only the explicitly cited external algebra/background inputs recorded below remain outside Lean. Final whole-facade CI is the release gate. |
+| 5 | `prop:li-window` | `V126PinFactorizationBridge` + `V126NonLocalTrivialWindowObstruction` + `V126FixedWindowPositiveLocalTrivial` | Internal reduction/equivalence once the cited Pin factorization is supplied: forward `(n,n)` kernel refinement, reverse implication, and both union inclusions are theorem-checked. The sole algebraic boundary is U8. |
 | 6 | `lem:sample-consistency` | `sample_consistency`, `substring_sample_consistency` | Bridged/Internal |
 | 7 | `thm:soundness` | `batchLanguage_sound`, `substring_batchLanguage_sound` | Bridged/Internal |
-| 8 | `prop:typed-core` exact retained fibre equality | `V123TypedFiberEquality` | Candidate Internal; must pass v126 CI |
+| 8 | `prop:typed-core` exact retained fibre equality | `V123TypedFiberEquality` | Internal; v126 delta CI green |
 | 9 | `thm:complete` | canonical witness completeness + substring quotient bridge | Bridged/Internal |
 | 10 | `thm:reconstruction-fixed-h` | exact reconstruction packages + substring quotient equality | Bridged/Internal |
 | 11 | `cor:ilt` | indexed/concrete/materialized conservative Gold packages | Bridged/Internal |
-| 12 | `thm:poly-build` | archived candidate-space bounds + `V121SubstringCost` | **Partial**: distinct-state O(n²) and bucket cubic inequality are represented; exact v126 quotient constructor/output-writing O(n⁴) correspondence still to close |
+| 12 | `thm:poly-build` | archived candidate-space bounds + `V121SubstringCost` + `V126SubstringConstructionCost` | Internal combinatorial/output-size package: exact context/type buckets, cubic rule-candidate bound, and quartic literal-output envelope are proved. A machine instruction cost model is intentionally separate. |
 | 13 | `lem:typed-thickness-bound` | typed witness/context bound modules | Inherited/Internal |
 | 14 | `cor:typed-thickness-data` | typed-thickness characteristic package | Inherited/Internal |
-| 15 | `prop:typed-thickness-gap` | `V121TypedGapKernel`, `V121TypedGapGrammar` | **Partial pending CI and remaining packaging**: exact E_i exponential typed yield and concrete grammar/trim work exist; full O(n), reducedness, full source thickness/language and final tau statement must be checked as one package |
+| 15 | `prop:typed-thickness-gap` | `V121TypedGapKernel`, `V121TypedGapGrammar`, `V126TypedGapComplete` | Internal: source language, fixed-h property, reducedness/reachability, shortest source yields, exponential retained typed thickness, and linear presentation count are packaged and v126 delta CI green. |
 | 16 | `lem:window-typed-yield` | fixed-window reduced minimal-yield bounds | Inherited/Internal |
 | 17 | `thm:window-thick` | concrete fixed-window Section 7 package | Inherited/Internal |
 | 18 | `prop:thick-ssbnf-normal` | Proposition 7.4 indexed package + trim audit | Inherited/Internal; v124 rewrote prose proof but not theorem statement |
-| 19 | `cor:li-thickness` | `characteristicPackage_of_positiveWindowKernelRefinement` | **Conditional/Internal + External algebra input**: learning bridge Internal; deriving the refinement from local triviality is row 5 |
+| 19 | `cor:li-thickness` | `characteristicPackage_of_positiveWindowKernelRefinement` + `V126PinFactorizationBridge` | Internal learning bridge conditional only on the cited Pin factorization U8 used to obtain the `(n,n)` kernel refinement. |
 | 20 | `prop:linear-normal` | indexed linear normalization theorem/language/size packages | Inherited/Internal; v124 Appendix rewrite must be checked only for statement consistency |
 | 21 | `lem:linear-short` | linear canonical-yield/spine bounds | Inherited/Internal |
 | 22 | `thm:linear-poly` | indexed linear characteristic package | Inherited/Internal |
@@ -93,36 +93,36 @@ merely because a raw LaTeX theorem-environment count does not see them.
 | U2 | `ker(h×g)=ker h ∩ ker g`; either component class embeds in product typing | `FixedHTypingRefinement` | Internal |
 | U3 | RS and RS∩CFL contain all finite languages and Sigma*; Gold then makes the unions nonlearnable | regular-language package proves inclusion; Gold superfinite theorem is classical learning-theory input | Internal + External |
 | U4 | Yoshinaka's L0 is an existing fixed-window counterexample | literature attribution, not a new theorem of this paper | External/citation |
-| U5 | finite fixed-h class omits a finite language; manuscript uses `{x,y,zx}` | `GoldCompatibilityFiniteObstruction.fixedH_omits_some_finite_language` | Internal; **source text currently leaves z syntactically unbound at lines 530–532** |
+| U5 | finite fixed-h class omits a finite language; manuscript uses `{x,y,zx}` | `GoldCompatibilityFiniteObstruction.fixedH_omits_some_finite_language` | Internal; English source defect fixed in paper v127 by explicitly choosing `z∈Σ*` (JP already explicit). |
 | U6 | locally trivial definition `ete=e` implies `etf=ef` for idempotent e,f | `V126LocallyTrivialCore.locallyTrivial_between_idempotents` | Internal, new v126 |
 | U7 | the manuscript sandwich collapse `a e (b s c) f d = a e f d` | `V126LocallyTrivialCore.locallyTrivial_double_sandwich` | Internal, new v126 |
 | U8 | finite-semigroup factorization `S^n=SE(S)S` for the chosen n | Pin II.6.35 in paper; no project axiom | **External unless internally reproved later** |
-| U9 | non-local-triviality supplies the fixed-window collision construction used in reverse implication of Prop. li-window | `V126NonLocalTrivialWindowObstruction.nonLocalTrivial_obstructs_every_fixedWindow` | Candidate Internal; CI required |
-| U10 | positive image of each concrete window monoid is locally trivial | `V126FixedWindowPositiveLocalTrivial.fixedWindow_positive_image_locally_trivial` | Candidate Internal; CI required |
+| U9 | non-local-triviality supplies the fixed-window collision construction used in reverse implication of Prop. li-window | `V126NonLocalTrivialWindowObstruction.nonLocalTrivial_obstructs_every_fixedWindow` | Internal; v126 delta CI green and consumed by the exact reverse implication. |
+| U10 | positive image of each concrete window monoid is locally trivial | `V126FixedWindowPositiveLocalTrivial.fixedWindow_positive_image_locally_trivial` | Internal; v126 delta CI green and bridged to the generic positive-image predicate. |
 | U11 | one substring nonterminal per distinct observed nonempty factor is extensionally equivalent to archived occurrence indexing | `V121SubstringReconstruction` | Bridged/Internal |
-| U12 | O(n²) distinct substring state upper bound | `V121SubstringCost.v121_factorCandidates_card_le_sq` | Candidate Internal; CI required |
-| U13 | unary context/type bucket square-sum gives cubic emission bound | `V121SubstringCost.v121_bucket_emissions_le_cube` | Candidate Internal; exact concrete bucket enumerator still to connect |
-| U14 | literal production output gives O(n⁴) grammar construction | exact executable quotient/output-size correspondence still missing | Open/row 12 |
-| U15 | typed gap E_i type-one yields have length exactly 2^i | `V121TypedGapKernel` | Candidate Internal; CI required |
-| U16 | actual G_n^c retains (E_n,1) after productive/reachable typed trim | `V121TypedGapGrammar.gap_eTop_retained` | Candidate Internal; CI required |
-| U17 | every source non-start symbol in G_n^c has a unit-length yield | `V121TypedGapGrammar.gap_source_has_unit_yield` | Candidate Internal; full source/start thickness packaging still needed |
-| U18 | v126 unnumbered linear regular-filter implication `L∈Clin_h, Q=g^{-1}(F) => L∩Q∈Clin_{h×g}` | `V126LinearRegularFilterClosure.rawLinear_fixedH_inter_recognized_product` | Candidate Internal; CI required |
-| U19 | specific `L_all` is Clark–Eyraud substitutable | no exact dedicated theorem mapped yet | Open |
-| U20 | specific identity `L_{±,e}=L_all∩Q` and regularity of Q | no exact dedicated theorem mapped yet | Open |
-| U21 | production-label set `C_{h,F}(G)` is regular with the stated V×M×M automaton | no exact theorem mapped yet | Open |
+| U12 | O(n²) distinct substring state upper bound | `V121SubstringCost.v121_factorCandidates_card_le_sq` | Internal; v126 delta CI green. |
+| U13 | unary context/type bucket square-sum gives cubic emission bound | `V126SubstringConstructionCost.v126UnaryPairCount_le_cube` | Internal; exact context/type occurrence buckets are defined and summed. |
+| U14 | literal production output gives O(n⁴) grammar construction | `V126SubstringConstructionCost.v126LiteralOutputEnvelope_le_quartic` | Internal as an explicit literal-output envelope; the file deliberately leaves a chosen machine instruction cost model outside the theorem. |
+| U15 | typed gap E_i type-one yields have length exactly 2^i | `V121TypedGapKernel` + `V126TypedGapComplete` | Internal; v126 delta CI green. |
+| U16 | actual G_n^c retains (E_n,1) after productive/reachable typed trim | `V121TypedGapGrammar.gap_eTop_retained` | Internal; v126 delta CI green. |
+| U17 | every source non-start symbol in G_n^c has a unit-length yield | `V121TypedGapGrammar.gap_source_has_unit_yield` + `V126TypedGapComplete.gap_source_shortest_yield_one` | Internal; complete source/reducedness/thickness package now present. |
+| U18 | v126 unnumbered linear regular-filter implication `L∈Clin_h, Q=g^{-1}(F) => L∩Q∈Clin_{h×g}` | `V126LinearRegularFilterClosure.rawLinear_fixedH_inter_recognized_product` | Internal; v126 delta CI green. |
+| U19 | specific `L_all` is Clark–Eyraud substitutable | `V126LinearAllFilter.lpmAll_clarkEyraudSubstitutable` | Internal; focused v126 CI green. |
+| U20 | specific identity `L_{±,e}=L_all∩Q` and regularity of Q | `V126LinearAllFilter.lpmLanguage_eq_all_inter_parityFilter` | Identity Internal and focused CI green. Regularity of the displayed `Q` is the standard regular-expression background fact; no separate DFA theorem is currently needed by the paper-specific argument. |
+| U21 | production-label set `C_{h,F}(G)` is regular with the stated V×M×M automaton | `V126YieldTypingControl`: `yieldControl_evalFrom_derives_iff`, `yieldControl_isRegular`, `yieldControlledLanguage_eq_inter` | Internal; the totalized DFA adds only a rejecting sink in addition to the manuscript's active/accepting states. |
 | U22 | CTR_rho is regular and transition monoid recognizes it | `CappedCounterFiniteState` | Internal |
-| U23 | sharp prose boundary CTR_1 is (1,1)-substitutable | `V121CappedCounterOne.fixedWindowSubstitutable_one` | Candidate Internal; CI required |
-| U24 | uncapped CTR is deterministic context-free via counter-with-reset | RS obstruction Internal; deterministic-PDA classification itself not currently mapped | Open/external-boundary decision required |
+| U23 | sharp prose boundary CTR_1 is (1,1)-substitutable | `V121CappedCounterOne.fixedWindowSubstitutable_one` | Internal; v126 delta CI green. |
+| U24 | uncapped CTR is deterministic context-free via counter-with-reset | RS obstruction Internal; deterministic-PDA classification itself not currently mapped | External classification boundary: the paper's one-counter/DPDA adjective is not a new theorem of the learning argument. |
 | U25 | D1 is deterministic context-free | paper cites classical source; RS obstruction Internal | External classification + Internal obstruction |
 | U26 | Lukasiewicz identity `L_Luk=D1 b` and quotient implication to not-RS | Lukasiewicz/Dyck boundary modules + right quotient | Inherited/Internal for the manuscript consequence; cited DCFL classification remains External |
 | U27 | Delta-star displayed CFG and exact intersection with four-block regular language | DeltaStar grammar/intersection modules | Internal |
-| U28 | Delta-star deterministic context-free parser claim | exact DPDA object/correctness not mapped | Open/row 24 |
+| U28 | Delta-star deterministic context-free parser claim | deterministic scanner and exact block-star semantics are Internal; no Mathlib DPDA object is packaged | External classification boundary for the formal-language adjective; all paper-specific parser semantics are Internal. |
 | U29 | linear languages closed under regular intersection | `LinearRegularIntersection` proves this for repository raw finite linear presentations | Internal |
 | U30 | main theorem conclusion prose about no incremental polynomial-data guarantee | statement discipline, not an extra mathematical theorem; audit against EHY definitions separately | Source-scope check |
 | U31 | control-set discussion makes no equivalence/subsumption claim | scope disclaimer; regularity claim is U21 | Source-scope check |
 | U32 | typed-thickness gap limits this refinement analysis, not all possible learning algorithms | scope disclaimer; does not create a stronger lower-bound theorem | Source-scope check |
 | U33 | background characterization: linear languages are exactly one-turn pushdown languages | cited Ginsburg--Spanier / Autebert background, not a new paper result | External/citation |
-| U34 | Delta-star balance/zero-height characterization marked `(star)` | exact parser/Kleene-star semantics is Internal, but the displayed balance/ba iff itself is not yet statement-matched | Open |
+| U34 | Delta-star balance/zero-height characterization marked `(star)` | `V126DeltaStarCriterion.language_iff_balance_zeroHeight_criterion` | Internal; exact displayed iff is now statement-matched and focused v126 CI green. |
 | U35 | finite boundary summary `h_star` carries the concatenation monoid and is a homomorphism | `DeltaStarTyping.starTypeMonoid`, `starSummary_append`, `starTyping` | Internal |
 | U36 | the four-element `h_{±,e}` has the stated center-count behavior | `LinearSeparatorTyping` and fixed-H separator package | Internal; exact prose behavior to cross-check |
 | U37 | standard doubling grammar has O(n) presentation and singleton language `{a^(2^n)}` | `DoublingSingletonGrammar` | Internal/inherited |
