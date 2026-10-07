@@ -116,7 +116,13 @@ theorem v121_productiveFilterDerives_complete
   | terminal h =>
       exact UntypedDerives.terminal h
   | @binary A B C wB wC h dB dC ihB ihC =>
-      exact UntypedDerives.binary h ihB ihC
+      have hfiltered :
+          v121ProductiveFilterBinary δ t b
+            ⟨A, ⟨wB ++ wC,
+              UntypedDerives.binary h dB dC⟩⟩
+            ⟨B, ⟨wB, dB⟩⟩
+            ⟨C, ⟨wC, dC⟩⟩ := h
+      exact UntypedDerives.binary hfiltered ihB ihC
 
 /-- Productive filtering does not change the DFA-product start language. -/
 theorem v121_productiveFilterStartLanguage_eq
@@ -149,8 +155,11 @@ theorem v121_productiveFilterStartLanguage_eq
         exact UntypedStartDerives.epsilon heps
   · intro d
     cases d with
-    | nonempty hs dx =>
-        exact UntypedStartDerives.nonempty hs
+    | @nonempty A word hs dx =>
+        have hs' :
+            v121ProductiveFilterStart δ t b s q₀ accept
+              ⟨A, ⟨word, dx⟩⟩ := hs
+        exact UntypedStartDerives.nonempty hs'
           (v121_productiveFilterDerives_complete δ t b dx)
     | epsilon heps =>
         exact UntypedStartDerives.epsilon heps
