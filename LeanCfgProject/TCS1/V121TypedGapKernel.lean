@@ -50,7 +50,7 @@ theorem wordType_append
     wordType (u ++ v) = wordType u * wordType v := by
   induction u with
   | nil =>
-      simp [wordType]
+      cases h : wordType v <;> rfl
   | cons s u ih =>
       cases s with
       | a => simpa [wordType] using ih
@@ -90,7 +90,7 @@ theorem EDerives_type_one_length
         exact h
       have hpair : wordType u = .one ∧ wordType v = .one := by
         cases hu : wordType u <;> cases hv : wordType v
-        · exact ⟨hu, hv⟩
+        · exact ⟨rfl, rfl⟩
         all_goals simp [hu, hv, twoMul] at hprod
       obtain ⟨hu, hv⟩ := hpair
       simp only [List.length_append, ihU hu, ihV hv]
