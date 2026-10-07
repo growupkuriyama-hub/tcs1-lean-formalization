@@ -292,16 +292,21 @@ theorem gap_nonterminal_card
   simp
   omega
 
-/-- There are O(n) displayed non-start production schemata: four fixed
-terminal/binary rules involving U,D,E_0 plus two rules for each E_i, i>0.
-This arithmetic count is the representation-size kernel of the paper's O(n)
-statement. -/
+/-- There are exactly 6+2n displayed non-start productions:
+U has four rules, D and E_0 have one each, and each E_i (i>0) has two.
+The separated start contributes one further rule. -/
 def gapDisplayedRuleCount (n : Nat) : Nat :=
-  5 + 2 * n
+  6 + 2 * n
+
+/-- Including the separated start rule, the displayed grammar has 7+2n
+production schemata, hence linear presentation size. -/
+def gapDisplayedRuleCountWithStart (n : Nat) : Nat :=
+  gapDisplayedRuleCount n + 1
 
 theorem gapDisplayedRuleCount_linear
     (n : Nat) :
-    gapDisplayedRuleCount n ≤ 7 * (n + 1) := by
+    gapDisplayedRuleCountWithStart n ≤ 9 * (n + 1) := by
+  unfold gapDisplayedRuleCountWithStart
   unfold gapDisplayedRuleCount
   omega
 
