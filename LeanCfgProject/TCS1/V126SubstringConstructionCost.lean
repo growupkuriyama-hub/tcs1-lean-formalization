@@ -47,7 +47,7 @@ deriving DecidableEq
 
 /-- Nonempty two-cut occurrences.  Invalid/reversed cuts decode to the empty
 factor and are discarded. -/
-def v126ValidOccurrences
+noncomputable def v126ValidOccurrences
     (K : Finset (Word α)) :
     Finset (ReconstructionFactorSlot K) := by
   classical
@@ -70,7 +70,7 @@ def v126OccurrenceKey
       H.h (reconstructionFactorSlotNonterminal s).factor }
 
 /-- Only keys that actually occur are enumerated. -/
-def v126OccurrenceKeys
+noncomputable def v126OccurrenceKeys
     (H : FixedFiniteMonoidHom α M)
     (K : Finset (Word α)) :
     Finset (V126OccurrenceKey α M) := by
@@ -78,7 +78,7 @@ def v126OccurrenceKeys
   exact (v126ValidOccurrences K).image (v126OccurrenceKey H)
 
 /-- One exact context/type bucket. -/
-def v126OccurrenceBucket
+noncomputable def v126OccurrenceBucket
     (H : FixedFiniteMonoidHom α M)
     (K : Finset (Word α))
     (key : V126OccurrenceKey α M) :
@@ -118,6 +118,14 @@ theorem v126_slot_eq_of_same_word_and_key
         hkey
     simpa [v126OccurrenceKey,
       reconstructionFactorSlotNonterminal] using h
+  have hislt := is.isLt
+  have hitlt := it.isLt
+  have hjslt := js.isLt
+  have hjtlt := jt.isLt
+  change is.val < ws.length + 1 at hislt
+  change it.val < ws.length + 1 at hitlt
+  change js.val < ws.length + 1 at hjslt
+  change jt.val < ws.length + 1 at hjtlt
   have his : is.val ≤ ws.length := by omega
   have hit : it.val ≤ ws.length := by omega
   have hjs : js.val ≤ ws.length := by omega
@@ -169,8 +177,9 @@ theorem v126_sum_bucket_cards_eq_valid
       =
     (v126ValidOccurrences K).card := by
   classical
+  unfold v126OccurrenceKeys v126OccurrenceBucket
   rw [Finset.sum_card_fiberwise_eq_card_filter]
-  simp [v126OccurrenceKeys, v126OccurrenceBucket]
+  simp
 
 /-- Total unary-bucket population is quadratically bounded by sample norm. -/
 theorem v126_sum_bucket_cards_le_sq
@@ -193,7 +202,7 @@ theorem v126_sum_bucket_cards_le_sq
       reconstructionFactorSlot_card_le_sq K
 
 /-- Exact ordered-pair count emitted by all unary buckets. -/
-def v126UnaryPairCount
+noncomputable def v126UnaryPairCount
     (H : FixedFiniteMonoidHom α M)
     (K : Finset (Word α)) : Nat :=
   ∑ key ∈ v126OccurrenceKeys H K,
@@ -239,7 +248,7 @@ theorem v126UnaryPairCount_le_cube
 
 /-- Generous exact candidate count for the current substring constructor:
 start rules, lexical factor states, binary split slots, and unary bucket pairs. -/
-def v126RuleCandidateCount
+noncomputable def v126RuleCandidateCount
     (H : FixedFiniteMonoidHom α M)
     (K : Finset (Word α)) : Nat :=
   K.card +
@@ -263,7 +272,7 @@ theorem v126RuleCandidateCount_le_cubic
 /-- A conservative literal output envelope.  Three factor identifiers per
 production, each of length at most n_K, plus constant delimiters, suffice for
 the manuscript's O(n_K)-per-production representation claim. -/
-def v126LiteralOutputEnvelope
+noncomputable def v126LiteralOutputEnvelope
     (H : FixedFiniteMonoidHom α M)
     (K : Finset (Word α)) : Nat :=
   v126RuleCandidateCount H K *
