@@ -135,8 +135,14 @@ theorem yieldControl_evalFrom_derives_iff
       simp [yieldControlDFA, yieldControlStep, hlhs, hrhs]
   | @around p A B left right labels word hlhs hrhs child ih =>
       rw [DFA.evalFrom_cons]
-      simp only [yieldControlDFA, yieldControlStep, hlhs, hrhs,
-        dite_true]
+      have hstep :
+          (yieldControlDFA G H F).step
+              (.active A muL muR) p =
+            .active B
+              (muL * H.h left)
+              (H.h right * muR) := by
+        simp [yieldControlDFA, yieldControlStep, hlhs, hrhs]
+      rw [hstep]
       rw [ih (muL * H.h left) (H.h right * muR)]
       rw [H.map_append (left ++ word) right]
       rw [H.map_append left word]
@@ -157,10 +163,12 @@ theorem yieldControl_evalFrom_derives_iff
   | nil => rfl
   | cons p rest ih =>
       rw [DFA.evalFrom_cons]
-      change
-        (yieldControlDFA G H F).evalFrom
-          ((yieldControlDFA G H F).step .dead p) rest = .dead
-      simp [yieldControlDFA, yieldControlStep, ih]
+      have hstep :
+          (yieldControlDFA G H F).step
+              (.dead : YieldControlState N M) p = .dead := by
+        simp [yieldControlDFA, yieldControlStep]
+      rw [hstep]
+      exact ih
 
 /-- Once the accepting state is reached, any further production label makes
 the word invalid and sends the totalized DFA to the rejecting sink. -/
@@ -175,10 +183,12 @@ the word invalid and sends the totalized DFA to the rejecting sink. -/
     (yieldControlDFA G H F).evalFrom
         (.accept : YieldControlState N M) (p :: rest) = .dead := by
   rw [DFA.evalFrom_cons]
-  change
-    (yieldControlDFA G H F).evalFrom
-      ((yieldControlDFA G H F).step .accept p) rest = .dead
-  simp [yieldControlDFA, yieldControlStep]
+  have hstep :
+      (yieldControlDFA G H F).step
+          (.accept : YieldControlState N M) p = .dead := by
+    simp [yieldControlDFA, yieldControlStep]
+  rw [hstep]
+  exact yieldControl_evalFrom_dead G H F rest
 
 theorem yieldControl_accept_implies_derivation
     {M : Type}
@@ -202,38 +212,50 @@ theorem yieldControl_accept_implies_derivation
   | cons p rest ih =>
       intro A muL muR hacc
       rw [DFA.evalFrom_cons] at hacc
-      classical
       by_cases hlhs : G.lhs p = A
       · cases hrhs : G.rhs p with
         | terminal word =>
             by_cases hF : muL * H.h word * muR ∈ F
-            · by_cases hrest : rest = []
-              · subst rest
-                refine ⟨word, ?_, hF⟩
-                exact LabeledLinearDerives.terminal
-                  p A word hlhs hrhs
-              · cases rest with
-                | nil => exact False.elim (hrest rfl)
-                | cons q qs =>
-                    simp [yieldControlDFA, yieldControlStep,
-                      hlhs, hrhs, hF,
-                      yieldControl_evalFrom_dead,
-                      yieldControl_evalFrom_accept_cons] at hacc
-            · simp [yieldControlDFA, yieldControlStep,
-                hlhs, hrhs, hF,
-                yieldControl_evalFrom_dead] at hacc
+            · have hstep :
+                  (yieldControlDFA G H F).step
+                      (.active A muL muR) p = .accept := by
+                simp [yieldControlDFA, yieldControlStep,
+                  hlhs, hrhs, hF]
+              rw [hstep] at hacc
+              cases rest with
+              | nil =>
+                  refine ⟨word, ?_, hF⟩
+                  exact LabeledLinearDerives.terminal
+                    p A word hlhs hrhs
+              | cons q qs =>
+                  have hdead :=
+                    yieldControl_evalFrom_accept_cons
+                      G H F q qs
+                  rw [hdead] at hacc
+                  cases hacc
+            · have hstep :
+                  (yieldControlDFA G H F).step
+                      (.active A muL muR) p = .dead := by
+                simp [yieldControlDFA, yieldControlStep,
+                  hlhs, hrhs, hF]
+              rw [hstep] at hacc
+              have hdead :=
+                yieldControl_evalFrom_dead G H F rest
+              rw [hdead] at hacc
+              cases hacc
         | around left B right =>
-            have hchild :
-                (yieldControlDFA G H F).evalFrom
-                    (.active B
-                      (muL * H.h left)
-                      (H.h right * muR))
-                    rest = .accept := by
-              simpa [yieldControlDFA, yieldControlStep,
-                hlhs, hrhs] using hacc
+            have hstep :
+                (yieldControlDFA G H F).step
+                    (.active A muL muR) p =
+                  .active B
+                    (muL * H.h left)
+                    (H.h right * muR) := by
+              simp [yieldControlDFA, yieldControlStep,
+                hlhs, hrhs]
+            rw [hstep] at hacc
             obtain ⟨word, dword, htype⟩ :=
               ih B (muL * H.h left)
-                (H.h right * muR) hchild
+                (H.h right * muR) hacc
             refine
               ⟨left ++ word ++ right,
                 LabeledLinearDerives.around
@@ -242,8 +264,15 @@ theorem yieldControl_accept_implies_derivation
             rw [H.map_append (left ++ word) right]
             rw [H.map_append left word]
             simpa only [mul_assoc] using htype
-      · simp [yieldControlDFA, yieldControlStep, hlhs,
-          yieldControl_evalFrom_dead] at hacc
+      · have hstep :
+            (yieldControlDFA G H F).step
+                (.active A muL muR) p = .dead := by
+          simp [yieldControlDFA, yieldControlStep, hlhs]
+        rw [hstep] at hacc
+        have hdead :=
+          yieldControl_evalFrom_dead G H F rest
+        rw [hdead] at hacc
+        cases hacc
 
 theorem yieldControl_accepts_iff
     {M : Type}
