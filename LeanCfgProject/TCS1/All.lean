@@ -119,6 +119,13 @@ import LeanCfgProject.TCS1.IndexedFixedHBridge
 import LeanCfgProject.TCS1.MainTheoremSemanticPackage
 import LeanCfgProject.TCS1.MainTheoremExecutablePackage
 import LeanCfgProject.TCS1.MainTheoremMaterializedPackage
+import LeanCfgProject.TCS1.V126LocallyTrivialCore
+import LeanCfgProject.TCS1.V126LinearRegularFilterClosure
+import LeanCfgProject.TCS1.V126TypedGapComplete
+import LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial
+import LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction
+import LeanCfgProject.TCS1.V126SubstringConstructionCost
+import LeanCfgProject.TCS1.V126YieldTypingControl
 
 import LeanCfgProject.TCS1.SSBNFThicknessBounds
 import LeanCfgProject.TCS1.SSBNFNormalizationCombinatorics
@@ -315,10 +322,3 @@ theorem v88_reverification_completed : True :=
 end TCS1
 end LeanCfgProject
 
-import LeanCfgProject.TCS1.V126LocallyTrivialCore
-import LeanCfgProject.TCS1.V126LinearRegularFilterClosure
-import LeanCfgProject.TCS1.V126TypedGapComplete
-import LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial
-import LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction
-import LeanCfgProject.TCS1.V126SubstringConstructionCost
-import LeanCfgProject.TCS1.V126YieldTypingControl
