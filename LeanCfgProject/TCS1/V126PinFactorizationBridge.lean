@@ -232,18 +232,30 @@ theorem fixedWindowSubstitutable_of_positiveKernelRefinement
     FixedWindowSubstitutable k l L := by
   intro p q y₁ y₂ x₁ x₂ z₁ z₂
     hp hq hw₁ne hw₂ne h₁ h₂ h₃
+  have hxpos :
+      1 ≤ (p ++ y₁ ++ q).length := by
+    exact List.length_pos_of_ne_nil hw₁ne
+  have hxsum :
+      k + l ≤ (p ++ y₁ ++ q).length := by
+    simp only [List.length_append, hp, hq]
+    omega
   have hxcut :
       fixedWindowThreshold k l ≤
         (p ++ y₁ ++ q).length := by
     unfold fixedWindowThreshold
-    simp only [List.length_append]
+    exact max_le hxpos hxsum
+  have hypos :
+      1 ≤ (p ++ y₂ ++ q).length := by
+    exact List.length_pos_of_ne_nil hw₂ne
+  have hysum :
+      k + l ≤ (p ++ y₂ ++ q).length := by
+    simp only [List.length_append, hp, hq]
     omega
   have hycut :
       fixedWindowThreshold k l ≤
         (p ++ y₂ ++ q).length := by
     unfold fixedWindowThreshold
-    simp only [List.length_append]
-    omega
+    exact max_le hypos hysum
   have hsame :
       SameFixedWindowSummary k l
         (p ++ y₁ ++ q) (p ++ y₂ ++ q) :=
@@ -266,7 +278,8 @@ theorem fixedWindowSubstitutable_of_positiveKernelRefinement
       hw₁ne hw₂ne hwindow
   have hdist :=
     hsub
-      (p ++ y₁ ++ q) (p ++ y₂ ++ q)
+      (x := p ++ y₁ ++ q)
+      (y := p ++ y₂ ++ q)
       hw₁ne hw₂ne htype
       ⟨x₁, z₁, h₁, h₂⟩
   have hctx :
