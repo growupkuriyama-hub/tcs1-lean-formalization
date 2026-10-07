@@ -121,6 +121,12 @@ merely because a raw LaTeX theorem-environment count does not see them.
 | U30 | main theorem conclusion prose about no incremental polynomial-data guarantee | statement discipline, not an extra mathematical theorem; audit against EHY definitions separately | Source-scope check |
 | U31 | control-set discussion makes no equivalence/subsumption claim | scope disclaimer; regularity claim is U21 | Source-scope check |
 | U32 | typed-thickness gap limits this refinement analysis, not all possible learning algorithms | scope disclaimer; does not create a stronger lower-bound theorem | Source-scope check |
+| U33 | background characterization: linear languages are exactly one-turn pushdown languages | cited Ginsburg--Spanier / Autebert background, not a new paper result | External/citation |
+| U34 | Delta-star balance/zero-height characterization marked `(star)` | exact parser/Kleene-star semantics is Internal, but the displayed balance/ba iff itself is not yet statement-matched | Open |
+| U35 | finite boundary summary `h_star` carries the concatenation monoid and is a homomorphism | `DeltaStarTyping.starTypeMonoid`, `starSummary_append`, `starTyping` | Internal |
+| U36 | the four-element `h_{±,e}` has the stated center-count behavior | `LinearSeparatorTyping` and fixed-H separator package | Internal; exact prose behavior to cross-check |
+| U37 | standard doubling grammar has O(n) presentation and singleton language `{a^(2^n)}` | `DoublingSingletonGrammar` | Internal/inherited |
+
 
 ## C. New v123–v126 mathematical deltas that must not be hidden by “inherited”
 
