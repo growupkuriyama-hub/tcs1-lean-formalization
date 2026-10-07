@@ -28,5 +28,4 @@ jobs:
       - name: Build current v126 audit tip
         run: |
           lake build \
-            LeanCfgProject.TCS1.V126PinFactorizationBridge \
-            LeanCfgProject.TCS1.V126DeltaStarCriterion
+            LeanCfgProject.TCS1.V126LinearAllFilter
