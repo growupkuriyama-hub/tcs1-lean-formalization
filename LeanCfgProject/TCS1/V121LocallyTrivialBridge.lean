@@ -24,6 +24,7 @@ section V121LocallyTrivialBridge
 
 variable {α : Type u}
 variable {M : Type v} [Monoid M] [Fintype M]
+variable {N : Type w}
 
 /-- Positive-word kernel refinement from the concrete fixed-window typing to H. -/
 def PositiveWindowKernelRefines
