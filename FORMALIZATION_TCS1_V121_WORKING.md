@@ -1,6 +1,6 @@
 # TCS #1 v121 — theorem-facing crosswalk (working, not a proof certificate)
 
-**Observed 2026-10-07.** Manuscript source: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`. Authoritative English **v121** SHA-256: `70107ff6ee9c38c84f36cc13cfd741c20722561ec711eea69198d0cd63ab17b6`. The Japanese document is still **v120**; do not assert EN/JP equivalence. The manuscript is a **TCS major revision** in progress.
+**Observed 2026-10-07.** Manuscript source: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`. Authoritative English **v121** SHA-256: `70107ff6ee9c38c84f36cc13cfd741c20722561ec711eea69198d0cd63ab17b6`. The Japanese reference has since been **synchronized to v121**, SHA-256 `48852cecd0ae73feb013d19b093da6f3bc5d9899cfb6692af3ad0aadbad7a504` (PAPER.yaml update `7660533a2`; LuaLaTeX CI passed, 28pp). English remains the TCS submission source of truth. The manuscript is a **TCS major revision** in progress.
 
 ## Important scope
 
