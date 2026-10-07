@@ -35,4 +35,5 @@ jobs:
             LeanCfgProject.TCS1.V126TypedGapComplete \
             LeanCfgProject.TCS1.V126SubstringConstructionCost \
             LeanCfgProject.TCS1.V126YieldTypingControl \
-            LeanCfgProject.TCS1.V126LinearAllFilter
+            LeanCfgProject.TCS1.V126LinearAllFilter \
+            LeanCfgProject.TCS1.V126PinFactorizationBridge
