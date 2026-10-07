@@ -128,6 +128,8 @@ import LeanCfgProject.TCS1.V126SubstringConstructionCost
 import LeanCfgProject.TCS1.V126YieldTypingControl
 import LeanCfgProject.TCS1.V126LinearAllFilter
 import LeanCfgProject.TCS1.V126PinFactorizationBridge
+import LeanCfgProject.TCS1.V126DeltaStarCriterion
+import LeanCfgProject.TCS1.V126ExactSourceAudit
 
 import LeanCfgProject.TCS1.SSBNFThicknessBounds
 import LeanCfgProject.TCS1.SSBNFNormalizationCombinatorics
