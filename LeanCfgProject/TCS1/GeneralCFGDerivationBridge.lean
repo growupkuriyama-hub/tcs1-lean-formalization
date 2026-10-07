@@ -47,7 +47,7 @@ theorem mixedSymbolsDerive_to_rhsRealizes
       · simp
       · exact head
 termination_by rhs.length
-decreasing_by omega
+decreasing_by simp_wf; simp
 
 /--
 Conversely, every semantic RHS realization can be represented by aligned

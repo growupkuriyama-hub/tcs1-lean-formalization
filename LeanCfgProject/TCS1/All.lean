@@ -3,6 +3,40 @@ import LeanCfgProject.TCS1.FixedHSubstitutability
 import LeanCfgProject.TCS1.FixedHTypeFiberRestriction
 import LeanCfgProject.TCS1.FixedHomEvaluation
 import LeanCfgProject.TCS1.FixedHTypingRefinement
+import LeanCfgProject.TCS1.V115FiniteInformationClosure
+import LeanCfgProject.TCS1.V115InverseHomClosure
+import LeanCfgProject.TCS1.V115LocallyTrivialWindows
+import LeanCfgProject.TCS1.V115LocallyTrivialForwardReduction
+import LeanCfgProject.TCS1.V115LocallyTrivialThickness
+import LeanCfgProject.TCS1.V115PositiveIdempotentIdeal
+import LeanCfgProject.TCS1.V115FinitePositivePowers
+import LeanCfgProject.TCS1.V115PositiveImageCardinal
+import LeanCfgProject.TCS1.V115LocalConsequences
+import LeanCfgProject.TCS1.V115LocalThicknessBound
+import LeanCfgProject.TCS1.V115IndexedNormalizationYieldBridge
+import LeanCfgProject.TCS1.V115IndexedCharacteristicData
+import LeanCfgProject.TCS1.V115IndexedCharacteristicPackage
+import LeanCfgProject.TCS1.V115DeltaStarDPDA
+import LeanCfgProject.TCS1.V115SSBNFRegularIntersection
+import LeanCfgProject.TCS1.V115IndexedRegularIntersection
+import LeanCfgProject.TCS1.V115CFGHomomorphicImage
+import LeanCfgProject.TCS1.V115MixedDerivationLeastClosed
+import LeanCfgProject.TCS1.V115InverseHomReduction
+import LeanCfgProject.TCS1.V115TheoremSurfaceAudit
+import LeanCfgProject.TCS1.V116SubstringQuotient
+import LeanCfgProject.TCS1.V117TypedThicknessGapCore
+import LeanCfgProject.TCS1.V118WindowSourceBridge
+import LeanCfgProject.TCS1.V118LinearFilterShapeBridge
+import LeanCfgProject.TCS1.V121ProductiveLinearFilter
+import LeanCfgProject.TCS1.V121IndexedLinearRegularClosure
+import LeanCfgProject.TCS1.V121IndexedLinearFixedHFilter
+import LeanCfgProject.TCS1.V121SubstringBucketCost
+import LeanCfgProject.TCS1.V119GapFiniteSSBNF
+import LeanCfgProject.TCS1.V119GapExactSource
+import LeanCfgProject.TCS1.V119GapSourceReduced
+import LeanCfgProject.TCS1.V119GapRuleIndex
+import LeanCfgProject.TCS1.V119GapQuantitativeCertificate
+import LeanCfgProject.TCS1.V119GapTargetClass
 import LeanCfgProject.TCS1.GoldCompatibilityFiniteObstruction
 import LeanCfgProject.TCS1.SyntacticRefinementRegularity
 import LeanCfgProject.TCS1.RegularRecognition
@@ -302,6 +336,10 @@ theorem v87_reverification_completed : True :=
 /-- Marker theorem: the v88 exact manuscript synchronization is integrated. -/
 theorem v88_reverification_completed : True :=
   v88_full_manuscript_audited
+
+/-- Marker theorem: the v115 re-verification has started with Proposition 3.2. -/
+theorem v115_reverification_started : True :=
+  True.intro
 
 end TCS1
 end LeanCfgProject

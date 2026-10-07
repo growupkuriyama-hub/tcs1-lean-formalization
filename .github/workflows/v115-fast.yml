@@ -1,0 +1,60 @@
+name: TCS1 v115 fast check
+
+on:
+  push:
+    branches:
+      - tcs1-v115-reverification
+  workflow_dispatch:
+
+jobs:
+  v115:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+
+      - name: Build v115 delta
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V115FiniteInformationClosure \
+            LeanCfgProject.TCS1.V115InverseHomClosure \
+            LeanCfgProject.TCS1.V115LocallyTrivialWindows \
+            LeanCfgProject.TCS1.V115LocallyTrivialForwardReduction \
+            LeanCfgProject.TCS1.V115LocallyTrivialThickness \
+            LeanCfgProject.TCS1.V115PositiveIdempotentIdeal \
+            LeanCfgProject.TCS1.V115FinitePositivePowers \
+            LeanCfgProject.TCS1.V115PositiveImageCardinal \
+            LeanCfgProject.TCS1.V115LocalConsequences \
+            LeanCfgProject.TCS1.V115LocalThicknessBound \
+            LeanCfgProject.TCS1.V115IndexedNormalizationYieldBridge \
+            LeanCfgProject.TCS1.V115IndexedCharacteristicData \
+            LeanCfgProject.TCS1.V115IndexedCharacteristicPackage \
+            LeanCfgProject.TCS1.V115DeltaStarDPDA \
+            LeanCfgProject.TCS1.V115SSBNFRegularIntersection \
+            LeanCfgProject.TCS1.V115IndexedRegularIntersection \
+            LeanCfgProject.TCS1.V115CFGHomomorphicImage \
+            LeanCfgProject.TCS1.V115MixedDerivationLeastClosed \
+            LeanCfgProject.TCS1.V115InverseHomReduction \
+            LeanCfgProject.TCS1.V115TheoremSurfaceAudit \
+            LeanCfgProject.TCS1.V116SubstringQuotient \
+            LeanCfgProject.TCS1.V117TypedThicknessGapCore \
+            LeanCfgProject.TCS1.V118WindowSourceBridge \
+            LeanCfgProject.TCS1.V118LinearFilterShapeBridge \
+            LeanCfgProject.TCS1.V121ProductiveLinearFilter \
+            LeanCfgProject.TCS1.V121IndexedLinearRegularClosure \
+            LeanCfgProject.TCS1.V121IndexedLinearFixedHFilter \
+            LeanCfgProject.TCS1.V121SubstringBucketCost \
+            LeanCfgProject.TCS1.V119GapFiniteSSBNF \
+            LeanCfgProject.TCS1.V119GapExactSource \
+            LeanCfgProject.TCS1.V119GapSourceReduced \
+            LeanCfgProject.TCS1.V119GapRuleIndex \
+            LeanCfgProject.TCS1.V119GapQuantitativeCertificate \
+            LeanCfgProject.TCS1.V119GapTargetClass
