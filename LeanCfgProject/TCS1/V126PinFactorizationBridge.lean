@@ -274,13 +274,9 @@ theorem fixedWindow_positiveImageLocallyTrivial
     PositiveImageLocallyTrivial
       (fixedWindowMonoidHom (α := α) k l) := by
   intro e hepos heidem t htpos
-  apply
+  exact
     fixedWindow_positive_image_locally_trivial
-      (α := α) k l e
-  · exact hepos
-  · exact heidem
-  · exact t
-  · exact htpos
+      (α := α) k l e hepos heidem t htpos
 
 /-- Reverse inclusion behind the manuscript's union equality: every classical
 fixed-window target belongs to a fixed-H slice whose positive image is locally
