@@ -177,9 +177,15 @@ theorem v126_sum_bucket_cards_eq_valid
       =
     (v126ValidOccurrences K).card := by
   classical
-  unfold v126OccurrenceKeys v126OccurrenceBucket
-  rw [Finset.sum_card_fiberwise_eq_card_filter]
-  simp
+  have hmaps :
+      ((v126ValidOccurrences K : Finset (ReconstructionFactorSlot K)) :
+          Set (ReconstructionFactorSlot K)).MapsTo
+        (v126OccurrenceKey H)
+        (v126OccurrenceKeys H K) := by
+    intro s hs
+    exact Finset.mem_image.mpr ⟨s, hs, rfl⟩
+  simpa [v126OccurrenceBucket] using
+    (Finset.card_eq_sum_card_fiberwise hmaps).symm
 
 /-- Total unary-bucket population is quadratically bounded by sample norm. -/
 theorem v126_sum_bucket_cards_le_sq
