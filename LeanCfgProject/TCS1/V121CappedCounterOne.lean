@@ -31,7 +31,7 @@ theorem scan_success_split
   | none =>
       simp [hm] at hs
   | some m =>
-      exact ⟨m, hm, by simpa [hm] using hs⟩
+      exact ⟨m, rfl, by simpa using hs⟩
 
 /-- Successful scans compose. -/
 theorem scan_success_join
@@ -126,25 +126,33 @@ theorem fixedWindowSubstitutable_one :
       scan 1 0 (x₂ ++ f₁ ++ z₂) = some t₃ := by
     simpa [f₁, List.append_assoc] using hs₃
 
+  have hs₁'' :
+      scan 1 0 (x₁ ++ (f₁ ++ z₁)) = some t₁ := by
+    simpa only [List.append_assoc] using hs₁'
   obtain ⟨a, hx₁, hf₁z₁⟩ :=
     scan_success_split (rho := 1) (h := 0)
-      (u := x₁) (v := f₁ ++ z₁) hs₁'
+      (u := x₁) (v := f₁ ++ z₁) hs₁''
   obtain ⟨b₁, hf₁a, hz₁⟩ :=
     scan_success_split (rho := 1) (h := a)
       (u := f₁) (v := z₁) hf₁z₁
 
+  have hs₂'' :
+      scan 1 0 (x₁ ++ (f₂ ++ z₁)) = some t₂ := by
+    simpa only [List.append_assoc] using hs₂'
   have hf₂z₁ :
       scan 1 a (f₂ ++ z₁) = some t₂ := by
-    rw [scan_append] at hs₂'
-    rw [hx₁] at hs₂'
-    exact hs₂'
+    rw [scan_append, hx₁] at hs₂''
+    exact hs₂''
   obtain ⟨b₂, hf₂a, hz₁'⟩ :=
     scan_success_split (rho := 1) (h := a)
       (u := f₂) (v := z₁) hf₂z₁
 
+  have hs₃'' :
+      scan 1 0 (x₂ ++ (f₁ ++ z₂)) = some t₃ := by
+    simpa only [List.append_assoc] using hs₃'
   obtain ⟨c, hx₂, hf₁z₂⟩ :=
     scan_success_split (rho := 1) (h := 0)
-      (u := x₂) (v := f₁ ++ z₂) hs₃'
+      (u := x₂) (v := f₁ ++ z₂) hs₃''
   obtain ⟨d₁, hf₁c, hz₂⟩ :=
     scan_success_split (rho := 1) (h := c)
       (u := f₁) (v := z₂) hf₁z₂
