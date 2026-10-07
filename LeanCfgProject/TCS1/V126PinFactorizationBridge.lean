@@ -180,6 +180,44 @@ theorem locallyTrivial_implies_nn_window_refinement
     positiveWindowKernelRefines_of_factorization
       H n hfac hlt⟩
 
+/-- Reverse half of Proposition li-window: if any fixed-window kernel
+refines H on positive words, then the positive image of H is locally trivial.
+This direction is entirely internal and uses the explicit obstruction from
+V126NonLocalTrivialWindowObstruction. -/
+theorem positiveWindowKernelRefines_implies_locallyTrivial
+    [Fintype α]
+    (H : FixedFiniteMonoidHom α M)
+    {k l : Nat}
+    (href : PositiveWindowKernelRefines H k l) :
+    PositiveImageLocallyTrivial H := by
+  by_contra hnot
+  obtain ⟨x, y, hxne, hyne, hwindow, hneq⟩ :=
+    nonLocalTrivial_obstructs_every_fixedWindow
+      H hnot k l
+  exact hneq (href x y hxne hyne hwindow)
+
+/-- Exact logical equivalence used by Proposition li-window, conditional only
+on the external Pin factorization contract for the forward direction. -/
+theorem locallyTrivial_iff_positiveWindowKernelRefines
+    [Fintype α]
+    (H : FixedFiniteMonoidHom α M)
+    (n : Nat)
+    (hfac :
+      PositiveImageLocallyTrivial H →
+        PositiveLengthFactorization H n) :
+    PositiveImageLocallyTrivial H ↔
+      ∃ k l : Nat,
+        PositiveWindowKernelRefines H k l := by
+  constructor
+  · intro hlt
+    exact
+      locallyTrivial_implies_nn_window_refinement
+        H n (hfac hlt) hlt
+  · rintro ⟨k, l, href⟩
+    exact
+      positiveWindowKernelRefines_implies_locallyTrivial
+        H href
+
 /-- Kernel refinement is enough to transfer fixed-H substitutability back
 to the classical fixed-window condition. -/
 theorem fixedWindowSubstitutable_of_positiveKernelRefinement
