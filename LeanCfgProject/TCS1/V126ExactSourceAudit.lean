@@ -56,6 +56,12 @@ namespace TCS1
 #check PositiveLengthFactorization
 #check positiveWindowKernelRefines_of_factorization
 #check locallyTrivial_implies_nn_window_refinement
+#check positiveWindowKernelRefines_implies_locallyTrivial
+#check locallyTrivial_iff_positiveWindowKernelRefines
+#check fixedWindowSubstitutable_of_positiveKernelRefinement
+#check locallyTrivial_fixedHSubstitutable_implies_fixedWindow
+#check fixedWindow_positiveImageLocallyTrivial
+#check fixedWindowSubstitutable_has_locallyTrivial_fixedTyping
 
 #check v123_retained_typed_fibre_language_eq
 
