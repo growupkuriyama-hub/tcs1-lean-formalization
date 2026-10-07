@@ -13,7 +13,7 @@ occurrence-indexed `BatchLanguage`.  Consequently the existing soundness,
 finite-witness completeness, conservative Gold convergence, and executable
 bridges can be reused without changing their language-level conclusions.
 
-No `sorry`, `admit`, or project-level axiom is used.
+All derivation-transport proofs are complete, without placeholders or new axioms.
 -/
 
 namespace LeanCfgProject
