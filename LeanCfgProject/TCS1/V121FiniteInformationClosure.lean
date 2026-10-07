@@ -109,6 +109,144 @@ theorem fixedHSubstitutable_inter_recognized_product
       H G hL
       (recognizedPreimage_fixedHSubstitutable G Acc)
 
+
+section InverseHomomorphism
+
+universe q
+
+variable {γ : Type q}
+
+/-- A homomorphism between free word monoids, allowing erasing letters. -/
+structure FreeWordHom (γ : Type q) (α : Type u) where
+  map : Word γ → Word α
+  map_nil : map [] = []
+  map_append : ∀ x y : Word γ, map (x ++ y) = map x ++ map y
+
+/-- Pull back a language along a free-word homomorphism. -/
+def PullbackLanguage
+    (φ : FreeWordHom γ α)
+    (L : Set (Word α)) :
+    Set (Word γ) :=
+  {w | φ.map w ∈ L}
+
+/-- Compose a fixed finite-monoid typing with a free-word homomorphism. -/
+def composeTyping
+    (H : FixedFiniteMonoidHom α M)
+    (φ : FreeWordHom γ α) :
+    FixedFiniteMonoidHom γ M where
+  h w := H.h (φ.map w)
+  map_nil := by
+    rw [φ.map_nil]
+    exact H.map_nil
+  map_append := by
+    intro x y
+    rw [φ.map_append]
+    exact H.map_append _ _
+
+/-- Two-element monoid recording whether the image under φ is empty. -/
+inductive EmptinessFlag where
+  | empty
+  | nonempty
+  deriving DecidableEq, Fintype
+
+def EmptinessFlag.mul :
+    EmptinessFlag → EmptinessFlag → EmptinessFlag
+  | .empty, .empty => .empty
+  | _, _ => .nonempty
+
+instance : Monoid EmptinessFlag where
+  one := .empty
+  mul := EmptinessFlag.mul
+  one_mul a := by cases a <;> rfl
+  mul_one a := by cases a <;> rfl
+  mul_assoc a b c := by cases a <;> cases b <;> cases c <;> rfl
+
+/-- The v121 emptiness/nonemptiness flag e_φ. -/
+def emptinessTyping
+    (φ : FreeWordHom γ α) :
+    FixedFiniteMonoidHom γ EmptinessFlag where
+  h w := if φ.map w = [] then .empty else .nonempty
+  map_nil := by
+    rw [φ.map_nil]
+    rfl
+  map_append := by
+    intro x y
+    rw [φ.map_append]
+    by_cases hx : φ.map x = [] <;>
+      by_cases hy : φ.map y = [] <;>
+      simp [hx, hy, EmptinessFlag.mul]
+
+/-- The exact v121 typing (h ∘ φ) × e_φ for inverse images. -/
+def inverseImageTyping
+    (H : FixedFiniteMonoidHom α M)
+    (φ : FreeWordHom γ α) :
+    FixedFiniteMonoidHom γ (M × EmptinessFlag) :=
+  productTyping (composeTyping H φ) (emptinessTyping φ)
+
+/--
+Distributional core of v121 Proposition "closure under finite information" (iii):
+possibly erasing inverse homomorphisms preserve fixed-typing substitutability
+after adjoining the emptiness flag.
+-/
+theorem fixedHSubstitutable_inverseImage
+    (H : FixedFiniteMonoidHom α M)
+    (φ : FreeWordHom γ α)
+    {L : Set (Word α)}
+    (hsub : FixedHSubstitutable H L) :
+    FixedHSubstitutable
+      (inverseImageTyping H φ)
+      (PullbackLanguage φ L) := by
+  intro x y hx hy htype hshared
+  have hH :
+      H.h (φ.map x) = H.h (φ.map y) := by
+    exact congrArg Prod.fst htype
+  have hflag :
+      (emptinessTyping φ).h x =
+        (emptinessTyping φ).h y := by
+    exact congrArg Prod.snd htype
+  by_cases hximg : φ.map x = []
+  · have hyimg : φ.map y = [] := by
+      by_contra hyimg
+      simp [emptinessTyping, hximg, hyimg] at hflag
+    apply Set.ext
+    intro c
+    rcases c with ⟨u, v⟩
+    change
+      φ.map (u ++ x ++ v) ∈ L ↔
+        φ.map (u ++ y ++ v) ∈ L
+    simp only [φ.map_append, List.append_assoc, hximg, hyimg,
+      List.append_nil]
+  · have hyimg : φ.map y ≠ [] := by
+      intro hyzero
+      simp [emptinessTyping, hximg, hyzero] at hflag
+    rcases hshared with ⟨u, v, hxshared, hyshared⟩
+    have hxL :
+        φ.map u ++ φ.map x ++ φ.map v ∈ L := by
+      change φ.map (u ++ x ++ v) ∈ L at hxshared
+      simpa only [φ.map_append, List.append_assoc] using hxshared
+    have hyL :
+        φ.map u ++ φ.map y ++ φ.map v ∈ L := by
+      change φ.map (u ++ y ++ v) ∈ L at hyshared
+      simpa only [φ.map_append, List.append_assoc] using hyshared
+    have hdist :
+        Distribution L (φ.map x) =
+          Distribution L (φ.map y) :=
+      hsub hximg hyimg hH
+        ⟨φ.map u, φ.map v, hxL, hyL⟩
+    apply Set.ext
+    intro c
+    rcases c with ⟨p, q⟩
+    change
+      φ.map (p ++ x ++ q) ∈ L ↔
+        φ.map (p ++ y ++ q) ∈ L
+    simp only [φ.map_append, List.append_assoc]
+    change
+      (φ.map p, φ.map q) ∈ Distribution L (φ.map x) ↔
+        (φ.map p, φ.map q) ∈ Distribution L (φ.map y)
+    rw [hdist]
+
+end InverseHomomorphism
+
 end V121FiniteInformationClosure
 
 end TCS1
