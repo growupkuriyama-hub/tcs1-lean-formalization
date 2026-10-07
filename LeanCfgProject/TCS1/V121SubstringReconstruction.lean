@@ -150,7 +150,7 @@ theorem substringDerives_to_hypDerives_at
         HypDerives.r1
           hobs hleft hright
           (ihleft hleft)
-          (ihright hright)
+          (ihrigh hright)
 
 /-- Old and new non-start derivation semantics are extensionally equivalent
 once an old representative occurrence is fixed. -/
