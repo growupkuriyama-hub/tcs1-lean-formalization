@@ -51,7 +51,7 @@ theorem scan_zero_prefix_success
       rw [hp] at hw
       cases hw
   | some q =>
-      exact ⟨q, hp⟩
+      exact ⟨q, rfl⟩
 
 /-- Parser acceptance implies the manuscript's nonnegative-prefix condition. -/
 theorem language_prefixBalanceNonnegative
@@ -61,9 +61,10 @@ theorem language_prefixBalanceNonnegative
   intro p r hpr
   obtain ⟨q, hp⟩ :=
     scan_zero_prefix_success hw hpr
-  have hh := scan_height hp
-  have hnon := modeHeight_nonneg q
-  simp [modeHeight] at hh ⊢
+  have hh : modeHeight q = balance p := by
+    simpa [modeHeight] using (scan_height hp)
+  have hnon : 0 ≤ modeHeight q :=
+    modeHeight_nonneg q
   omega
 
 /-- Parser acceptance implies that every ba transition occurs at height zero. -/
@@ -107,6 +108,29 @@ theorem language_implies_balance_zeroHeight_criterion
       balance_mem_zero hw,
       language_everyBAAtHeightZero hw⟩
 
+/-- A word whose recorded last symbol is b ends in b. -/
+theorem exists_append_b_of_lastSymbol
+    {p : Word Symbol}
+    (hl : lastSymbol? p = some b) :
+    ∃ u : Word Symbol,
+      p = u ++ [b] := by
+  induction p with
+  | nil =>
+      simp [lastSymbol?] at hl
+  | cons x xs ih =>
+      cases xs with
+      | nil =>
+          simp [lastSymbol?, lastFrom] at hl
+          subst x
+          exact ⟨[], rfl⟩
+      | cons y ys =>
+          have htail :
+              lastSymbol? (y :: ys) = some b := by
+            simpa [lastSymbol?, lastFrom] using hl
+          obtain ⟨u, hu⟩ := ih htail
+          refine ⟨x :: u, ?_⟩
+          simp [hu]
+
 /-- If a successful scan from zero ends in a falling state, the processed
 nonempty word ends in b. -/
 theorem exists_append_b_of_scan_zero_falling
@@ -131,44 +155,7 @@ theorem exists_append_b_of_scan_zero_falling
               hpne hl hp
           cases hm
       | b =>
-          induction p with
-          | nil =>
-              exact False.elim (hpne rfl)
-          | cons x xs ih =>
-              cases xs with
-              | nil =>
-                  simp [lastSymbol?, lastFrom] at hl
-                  subst x
-                  exact ⟨[], rfl⟩
-              | cons y ys =>
-                  have htail :
-                      lastSymbol? (y :: ys) = some b := by
-                    simpa [lastSymbol?, lastFrom] using hl
-                  have htailne : (y :: ys : Word Symbol) ≠ [] := by
-                    simp
-                  have hscanTailDummy :
-                      True := True.intro
-                  -- The decomposition of a nonempty list from its last symbol
-                  -- is purely list-theoretic; recurse on the tail.
-                  have ih' :
-                      ∃ u : Word Symbol,
-                        y :: ys = u ++ [b] := by
-                    clear hp hpne hscanTailDummy
-                    induction ys generalizing y with
-                    | nil =>
-                        simp [lastSymbol?, lastFrom] at htail
-                        subst y
-                        exact ⟨[], rfl⟩
-                    | cons z zs ihzs =>
-                        have hrest :
-                            lastSymbol? (z :: zs) = some b := by
-                          simpa [lastSymbol?, lastFrom] using htail
-                        obtain ⟨u, hu⟩ := ihzs z hrest
-                        refine ⟨y :: u, ?_⟩
-                        simp [hu]
-                  obtain ⟨u, hu⟩ := ih'
-                  refine ⟨x :: u, ?_⟩
-                  simp [hu]
+          exact exists_append_b_of_lastSymbol hl
 
 /-- One-step extension of a successful processed prefix. -/
 theorem scan_zero_snoc
