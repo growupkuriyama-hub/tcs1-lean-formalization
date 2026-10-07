@@ -127,6 +127,7 @@ import LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction
 import LeanCfgProject.TCS1.V126SubstringConstructionCost
 import LeanCfgProject.TCS1.V126YieldTypingControl
 import LeanCfgProject.TCS1.V126LinearAllFilter
+import LeanCfgProject.TCS1.V126PinFactorizationBridge
 
 import LeanCfgProject.TCS1.SSBNFThicknessBounds
 import LeanCfgProject.TCS1.SSBNFNormalizationCombinatorics
