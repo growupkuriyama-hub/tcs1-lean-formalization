@@ -1,0 +1,60 @@
+name: TCS1 v126 complete-delta check
+
+on:
+  push:
+    branches: [tcs1-v126-complete-reverification]
+    paths:
+      - 'LeanCfgProject/TCS1/V121*.lean'
+      - 'LeanCfgProject/TCS1/V123*.lean'
+      - 'LeanCfgProject/TCS1/V126*.lean'
+      - 'LeanCfgProject/TCS1/All.lean'
+      - '.github/workflows/v126-complete.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: tcs1-v126-complete-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  v126-delta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+      - name: Build all post-v88 theorem-facing deltas
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V121SubstringReconstruction \
+            LeanCfgProject.TCS1.V121FiniteInformationClosure \
+            LeanCfgProject.TCS1.V121TrimAudit \
+            LeanCfgProject.TCS1.V121LocallyTrivialBridge \
+            LeanCfgProject.TCS1.V121CappedCounterOne \
+            LeanCfgProject.TCS1.V121TypedGapKernel \
+            LeanCfgProject.TCS1.V121TypedGapGrammar \
+            LeanCfgProject.TCS1.V121SubstringCost \
+            LeanCfgProject.TCS1.V123TypedFiberEquality \
+            LeanCfgProject.TCS1.V126LocallyTrivialCore
+      - name: Reject proof placeholders in post-v88 deltas
+        run: |
+          files=$(printf '%s\n' \
+            LeanCfgProject/TCS1/V121SubstringReconstruction.lean \
+            LeanCfgProject/TCS1/V121FiniteInformationClosure.lean \
+            LeanCfgProject/TCS1/V121TrimAudit.lean \
+            LeanCfgProject/TCS1/V121LocallyTrivialBridge.lean \
+            LeanCfgProject/TCS1/V121CappedCounterOne.lean \
+            LeanCfgProject/TCS1/V121TypedGapKernel.lean \
+            LeanCfgProject/TCS1/V121TypedGapGrammar.lean \
+            LeanCfgProject/TCS1/V121SubstringCost.lean \
+            LeanCfgProject/TCS1/V123TypedFiberEquality.lean \
+            LeanCfgProject/TCS1/V126LocallyTrivialCore.lean)
+          if grep -nE '^[[:space:]]*(sorry|axiom)[[:space:]]' $files; then
+            echo "::error::proof placeholder or project axiom detected"
+            exit 1
+          fi
