@@ -314,3 +314,5 @@ theorem v88_reverification_completed : True :=
 
 end TCS1
 end LeanCfgProject
+
+import LeanCfgProject.TCS1.V126LocallyTrivialCore
