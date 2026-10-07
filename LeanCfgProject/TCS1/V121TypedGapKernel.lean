@@ -50,7 +50,7 @@ theorem wordType_append
     wordType (u ++ v) = wordType u * wordType v := by
   induction u with
   | nil =>
-      cases h : wordType v <;> rfl
+      simpa [wordType] using (one_mul (wordType v)).symm
   | cons s u ih =>
       cases s with
       | a => simpa [wordType] using ih
