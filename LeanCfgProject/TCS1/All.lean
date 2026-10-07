@@ -28,6 +28,8 @@ import LeanCfgProject.TCS1.V117TypedThicknessGapCore
 import LeanCfgProject.TCS1.V118WindowSourceBridge
 import LeanCfgProject.TCS1.V118LinearFilterShapeBridge
 import LeanCfgProject.TCS1.V121ProductiveLinearFilter
+import LeanCfgProject.TCS1.V121IndexedLinearRegularClosure
+import LeanCfgProject.TCS1.V121IndexedLinearFixedHFilter
 import LeanCfgProject.TCS1.V119GapFiniteSSBNF
 import LeanCfgProject.TCS1.V119GapExactSource
 import LeanCfgProject.TCS1.V119GapSourceReduced
