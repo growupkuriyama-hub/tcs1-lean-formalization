@@ -241,6 +241,7 @@ import LeanCfgProject.TCS1.V88FullManuscriptAudit
 import LeanCfgProject.TCS1.V121SubstringReconstruction
 import LeanCfgProject.TCS1.V121FiniteInformationClosure
 import LeanCfgProject.TCS1.V121TrimAudit
+import LeanCfgProject.TCS1.V121LocallyTrivialBridge
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
