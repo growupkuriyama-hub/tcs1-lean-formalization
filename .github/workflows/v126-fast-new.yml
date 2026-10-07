@@ -28,4 +28,4 @@ jobs:
       - name: Build current v126 audit tip
         run: |
           lake build \
-            LeanCfgProject.TCS1.V126LinearAllFilter
+            LeanCfgProject.TCS1.V126ExactSourceAudit
