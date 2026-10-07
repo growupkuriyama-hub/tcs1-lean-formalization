@@ -97,7 +97,7 @@ merely because a raw LaTeX theorem-environment count does not see them.
 | U6 | locally trivial definition `ete=e` implies `etf=ef` for idempotent e,f | `V126LocallyTrivialCore.locallyTrivial_between_idempotents` | Internal, new v126 |
 | U7 | the manuscript sandwich collapse `a e (b s c) f d = a e f d` | `V126LocallyTrivialCore.locallyTrivial_double_sandwich` | Internal, new v126 |
 | U8 | finite-semigroup factorization `S^n=SE(S)S` for the chosen n | Pin II.6.35 in paper; no project axiom | **External unless internally reproved later** |
-| U9 | non-local-triviality supplies the fixed-window collision construction used in reverse implication of Prop. li-window | needs full source-matching formal package | Open/part of row 5 |
+| U9 | non-local-triviality supplies the fixed-window collision construction used in reverse implication of Prop. li-window | `V126NonLocalTrivialWindowObstruction.nonLocalTrivial_obstructs_every_fixedWindow` | Candidate Internal; CI required |
 | U10 | positive image of each concrete window monoid is locally trivial | `V126FixedWindowPositiveLocalTrivial.fixedWindow_positive_image_locally_trivial` | Candidate Internal; CI required |
 | U11 | one substring nonterminal per distinct observed nonempty factor is extensionally equivalent to archived occurrence indexing | `V121SubstringReconstruction` | Bridged/Internal |
 | U12 | O(n²) distinct substring state upper bound | `V121SubstringCost.v121_factorCandidates_card_le_sq` | Candidate Internal; CI required |
