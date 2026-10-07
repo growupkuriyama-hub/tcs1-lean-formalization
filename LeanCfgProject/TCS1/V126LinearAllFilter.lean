@@ -368,7 +368,7 @@ theorem lpmAll_oneCenter_distribution_transfer
     have h := congrArg (List.count a) hxshape
     rcases hz with rfl | rfl | rfl <;>
       simpa [lpmOneCenter, List.count_append,
-        List.count_replicate] using h.symm.symm
+        List.count_replicate] using h.symm
   have hjj : _jj = j := by
     have h := congrArg (List.count b) hxshape
     rcases hz with rfl | rfl | rfl <;>
