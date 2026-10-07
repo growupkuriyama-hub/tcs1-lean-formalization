@@ -144,12 +144,18 @@ theorem repeated_boundary_same_fixedWindow
     omega
   have hpos :
       0 < (R ++ x ++ R).length := by
-    have : 0 < R.length := List.length_pos.mpr hRne
+    have : 0 < R.length := by
+      cases R with
+      | nil => exact False.elim (hRne rfl)
+      | cons a rest => simp
     simp only [List.length_append]
     omega
   have hpos' :
       0 < (R ++ y ++ R).length := by
-    have : 0 < R.length := List.length_pos.mpr hRne
+    have : 0 < R.length := by
+      cases R with
+      | nil => exact False.elim (hRne rfl)
+      | cons a rest => simp
     simp only [List.length_append]
     omega
   have hcut :
@@ -210,7 +216,10 @@ theorem nonLocalTrivial_obstructs_every_fixedWindow
   rcases hmpos with ⟨z, hzne, hz⟩
   let j : Nat := max k l + 1
   let R : Word α := wordRepeat r j
-  have hrlen : 0 < r.length := List.length_pos.mpr hrne
+  have hrlen : 0 < r.length := by
+    cases r with
+    | nil => exact False.elim (hrne rfl)
+    | cons a rest => simp
   have hjpos : 0 < j := by
     dsimp [j]
     omega
@@ -218,12 +227,18 @@ theorem nonLocalTrivial_obstructs_every_fixedWindow
     simp [R]
   have hRbound : max k l ≤ R.length := by
     rw [hRlen]
-    dsimp [j]
-    nlinarith
+    have hlen1 : 1 ≤ r.length := by omega
+    calc
+      max k l ≤ max k l + 1 := by omega
+      _ = j := by rfl
+      _ = j * 1 := by simp
+      _ ≤ j * r.length := Nat.mul_le_mul_left j hlen1
   have hRne : R ≠ [] := by
-    apply List.ne_nil_of_length_pos
-    rw [hRlen]
-    exact Nat.mul_pos hjpos hrlen
+    intro hnil
+    have hzero : R.length = 0 := by simp [hnil]
+    rw [hRlen] at hzero
+    have hprod : 0 < j * r.length := Nat.mul_pos hjpos hrlen
+    omega
   have hRtype : H.h R = e := by
     rw [show H.h R = (H.h r) ^ j by
       simpa [R] using wordRepeat_type H r j]
@@ -233,10 +248,14 @@ theorem nonLocalTrivial_obstructs_every_fixedWindow
   let y : Word α := R ++ z ++ R
   have hxne : x ≠ [] := by
     dsimp [x]
-    exact append_ne_nil_of_left_ne_nil hRne
+    have hleft : R ++ r ≠ [] :=
+      append_ne_nil_of_left_ne_nil hRne
+    exact append_ne_nil_of_left_ne_nil hleft
   have hyne : y ≠ [] := by
     dsimp [y]
-    exact append_ne_nil_of_left_ne_nil hRne
+    have hleft : R ++ z ≠ [] :=
+      append_ne_nil_of_left_ne_nil hRne
+    exact append_ne_nil_of_left_ne_nil hleft
   have hwindow :
       (fixedWindowMonoidHom (α := α) k l).h x =
         (fixedWindowMonoidHom (α := α) k l).h y := by
@@ -264,7 +283,7 @@ theorem nonLocalTrivial_obstructs_every_fixedWindow
       _ = e * m * e := by rw [hRtype, hz]
   refine ⟨x, y, hxne, hyne, hwindow, ?_⟩
   rw [hxH, hyH]
-  exact hbad
+  exact Ne.symm hbad
 
 end V126NonLocalTrivialWindowObstruction
 
