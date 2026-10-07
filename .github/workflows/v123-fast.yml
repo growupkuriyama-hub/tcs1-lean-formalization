@@ -32,10 +32,11 @@ jobs:
           lake build \
             LeanCfgProject.TCS1.V121TypedGapKernel \
             LeanCfgProject.TCS1.V123TypedFiberEquality \
-            LeanCfgProject.TCS1.V121SubstringCost
+            LeanCfgProject.TCS1.V121SubstringCost \
+            LeanCfgProject.TCS1.V121TypedGapGrammar
       - name: Reject placeholders
         run: |
-          if grep -nE '\bsorry\b' LeanCfgProject/TCS1/V121TypedGapKernel.lean LeanCfgProject/TCS1/V123TypedFiberEquality.lean LeanCfgProject/TCS1/V121SubstringCost.lean; then
+          if grep -nE '\bsorry\b' LeanCfgProject/TCS1/V121TypedGapKernel.lean LeanCfgProject/TCS1/V123TypedFiberEquality.lean LeanCfgProject/TCS1/V121SubstringCost.lean LeanCfgProject/TCS1/V121TypedGapGrammar.lean; then
             echo "::error::placeholder detected"
             exit 1
           fi
