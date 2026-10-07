@@ -48,6 +48,7 @@ jobs:
             LeanCfgProject.TCS1.V117TypedThicknessGapCore \
             LeanCfgProject.TCS1.V118WindowSourceBridge \
             LeanCfgProject.TCS1.V118LinearFilterShapeBridge \
+            LeanCfgProject.TCS1.V121ProductiveLinearFilter \
             LeanCfgProject.TCS1.V119GapFiniteSSBNF \
             LeanCfgProject.TCS1.V119GapExactSource \
             LeanCfgProject.TCS1.V119GapSourceReduced \
