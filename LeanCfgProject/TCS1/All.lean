@@ -318,3 +318,4 @@ end LeanCfgProject
 import LeanCfgProject.TCS1.V126LocallyTrivialCore
 import LeanCfgProject.TCS1.V126LinearRegularFilterClosure
 import LeanCfgProject.TCS1.V126TypedGapComplete
+import LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial
