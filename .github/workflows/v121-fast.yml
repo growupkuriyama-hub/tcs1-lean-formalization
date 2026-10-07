@@ -31,7 +31,8 @@ jobs:
             LeanCfgProject.TCS1.V121SubstringReconstruction \
             LeanCfgProject.TCS1.V121FiniteInformationClosure \
             LeanCfgProject.TCS1.V121TrimAudit \
-            LeanCfgProject.TCS1.V121LocallyTrivialBridge
+            LeanCfgProject.TCS1.V121LocallyTrivialBridge \
+            LeanCfgProject.TCS1.V121CappedCounterOne
 
       - name: Reject sorry in v121 delta
         run: |
