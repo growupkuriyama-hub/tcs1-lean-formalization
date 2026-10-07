@@ -121,17 +121,22 @@ inferred from the existence of source files.
 - v123 **strengthens `prop:typed-core`** from language preservation +
   yield-type invariant to the *retained non-start fibre equality*
   `L_tildeG(A_μ) = L_G(A) ∩ h^-1({μ})`. Its proof obligation is not the
-  statement checked by the original v88 facade; a direct v123 Lean
-  theorem should be added.
+  statement checked by the original v88 facade. An explicit candidate
+  proof (`v123_retained_typed_fibre_language_eq`) now lives in the
+  separate `tcs1-v123-reverification` branch, pending its own CI.
 - The DCFL qualifier for Δ* was already introduced by **v121** relative
   to v88. v123 only standardizes the spelling of “nonlinear”. A concrete
   DPDA correspondence remains an explicit unmapped claim.
 
 ## Current outstanding obligations before an honest “v121 verified” claim
 
-1. Pass CI for all five v121 modules without `sorry`/project axioms.
+1. The five v121 modules **have passed** the dedicated delta build and
+   placeholder check at SHA `a8aba31172737fd91a82d61dea95a92b832a42c6`;
+   the **full inherited audit/facade CI** must also finish successfully.
 2. Verify the concrete **typed-thickness-gap** example, not just a numerical
-   bound for abstract typed symbols.
+   bound for abstract typed symbols. The separate v123 branch contains
+   `V121TypedGapKernel.lean` for the exact exponential E_i subgrammar yield,
+   but this does not yet prove the full source grammar/trim bound.
 3. Reconnect the **exact v121 quotient grammar constructor**, including
    enumerator/size and polynomial construction, to Lean's verified executable
    learner (the language-theoretic quotient bridge is already present).
