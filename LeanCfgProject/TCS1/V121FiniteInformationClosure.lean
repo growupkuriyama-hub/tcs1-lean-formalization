@@ -40,14 +40,14 @@ def productTyping
     (H : FixedFiniteMonoidHom α M)
     (G : FixedFiniteMonoidHom α N)
     (x : Word α) :
-    (productTyping H G).h x |>.1 = H.h x :=
+    ((productTyping H G).h x).1 = H.h x :=
   rfl
 
 @[simp] theorem productTyping_snd
     (H : FixedFiniteMonoidHom α M)
     (G : FixedFiniteMonoidHom α N)
     (x : Word α) :
-    (productTyping H G).h x |>.2 = G.h x :=
+    ((productTyping H G).h x).2 = G.h x :=
   rfl
 
 /-- Distributional part of v121 Proposition "closure under finite information" (i). -/
@@ -174,7 +174,7 @@ def emptinessTyping
     rw [φ.map_append]
     by_cases hx : φ.map x = [] <;>
       by_cases hy : φ.map y = [] <;>
-      simp [hx, hy, EmptinessFlag.mul]
+      simp [hx, hy] <;> rfl
 
 /-- The exact v121 typing (h ∘ φ) × e_φ for inverse images. -/
 def inverseImageTyping
@@ -240,10 +240,9 @@ theorem fixedHSubstitutable_inverseImage
       φ.map (p ++ x ++ q) ∈ L ↔
         φ.map (p ++ y ++ q) ∈ L
     simp only [φ.map_append, List.append_assoc]
-    change
-      (φ.map p, φ.map q) ∈ Distribution L (φ.map x) ↔
-        (φ.map p, φ.map q) ∈ Distribution L (φ.map y)
-    rw [hdist]
+    have hc :=
+      Set.ext_iff.mp hdist (φ.map p, φ.map q)
+    simpa [Distribution, List.append_assoc] using hc
 
 end InverseHomomorphism
 
