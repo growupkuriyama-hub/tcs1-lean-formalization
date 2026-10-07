@@ -1,0 +1,39 @@
+name: TCS1 v123 delta check
+
+on:
+  push:
+    branches: [tcs1-v123-reverification]
+    paths:
+      - 'LeanCfgProject/TCS1/V123*.lean'
+      - 'LeanCfgProject/TCS1/V121TypedGapKernel.lean'
+      - '.github/workflows/v123-fast.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: tcs1-v123-fast-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  v123-delta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+      - name: Build v123 and typed-gap deltas
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V121TypedGapKernel \
+            LeanCfgProject.TCS1.V123TypedFiberEquality
+      - name: Reject placeholders
+        run: |
+          if grep -nE '\bsorry\b' LeanCfgProject/TCS1/V121TypedGapKernel.lean LeanCfgProject/TCS1/V123TypedFiberEquality.lean; then
+            echo "::error::placeholder detected"
+            exit 1
+          fi
