@@ -137,10 +137,48 @@ theorem yieldControl_evalFrom_derives_iff
       rw [DFA.evalFrom_cons]
       simp only [yieldControlDFA, yieldControlStep, hlhs, hrhs,
         dite_true]
-      rw [ih]
+      rw [ih (muL * H.h left) (H.h right * muR)]
       rw [H.map_append (left ++ word) right]
       rw [H.map_append left word]
       simp only [mul_assoc]
+
+/-- The rejecting sink is absorbing for every remaining label word. -/
+@[simp] theorem yieldControl_evalFrom_dead
+    {M : Type}
+    [Monoid M] [Fintype M]
+    [Fintype N] [DecidableEq N]
+    (G : LabeledLinearGrammar N α P)
+    (H : FixedFiniteMonoidHom α M)
+    (F : Set M)
+    (labels : Word P) :
+    (yieldControlDFA G H F).evalFrom
+        (.dead : YieldControlState N M) labels = .dead := by
+  induction labels with
+  | nil => rfl
+  | cons p rest ih =>
+      rw [DFA.evalFrom_cons]
+      change
+        (yieldControlDFA G H F).evalFrom
+          ((yieldControlDFA G H F).step .dead p) rest = .dead
+      simp [yieldControlDFA, yieldControlStep, ih]
+
+/-- Once the accepting state is reached, any further production label makes
+the word invalid and sends the totalized DFA to the rejecting sink. -/
+@[simp] theorem yieldControl_evalFrom_accept_cons
+    {M : Type}
+    [Monoid M] [Fintype M]
+    [Fintype N] [DecidableEq N]
+    (G : LabeledLinearGrammar N α P)
+    (H : FixedFiniteMonoidHom α M)
+    (F : Set M)
+    (p : P) (rest : Word P) :
+    (yieldControlDFA G H F).evalFrom
+        (.accept : YieldControlState N M) (p :: rest) = .dead := by
+  rw [DFA.evalFrom_cons]
+  change
+    (yieldControlDFA G H F).evalFrom
+      ((yieldControlDFA G H F).step .accept p) rest = .dead
+  simp [yieldControlDFA, yieldControlStep]
 
 theorem yieldControl_accept_implies_derivation
     {M : Type}
@@ -178,9 +216,12 @@ theorem yieldControl_accept_implies_derivation
                 | nil => exact False.elim (hrest rfl)
                 | cons q qs =>
                     simp [yieldControlDFA, yieldControlStep,
-                      hlhs, hrhs, hF] at hacc
+                      hlhs, hrhs, hF,
+                      yieldControl_evalFrom_dead,
+                      yieldControl_evalFrom_accept_cons] at hacc
             · simp [yieldControlDFA, yieldControlStep,
-                hlhs, hrhs, hF] at hacc
+                hlhs, hrhs, hF,
+                yieldControl_evalFrom_dead] at hacc
         | around left B right =>
             have hchild :
                 (yieldControlDFA G H F).evalFrom
@@ -201,7 +242,8 @@ theorem yieldControl_accept_implies_derivation
             rw [H.map_append (left ++ word) right]
             rw [H.map_append left word]
             simpa only [mul_assoc] using htype
-      · simp [yieldControlDFA, yieldControlStep, hlhs] at hacc
+      · simp [yieldControlDFA, yieldControlStep, hlhs,
+          yieldControl_evalFrom_dead] at hacc
 
 theorem yieldControl_accepts_iff
     {M : Type}
