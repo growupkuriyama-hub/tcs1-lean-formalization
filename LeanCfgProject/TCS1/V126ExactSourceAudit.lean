@@ -45,7 +45,7 @@ namespace TCS1
 
 #check fixedHSubstitutable_inter_product
 #check fixedHSubstitutable_inter_recognized_product
-#check fixedHSubstitutable_erasingInverseImage
+#check fixedHSubstitutable_inverseImage
 
 #check respectsFixedWindowSummary_of_positiveKernelRefinement
 #check characteristicPackage_of_positiveWindowKernelRefinement
@@ -57,7 +57,7 @@ namespace TCS1
 #check positiveWindowKernelRefines_of_factorization
 #check locallyTrivial_implies_nn_window_refinement
 
-#check typedActive_nonterminalLanguage_eq_typeFiber
+#check v123_retained_typed_fibre_language_eq
 
 #check v121_factorCandidates_card_le_sq
 #check v121_bucket_emissions_le_cube
@@ -87,7 +87,7 @@ namespace TCS1
 #check yieldControl_isRegular
 #check yieldControlledLanguage_eq_inter
 
-#check CappedCounterOne.fixedWindowSubstitutable_one
+#check CappedCounter.fixedWindowSubstitutable_one
 
 #check DeltaStar.language_iff_balance_zeroHeight_criterion
 
