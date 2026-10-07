@@ -1,6 +1,8 @@
 import LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction
 import LeanCfgProject.TCS1.V126LocallyTrivialCore
 import LeanCfgProject.TCS1.V121LocallyTrivialBridge
+import LeanCfgProject.TCS1.FixedWindowClassicalSubstitutability
+import LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial
 import Mathlib.Tactic
 
 /-!
