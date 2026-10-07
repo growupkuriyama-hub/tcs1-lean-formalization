@@ -34,7 +34,7 @@ theorem scan_success_split
   | some m =>
       have htail := hs
       rw [scan_append, hscan] at htail
-      exact ⟨m, hscan, htail⟩
+      exact ⟨m, rfl, htail⟩
 
 /-- Successful scans compose. -/
 theorem scan_success_join
