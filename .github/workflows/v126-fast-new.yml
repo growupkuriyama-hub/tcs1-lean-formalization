@@ -1,0 +1,37 @@
+name: TCS1 v126 fast-new check
+
+on:
+  push:
+    branches: [tcs1-v126-complete-reverification]
+    paths:
+      - 'LeanCfgProject/TCS1/V126*.lean'
+      - 'LeanCfgProject/TCS1/V121TypedGapGrammar.lean'
+      - 'LeanCfgProject/TCS1/V121TypedGapKernel.lean'
+      - '.github/workflows/v126-fast-new.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: tcs1-v126-fast-new-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fast-new:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+      - name: Build v126 new modules
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V126LocallyTrivialCore \
+            LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial \
+            LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction \
+            LeanCfgProject.TCS1.V126LinearRegularFilterClosure \
+            LeanCfgProject.TCS1.V126TypedGapComplete \
+            LeanCfgProject.TCS1.V126SubstringConstructionCost \
+            LeanCfgProject.TCS1.V126YieldTypingControl
