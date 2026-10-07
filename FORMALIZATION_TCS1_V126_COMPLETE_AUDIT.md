@@ -55,7 +55,7 @@ Lean work branch:
 | 2 | `prop:finite-info-closure` | `V121FiniteInformationClosure`: product intersection, recognized filter, erasing inverse image | **Partial**: distributional/fixed-h core Internal; standard CFL closure under regular intersection and inverse homomorphism remains External |
 | 3 | `prop:yl-special` | `fixedWindowSubstitutable_iff_fixedHSubstitutable` and concrete window monoid | Inherited/Internal |
 | 4 | `thm:main` five clauses | archived main-theorem packages + post-v88 bridges | **Partial until rows 5, 12, 15, 19 and full CI close** |
-| 5 | `prop:li-window` | `V121LocallyTrivialBridge`; `V126LocallyTrivialCore` | **Partial/External**: elementary local-trivial sandwich identity Internal; finite-semigroup decomposition and the full positive-image/window equivalence still require explicit treatment |
+| 5 | `prop:li-window` | `V121LocallyTrivialBridge`; `V126LocallyTrivialCore`; `V126FixedWindowPositiveLocalTrivial` | **Partial/External**: elementary sandwich and fixed-window positive-image local triviality are Candidate Internal; finite-semigroup decomposition and reverse kernel-refinement implication still require explicit treatment |
 | 6 | `lem:sample-consistency` | `sample_consistency`, `substring_sample_consistency` | Bridged/Internal |
 | 7 | `thm:soundness` | `batchLanguage_sound`, `substring_batchLanguage_sound` | Bridged/Internal |
 | 8 | `prop:typed-core` exact retained fibre equality | `V123TypedFiberEquality` | Candidate Internal; must pass v126 CI |
@@ -98,7 +98,7 @@ merely because a raw LaTeX theorem-environment count does not see them.
 | U7 | the manuscript sandwich collapse `a e (b s c) f d = a e f d` | `V126LocallyTrivialCore.locallyTrivial_double_sandwich` | Internal, new v126 |
 | U8 | finite-semigroup factorization `S^n=SE(S)S` for the chosen n | Pin II.6.35 in paper; no project axiom | **External unless internally reproved later** |
 | U9 | non-local-triviality supplies the fixed-window collision construction used in reverse implication of Prop. li-window | needs full source-matching formal package | Open/part of row 5 |
-| U10 | positive image of each concrete window monoid is locally trivial | needs full source-matching formal package | Open/part of row 5 |
+| U10 | positive image of each concrete window monoid is locally trivial | `V126FixedWindowPositiveLocalTrivial.fixedWindow_positive_image_locally_trivial` | Candidate Internal; CI required |
 | U11 | one substring nonterminal per distinct observed nonempty factor is extensionally equivalent to archived occurrence indexing | `V121SubstringReconstruction` | Bridged/Internal |
 | U12 | O(n²) distinct substring state upper bound | `V121SubstringCost.v121_factorCandidates_card_le_sq` | Candidate Internal; CI required |
 | U13 | unary context/type bucket square-sum gives cubic emission bound | `V121SubstringCost.v121_bucket_emissions_le_cube` | Candidate Internal; exact concrete bucket enumerator still to connect |
