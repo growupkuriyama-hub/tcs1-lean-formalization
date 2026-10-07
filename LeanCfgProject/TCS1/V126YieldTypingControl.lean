@@ -28,18 +28,18 @@ universe u v w
 
 section V126YieldTypingControl
 
-variable {N : Type u}
+variable {N : Type}
 variable {α : Type v}
 variable {P : Type w}
 
 inductive LabeledLinearRhs
-    (N : Type u) (α : Type v) where
+    (N : Type) (α : Type v) where
   | terminal (word : Word α)
   | around (left : Word α) (core : N) (right : Word α)
 deriving DecidableEq
 
 structure LabeledLinearGrammar
-    (N : Type u) (α : Type v) (P : Type w) where
+    (N : Type) (α : Type v) (P : Type w) where
   lhs : P → N
   rhs : P → LabeledLinearRhs N α
   start : N
@@ -69,7 +69,7 @@ def LabeledLinearLanguage
     LabeledLinearDerives G G.start labels w}
 
 inductive YieldControlState
-    (N : Type u) (M : Type) where
+    (N : Type) (M : Type) where
   | active (A : N) (muL muR : M)
   | accept
   | dead
@@ -82,14 +82,15 @@ noncomputable def yieldControlStep
     (G : LabeledLinearGrammar N α P)
     (H : FixedFiniteMonoidHom α M)
     (F : Set M) :
-    YieldControlState N M → P → YieldControlState N M :=
-  fun q p =>
+    YieldControlState N M → P → YieldControlState N M := by
+  classical
+  exact fun q p =>
     match q with
     | .accept => .dead
     | .dead => .dead
     | .active A muL muR =>
         if hlhs : G.lhs p = A then
-          match hrhs : G.rhs p with
+          match G.rhs p with
           | .terminal word =>
               if muL * H.h word * muR ∈ F then
                 .accept
@@ -128,6 +129,7 @@ theorem yieldControl_evalFrom_derives_iff
         (.active A muL muR) labels = .accept
       ↔
     muL * H.h word * muR ∈ F := by
+  classical
   induction d generalizing muL muR with
   | terminal p A word hlhs hrhs =>
       simp [yieldControlDFA, yieldControlStep, hlhs, hrhs]
@@ -136,8 +138,8 @@ theorem yieldControl_evalFrom_derives_iff
       simp only [yieldControlDFA, yieldControlStep, hlhs, hrhs,
         dite_true]
       rw [ih]
-      rw [H.map_append left (word ++ right)]
-      rw [H.map_append word right]
+      rw [H.map_append (left ++ word) right]
+      rw [H.map_append left word]
       simp only [mul_assoc]
 
 theorem yieldControl_accept_implies_derivation
@@ -153,6 +155,7 @@ theorem yieldControl_accept_implies_derivation
       ∃ word : Word α,
         LabeledLinearDerives G A labels word ∧
         muL * H.h word * muR ∈ F := by
+  classical
   intro labels
   induction labels with
   | nil =>
@@ -195,8 +198,8 @@ theorem yieldControl_accept_implies_derivation
                 LabeledLinearDerives.around
                   p A B left right hlhs hrhs dword,
                 ?_⟩
-            rw [H.map_append left (word ++ right)]
-            rw [H.map_append word right]
+            rw [H.map_append (left ++ word) right]
+            rw [H.map_append left word]
             simpa only [mul_assoc] using htype
       · simp [yieldControlDFA, yieldControlStep, hlhs] at hacc
 
@@ -255,43 +258,6 @@ def YieldControlledLanguage
       labels ∈ (yieldControlDFA G H F).accepts ∧
       LabeledLinearDerives G G.start labels word}
 
-theorem labeledLinearDerives_yield_unique
-    (G : LabeledLinearGrammar N α P)
-    {A : N} {labels : Word P}
-    {x y : Word α}
-    (dx : LabeledLinearDerives G A labels x)
-    (dy : LabeledLinearDerives G A labels y) :
-    x = y := by
-  induction dx generalizing y with
-  | terminal p A word hlhs hrhs =>
-      cases dy with
-      | terminal p' A' word' hlhs' hrhs' =>
-          simp at *
-          subst p'
-          rw [hrhs] at hrhs'
-          cases hrhs'
-          rfl
-      | around p' A' B left right hlhs' hrhs' child =>
-          simp at *
-          subst p'
-          rw [hrhs] at hrhs'
-          cases hrhs'
-  | @around p A B left right labels word hlhs hrhs child ih =>
-      cases dy with
-      | terminal p' A' word' hlhs' hrhs' =>
-          simp at *
-          subst p'
-          rw [hrhs] at hrhs'
-          cases hrhs'
-      | @around p' A' B' left' right' labels' word'
-          hlhs' hrhs' child' =>
-          simp at *
-          subst p'
-          rw [hrhs] at hrhs'
-          cases hrhs'
-          have hw := ih child'
-          rw [hw]
-
 theorem yieldControlledLanguage_eq_inter
     {M : Type}
     [Monoid M] [Fintype M]
@@ -306,12 +272,15 @@ theorem yieldControlledLanguage_eq_inter
   intro word
   constructor
   · rintro ⟨labels, hctrl, d⟩
-    obtain ⟨word', d', ht⟩ :=
-      (yieldControl_accepts_iff G H F labels).1 hctrl
-    have hsame :
-        word' = word :=
-      labeledLinearDerives_yield_unique G d' d
-    subst word'
+    have heval :
+        (yieldControlDFA G H F).evalFrom
+          (.active G.start 1 1) labels = .accept := by
+      exact hctrl
+    have ht0 :=
+      (yieldControl_evalFrom_derives_iff
+        G H F d 1 1).1 heval
+    have ht : H.h word ∈ F := by
+      simpa using ht0
     exact ⟨⟨labels, d⟩, ht⟩
   · rintro ⟨⟨labels, d⟩, ht⟩
     refine ⟨labels, ?_, d⟩
