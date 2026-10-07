@@ -63,7 +63,6 @@ theorem positiveImage_mul_eval_mul
       append_ne_nil_of_left_ne_nil hune
     exact append_ne_nil_of_left_ne_nil hur
   · rw [H.map_append, H.map_append, hu, hv]
-    simp only [mul_assoc]
 
 /-- Positive-image version of the elementary locally-trivial sandwich identity. -/
 theorem positiveLocallyTrivial_between_idempotents
