@@ -51,6 +51,7 @@ jobs:
             LeanCfgProject.TCS1.V121ProductiveLinearFilter \
             LeanCfgProject.TCS1.V121IndexedLinearRegularClosure \
             LeanCfgProject.TCS1.V121IndexedLinearFixedHFilter \
+            LeanCfgProject.TCS1.V121SubstringBucketCost \
             LeanCfgProject.TCS1.V119GapFiniteSSBNF \
             LeanCfgProject.TCS1.V119GapExactSource \
             LeanCfgProject.TCS1.V119GapSourceReduced \
