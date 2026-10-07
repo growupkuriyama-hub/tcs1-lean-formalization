@@ -17,6 +17,7 @@ import LeanCfgProject.TCS1.V126TypedGapComplete
 import LeanCfgProject.TCS1.V126SubstringConstructionCost
 import LeanCfgProject.TCS1.V126YieldTypingControl
 import LeanCfgProject.TCS1.V126LinearAllFilter
+import LeanCfgProject.TCS1.V126DeltaStarCriterion
 
 /-!
 # TCS #1 exact-source audit for the v126 re-verification line
@@ -87,6 +88,8 @@ namespace TCS1
 #check yieldControlledLanguage_eq_inter
 
 #check CappedCounterOne.fixedWindowSubstitutable_one
+
+#check DeltaStar.language_iff_balance_zeroHeight_criterion
 
 theorem v126_exact_source_delta_audited : True :=
   True.intro
