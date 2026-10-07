@@ -1,0 +1,41 @@
+name: TCS1 v121 delta check
+
+on:
+  push:
+    branches:
+      - tcs1-v121-reverification
+  workflow_dispatch:
+
+concurrency:
+  group: tcs1-v121-delta-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  v121-delta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+
+      - name: Build v121 delta
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V121SubstringReconstruction \
+            LeanCfgProject.TCS1.V121FiniteInformationClosure \
+            LeanCfgProject.TCS1.V121TrimAudit \
+            LeanCfgProject.TCS1.V121LocallyTrivialBridge
+
+      - name: Reject sorry in v121 delta
+        run: |
+          if grep -R -nE '\bsorry\b' LeanCfgProject/TCS1/V121*.lean; then
+            echo "::error::sorry found in v121 delta"
+            exit 1
+          fi
