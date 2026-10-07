@@ -25,16 +25,9 @@ jobs:
           build: false
           test: false
           lint: false
-      - name: Build v126 new modules
+      - name: Build current v126 audit tip
         run: |
           lake build \
-            LeanCfgProject.TCS1.V126LocallyTrivialCore \
-            LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial \
-            LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction \
-            LeanCfgProject.TCS1.V126LinearRegularFilterClosure \
-            LeanCfgProject.TCS1.V126TypedGapComplete \
-            LeanCfgProject.TCS1.V126SubstringConstructionCost \
-            LeanCfgProject.TCS1.V126YieldTypingControl \
             LeanCfgProject.TCS1.V126LinearAllFilter \
             LeanCfgProject.TCS1.V126PinFactorizationBridge \
             LeanCfgProject.TCS1.V126DeltaStarCriterion \
