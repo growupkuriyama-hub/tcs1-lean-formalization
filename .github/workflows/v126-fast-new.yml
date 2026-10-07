@@ -36,4 +36,6 @@ jobs:
             LeanCfgProject.TCS1.V126SubstringConstructionCost \
             LeanCfgProject.TCS1.V126YieldTypingControl \
             LeanCfgProject.TCS1.V126LinearAllFilter \
-            LeanCfgProject.TCS1.V126PinFactorizationBridge
+            LeanCfgProject.TCS1.V126PinFactorizationBridge \
+            LeanCfgProject.TCS1.V126DeltaStarCriterion \
+            LeanCfgProject.TCS1.V126ExactSourceAudit
