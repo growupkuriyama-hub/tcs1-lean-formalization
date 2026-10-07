@@ -26,12 +26,15 @@ theorem scan_success_split
     ∃ m : Nat,
       scan rho h u = some m ∧
       scan rho m v = some t := by
-  rw [scan_append] at hs
-  cases hm : scan rho h u with
+  cases hscan : scan rho h u with
   | none =>
-      simp [hm] at hs
+      have hfalse := hs
+      rw [scan_append, hscan] at hfalse
+      simp at hfalse
   | some m =>
-      exact ⟨m, rfl, by simpa using hs⟩
+      have htail := hs
+      rw [scan_append, hscan] at htail
+      exact ⟨m, hscan, htail⟩
 
 /-- Successful scans compose. -/
 theorem scan_success_join
