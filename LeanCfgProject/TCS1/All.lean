@@ -246,6 +246,7 @@ import LeanCfgProject.TCS1.V121CappedCounterOne
 import LeanCfgProject.TCS1.V123TypedFiberEquality
 import LeanCfgProject.TCS1.V121TypedGapKernel
 import LeanCfgProject.TCS1.V121SubstringCost
+import LeanCfgProject.TCS1.V121TypedGapGrammar
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
