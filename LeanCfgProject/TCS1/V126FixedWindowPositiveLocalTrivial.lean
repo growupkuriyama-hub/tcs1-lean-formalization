@@ -61,7 +61,10 @@ theorem fixedWindow_positive_idempotent_long
   rcases hsame with hshort | hlong
   · rcases hshort with ⟨_, heq⟩
     have hlen := congrArg List.length heq
-    have hxpos : 0 < x.length := List.length_pos.mpr hxne
+    have hxpos : 0 < x.length := by
+      cases x with
+      | nil => exact False.elim (hxne rfl)
+      | cons a rest => simp
     simp only [List.length_append] at hlen
     omega
   · exact hlong.2.1
