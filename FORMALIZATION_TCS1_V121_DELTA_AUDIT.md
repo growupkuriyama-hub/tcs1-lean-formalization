@@ -123,8 +123,9 @@ inferred from the existence of source files.
   `L_tildeG(A_μ) = L_G(A) ∩ h^-1({μ})`. Its proof obligation is not the
   statement checked by the original v88 facade; a direct v123 Lean
   theorem should be added.
-- v123 strengthens `thm:main` presentation and classifies Δ* as DCFL;
-  a genuine DPDA correspondence is still outstanding.
+- The DCFL qualifier for Δ* was already introduced by **v121** relative
+  to v88. v123 only standardizes the spelling of “nonlinear”. A concrete
+  DPDA correspondence remains an explicit unmapped claim.
 
 ## Current outstanding obligations before an honest “v121 verified” claim
 
