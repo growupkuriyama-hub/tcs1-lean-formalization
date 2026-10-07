@@ -22,12 +22,12 @@ This file packages the exact combined claim.
 namespace LeanCfgProject
 namespace TCS1
 
-universe u v w m n
+universe u v w m
 
 section V126LinearRegularFilterClosure
 
 variable {α : Type v}
-variable {M : Type m} {N : Type n}
+variable {M : Type m} {N : Type}
 variable [Monoid M] [Fintype M]
 variable [Monoid N] [Fintype N]
 
@@ -41,8 +41,7 @@ theorem rawLinear_fixedH_inter_recognized_product
     (hlin :
       RawLinearInitialRepresentable.{u, v, w} L)
     (hsub : FixedHSubstitutable H L) :
-    RawLinearInitialRepresentable.{
-      max u n, v, max w n}
+    RawLinearInitialRepresentable.{u, v, w}
       (L ∩ RecognizedPreimage G Acc)
     ∧
     FixedHSubstitutable
