@@ -45,7 +45,8 @@ jobs:
             LeanCfgProject.TCS1.V126TypedGapComplete \
             LeanCfgProject.TCS1.V126FixedWindowPositiveLocalTrivial \
             LeanCfgProject.TCS1.V126NonLocalTrivialWindowObstruction \
-            LeanCfgProject.TCS1.V126SubstringConstructionCost
+            LeanCfgProject.TCS1.V126SubstringConstructionCost \
+            LeanCfgProject.TCS1.V126YieldTypingControl
       - name: Reject proof placeholders in post-v88 deltas
         run: |
           files=$(printf '%s\n' \
@@ -63,7 +64,8 @@ jobs:
             LeanCfgProject/TCS1/V126TypedGapComplete.lean \
             LeanCfgProject/TCS1/V126FixedWindowPositiveLocalTrivial.lean \
             LeanCfgProject/TCS1/V126NonLocalTrivialWindowObstruction.lean \
-            LeanCfgProject/TCS1/V126SubstringConstructionCost.lean)
+            LeanCfgProject/TCS1/V126SubstringConstructionCost.lean \
+            LeanCfgProject/TCS1/V126YieldTypingControl.lean)
           if grep -nE '^[[:space:]]*(sorry|axiom)[[:space:]]' $files; then
             echo "::error::proof placeholder or project axiom detected"
             exit 1
