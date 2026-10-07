@@ -67,7 +67,7 @@ theorem gapE_derives_to_kernel
           exact EDerives.base
       | ei_c j hj =>
           cases hAi
-          cases heq : j.val with
+          cases heq : i.val with
           | zero =>
               omega
           | succ k =>
