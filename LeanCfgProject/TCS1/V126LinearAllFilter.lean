@@ -62,34 +62,34 @@ theorem lpmCenterCount_eq_zero_iff_boundary_only
     | b => exact Or.inr rfl
     | c =>
         have hc : 0 < w.count c :=
-          List.count_pos.mpr hz
+          (List.count_pos_iff).2 hz
         unfold lpmCenterCount at h
         omega
     | d =>
         have hd : 0 < w.count d :=
-          List.count_pos.mpr hz
+          (List.count_pos_iff).2 hz
         unfold lpmCenterCount at h
         omega
     | e =>
         have he : 0 < w.count e :=
-          List.count_pos.mpr hz
+          (List.count_pos_iff).2 hz
         unfold lpmCenterCount at h
         omega
   · intro h
     have hc : w.count c = 0 := by
       apply Nat.eq_zero_of_not_pos
       intro hcpos
-      have hc : c ∈ w := List.count_pos.mp hcpos
+      have hc : c ∈ w := (List.count_pos_iff).1 hcpos
       rcases h c hc with hcEq | hcEq <;> cases hcEq
     have hd : w.count d = 0 := by
       apply Nat.eq_zero_of_not_pos
       intro hdpos
-      have hd : d ∈ w := List.count_pos.mp hdpos
+      have hd : d ∈ w := (List.count_pos_iff).1 hdpos
       rcases h d hd with hdEq | hdEq <;> cases hdEq
     have he : w.count e = 0 := by
       apply Nat.eq_zero_of_not_pos
       intro hepos
-      have he : e ∈ w := List.count_pos.mp hepos
+      have he : e ∈ w := (List.count_pos_iff).1 hepos
       rcases h e he with heEq | heEq <;> cases heEq
     simp [lpmCenterCount, hc, hd, he]
 
@@ -327,7 +327,9 @@ theorem lpmAll_boundary_factors_eq
       ⟨n, hnpos, hya⟩ | ⟨n, hnpos, hybpow⟩
   · rw [hxa, hya] at hbal ⊢
     simp at hbal
-    omega
+    have hmn : m = n := by omega
+    subst n
+    rfl
   · rw [hxa, hybpow] at hbal
     simp at hbal
     omega
@@ -336,7 +338,9 @@ theorem lpmAll_boundary_factors_eq
     omega
   · rw [hxbpow, hybpow] at hbal ⊢
     simp at hbal
-    omega
+    have hmn : m = n := by omega
+    subst n
+    rfl
 
 /-- Distribution membership of one-center factors in L_all depends only on
 the balance i-j, not on which center c,d,e is used. -/
@@ -364,16 +368,20 @@ theorem lpmAll_oneCenter_distribution_transfer
     have h := congrArg (List.count a) hxshape
     rcases hz with rfl | rfl | rfl <;>
       simpa [lpmOneCenter, List.count_append,
-        List.count_replicate] using h
+        List.count_replicate] using h.symm.symm
   have hjj : _jj = j := by
     have h := congrArg (List.count b) hxshape
     rcases hz with rfl | rfl | rfl <;>
       simpa [lpmOneCenter, List.count_append,
-        List.count_replicate] using h
+        List.count_replicate] using h.symm
   subst _ii
   subst _jj
   subst u
   subst v
+  change
+    (List.replicate m a ++
+      lpmOneCenter i' z' j' ++
+      List.replicate n b) ∈ LpmAllLanguage
   rw [lpm_power_context_word] at hctx ⊢
   have hmem :=
     (lpmAll_oneCenter_mem_iff
@@ -414,19 +422,19 @@ theorem lpmAll_clarkEyraudSubstitutable :
     have hxcenter : ∃ z ∈ x, LpmCenterSymbol z := by
       unfold lpmCenterCount at hxpos
       by_cases hc : 0 < x.count c
-      · exact ⟨c, List.count_pos.mp hc, Or.inl rfl⟩
+      · exact ⟨c, (List.count_pos_iff).1 hc, Or.inl rfl⟩
       · by_cases hd : 0 < x.count d
-        · exact ⟨d, List.count_pos.mp hd, Or.inr (Or.inl rfl)⟩
+        · exact ⟨d, (List.count_pos_iff).1 hd, Or.inr (Or.inl rfl)⟩
         · have he : 0 < x.count e := by omega
-          exact ⟨e, List.count_pos.mp he, Or.inr (Or.inr rfl)⟩
+          exact ⟨e, (List.count_pos_iff).1 he, Or.inr (Or.inr rfl)⟩
     have hycenter : ∃ z ∈ y, LpmCenterSymbol z := by
       unfold lpmCenterCount at hypos
       by_cases hc : 0 < y.count c
-      · exact ⟨c, List.count_pos.mp hc, Or.inl rfl⟩
+      · exact ⟨c, (List.count_pos_iff).1 hc, Or.inl rfl⟩
       · by_cases hd : 0 < y.count d
-        · exact ⟨d, List.count_pos.mp hd, Or.inr (Or.inl rfl)⟩
+        · exact ⟨d, (List.count_pos_iff).1 hd, Or.inr (Or.inl rfl)⟩
         · have he : 0 < y.count e := by omega
-          exact ⟨e, List.count_pos.mp he, Or.inr (Or.inr rfl)⟩
+          exact ⟨e, (List.count_pos_iff).1 he, Or.inr (Or.inr rfl)⟩
     rcases hshared with ⟨u0, v0, hxL, hyL⟩
     rcases hxcenter with ⟨zx, hzxmem, hzxc⟩
     rcases hycenter with ⟨zy, hzymem, hzyc⟩
@@ -511,7 +519,7 @@ theorem lpmLanguage_eq_all_inter_parityFilter :
             List.count_replicate] at hcCount ⊢
       subst z
       subst i
-      exact ⟨n, c, rfl, hie⟩
+      exact ⟨n, c, hw, hie⟩
     · rcases hd with ⟨hdword, hio, hjo⟩
       have hEq :
           lpmCore n z = lpmOneCenter i d j := by
@@ -529,7 +537,7 @@ theorem lpmLanguage_eq_all_inter_parityFilter :
             List.count_replicate] at hdCount ⊢
       subst z
       subst i
-      exact ⟨n, d, rfl, hio⟩
+      exact ⟨n, d, hw, hio⟩
     · have hEq :
           lpmCore n z = lpmOneCenter i e j := by
         rw [← hw]
@@ -540,7 +548,7 @@ theorem lpmLanguage_eq_all_inter_parityFilter :
           simp [lpmCore, lpmOneCenter, List.count_append,
             List.count_replicate] at heCount ⊢
       subst z
-      exact ⟨n, e, rfl, trivial⟩
+      exact ⟨n, e, hw, trivial⟩
 
 end TCS1
 end LeanCfgProject
