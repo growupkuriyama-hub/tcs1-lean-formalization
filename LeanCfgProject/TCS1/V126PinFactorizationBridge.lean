@@ -180,6 +180,127 @@ theorem locallyTrivial_implies_nn_window_refinement
     positiveWindowKernelRefines_of_factorization
       H n hfac hlt⟩
 
+/-- Kernel refinement is enough to transfer fixed-H substitutability back
+to the classical fixed-window condition. -/
+theorem fixedWindowSubstitutable_of_positiveKernelRefinement
+    [Fintype α]
+    (H : FixedFiniteMonoidHom α M)
+    (k l : Nat)
+    (href : PositiveWindowKernelRefines H k l)
+    {L : Set (Word α)}
+    (hsub : FixedHSubstitutable H L) :
+    FixedWindowSubstitutable k l L := by
+  intro p q y₁ y₂ x₁ x₂ z₁ z₂
+    hp hq hw₁ne hw₂ne h₁ h₂ h₃
+  have hxcut :
+      fixedWindowThreshold k l ≤
+        (p ++ y₁ ++ q).length := by
+    unfold fixedWindowThreshold
+    simp only [List.length_append]
+    omega
+  have hycut :
+      fixedWindowThreshold k l ≤
+        (p ++ y₂ ++ q).length := by
+    unfold fixedWindowThreshold
+    simp only [List.length_append]
+    omega
+  have hsame :
+      SameFixedWindowSummary k l
+        (p ++ y₁ ++ q) (p ++ y₂ ++ q) :=
+    Or.inr
+      ⟨hxcut, hycut,
+        p, q, y₁, y₂,
+        hp, hq, rfl, rfl⟩
+  have hwindow :
+      (fixedWindowMonoidHom (α := α) k l).h
+          (p ++ y₁ ++ q) =
+        (fixedWindowMonoidHom (α := α) k l).h
+          (p ++ y₂ ++ q) :=
+    fixedWindowMonoidHom_respects
+      (α := α) k l
+      (p ++ y₁ ++ q) (p ++ y₂ ++ q) hsame
+  have htype :
+      H.h (p ++ y₁ ++ q) =
+        H.h (p ++ y₂ ++ q) :=
+    href (p ++ y₁ ++ q) (p ++ y₂ ++ q)
+      hw₁ne hw₂ne hwindow
+  have hdist :=
+    hsub
+      (p ++ y₁ ++ q) (p ++ y₂ ++ q)
+      hw₁ne hw₂ne htype
+      ⟨x₁, z₁, h₁, h₂⟩
+  have hctx :
+      (x₂, z₂) ∈
+        Distribution L (p ++ y₁ ++ q) := by
+    exact h₃
+  rw [hdist] at hctx
+  exact hctx
+
+/-- Forward inclusion behind the manuscript's KL/locally-trivial union:
+once Pin's factorization is supplied, a locally-trivial fixed-H language lies
+in the concrete (n,n) fixed-window slice. -/
+theorem locallyTrivial_fixedHSubstitutable_implies_fixedWindow
+    [Fintype α]
+    (H : FixedFiniteMonoidHom α M)
+    (n : Nat)
+    (hfac : PositiveLengthFactorization H n)
+    (hlt : PositiveImageLocallyTrivial H)
+    {L : Set (Word α)}
+    (hsub : FixedHSubstitutable H L) :
+    FixedWindowSubstitutable n n L := by
+  exact
+    fixedWindowSubstitutable_of_positiveKernelRefinement
+      H n n
+      (positiveWindowKernelRefines_of_factorization
+        H n hfac hlt)
+      hsub
+
+/-- The positive image predicate used by the fixed-window module agrees with
+the generic positive-image predicate used in this v126 algebraic audit. -/
+theorem fixedWindowPositiveImage_iff_positiveImage
+    [Fintype α]
+    (k l : Nat)
+    (s : FixedWindowMonoid α k l) :
+    FixedWindowPositiveImage k l s ↔
+      PositiveImage
+        (fixedWindowMonoidHom (α := α) k l) s := by
+  rfl
+
+/-- The concrete fixed-window typing satisfies the generic positive-image
+local-triviality predicate. -/
+theorem fixedWindow_positiveImageLocallyTrivial
+    [Fintype α]
+    (k l : Nat) :
+    PositiveImageLocallyTrivial
+      (fixedWindowMonoidHom (α := α) k l) := by
+  intro e hepos heidem t htpos
+  apply
+    fixedWindow_positive_image_locally_trivial
+      (α := α) k l e
+  · exact hepos
+  · exact heidem
+  · exact t
+  · exact htpos
+
+/-- Reverse inclusion behind the manuscript's union equality: every classical
+fixed-window target belongs to a fixed-H slice whose positive image is locally
+trivial. -/
+theorem fixedWindowSubstitutable_has_locallyTrivial_fixedTyping
+    [Fintype α]
+    (k l : Nat)
+    (L : Set (Word α))
+    (hwin : FixedWindowSubstitutable k l L) :
+    FixedHSubstitutable
+        (fixedWindowMonoidHom (α := α) k l) L
+      ∧
+    PositiveImageLocallyTrivial
+        (fixedWindowMonoidHom (α := α) k l) := by
+  exact
+    ⟨fixedHSubstitutable_of_fixedWindowSubstitutable
+        k l L hwin,
+      fixedWindow_positiveImageLocallyTrivial
+        (α := α) k l⟩
+
 end V126PinFactorizationBridge
 
 end TCS1
