@@ -5,7 +5,8 @@ on:
     branches: [tcs1-v123-reverification]
     paths:
       - 'LeanCfgProject/TCS1/V123*.lean'
-      - 'LeanCfgProject/TCS1/V121TypedGapKernel.lean'
+      - 'LeanCfgProject/TCS1/V121TypedGap*.lean'
+      - 'LeanCfgProject/TCS1/V121SubstringCost.lean'
       - '.github/workflows/v123-fast.yml'
   workflow_dispatch:
 
@@ -30,10 +31,11 @@ jobs:
         run: |
           lake build \
             LeanCfgProject.TCS1.V121TypedGapKernel \
-            LeanCfgProject.TCS1.V123TypedFiberEquality
+            LeanCfgProject.TCS1.V123TypedFiberEquality \
+            LeanCfgProject.TCS1.V121SubstringCost
       - name: Reject placeholders
         run: |
-          if grep -nE '\bsorry\b' LeanCfgProject/TCS1/V121TypedGapKernel.lean LeanCfgProject/TCS1/V123TypedFiberEquality.lean; then
+          if grep -nE '\bsorry\b' LeanCfgProject/TCS1/V121TypedGapKernel.lean LeanCfgProject/TCS1/V123TypedFiberEquality.lean LeanCfgProject/TCS1/V121SubstringCost.lean; then
             echo "::error::placeholder detected"
             exit 1
           fi
