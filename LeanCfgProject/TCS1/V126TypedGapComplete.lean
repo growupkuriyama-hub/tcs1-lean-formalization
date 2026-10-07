@@ -96,10 +96,12 @@ theorem nonempty_full_language_fixedH
     u ++ x ++ v ≠ [] ↔
       u ++ y ++ v ≠ []
   constructor <;> intro _
-  · exact append_ne_nil_of_right_ne_nil
-      (append_ne_nil_of_left_ne_nil hy)
-  · exact append_ne_nil_of_right_ne_nil
-      (append_ne_nil_of_left_ne_nil hx)
+  · intro hnil
+    simp only [List.append_eq_nil_iff] at hnil
+    exact hy hnil.1.2
+  · intro hnil
+    simp only [List.append_eq_nil_iff] at hnil
+    exact hx hnil.1.2
 
 /-- The displayed source target belongs to the fixed-h_c substitutable slice. -/
 theorem gap_source_fixedH (n : Nat) :
@@ -158,10 +160,12 @@ theorem gap_e_reachable
   have hi : i.val ≤ n := by omega
   have h :=
     gap_e_reachable_by_down n (n - i.val) (by omega)
+  have hval : n - (n - i.val) = i.val :=
+    Nat.sub_sub_self hi
   have heq :
       (⟨n - (n - i.val), by omega⟩ : Fin (n + 1)) = i := by
     apply Fin.ext
-    omega
+    exact hval
   simpa [heq] using h
 
 /-- Every source non-start symbol is reachable from U. -/
@@ -262,7 +266,30 @@ theorem gap_typed_thickness_at_least_pow_two
 theorem gap_nonterminal_card
     (n : Nat) :
     Fintype.card (GapNT n) = n + 3 := by
-  simp [GapNT]
+  let e : GapNT n ≃ (Fin 2 ⊕ Fin (n + 1)) :=
+    { toFun := fun A =>
+        match A with
+        | .u => Sum.inl ⟨0, by omega⟩
+        | .d => Sum.inl ⟨1, by omega⟩
+        | .e i => Sum.inr i
+      invFun := fun s =>
+        match s with
+        | Sum.inl i => if i.val = 0 then .u else .d
+        | Sum.inr i => .e i
+      left_inv := by
+        intro A
+        cases A with
+        | u => rfl
+        | d => rfl
+        | e i => rfl
+      right_inv := by
+        intro s
+        cases s with
+        | inl i =>
+            fin_cases i <;> rfl
+        | inr i => rfl }
+  rw [Fintype.card_congr e]
+  simp
   omega
 
 /-- There are O(n) displayed non-start production schemata: four fixed
