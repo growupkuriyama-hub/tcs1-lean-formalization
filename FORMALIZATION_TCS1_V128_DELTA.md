@@ -193,6 +193,19 @@ CI #738 failed due to an unrecognized append nonemptiness helper in
 `89a3c3f6f2068bb0c4d058d8a8f2c6b019516c2e`. The fix and
 the retained-language theorem are subject to the next integrated CI.
 
+## Successful typed branch trim-survival (pending CI)
+
+The candidate module `V128TypedTrimSuccessfulBranch.lean`
+reuses `ConcreteTypedActive` to prove a general start-branch bridge:
+if a start child A has a binary rule A→BC and typed terminal
+derivations for both children, then the two typed children are retained
+by the productive/reachable trim and their **same derivations** survive
+restriction. This is the precise structural principle needed to keep
+(E_n)_1 alive along U→E_nD, once the full source grammar
+G_n is encoded in the generic SSBNF formalization. It is not
+the instance-specific exponential gap theorem yet. A green CI for the
+new module is required before describing it as checked.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
