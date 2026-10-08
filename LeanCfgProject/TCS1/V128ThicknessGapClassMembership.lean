@@ -52,5 +52,31 @@ theorem gapSource_fixedHSubstitutable (n : Nat) :
   rw [gapSource_startLanguage_eq_nonempty n]
   exact gapPositiveWords_fixedHSubstitutable gapCZeroTyping
 
+
+/-- Complete single-instance statement combining the source's h_c-class
+    membership with the earlier reducedness, ordinary/typed thickness
+    separation, and explicit linear grammar-size certificate. -/
+theorem v128_exponential_gap_manuscript_instance (n : Nat) :
+    FixedHSubstitutable gapCZeroTyping
+      (UntypedStartLanguage (GapTerminalRule n)
+        (GapBinaryRule n) (GapStartRule n) False) ∧
+    (UntypedStartLanguage (GapTerminalRule n) (GapBinaryRule n)
+        (GapStartRule n) False =
+      {w : List Bool | w ≠ []}) ∧
+    (∀ A : GapNonterminal n,
+      GapSourceReachable n A ∧
+        ∃ w : List Bool,
+          UntypedDerives (GapTerminalRule n) (GapBinaryRule n) A w) ∧
+    (YieldBound (gapSourceYieldLanguage n) 1 ∧
+      ∀ bound : Nat,
+        YieldBound (gapSourceYieldLanguage n) bound →
+        1 ≤ bound) ∧
+    (∀ bound : Nat,
+      YieldBound (gapRetainedTypedYieldLanguage n) bound →
+      2 ^ n ≤ bound) ∧
+    (gapSourceGrammarSymbolBudget n ≤ 34 * (n + 1)) := by
+  exact ⟨gapSource_fixedHSubstitutable n,
+    v128_exponential_typed_thickness_gap_package n⟩
+
 end TCS1
 end LeanCfgProject
