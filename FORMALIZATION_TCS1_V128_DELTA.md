@@ -253,6 +253,39 @@ bit-level integer index encoding analyses are not yet formalized.
 The code and the ordinary thickness/reducedness modules are now
 awaiting the newest integrated CI #780.
 
+## Gap proposition consolidation after green CI #786
+
+The integrated **CI #786** (run `37786906358`, head
+`35004c26d58ea5f2e50cbdeef28d6f5ba8fea88d`) passed all checks:
+the theorem critical path, `TCS1.All` facade, no `sorry`, and
+no project-level `axiom`.
+
+Thus the concrete gap-example components now checked include:
+- indexed finite SSBNF source grammar G_n and h_c typed-refinement;
+- concrete productive/reachable trimming and retention of (E_n,1);
+- all trimmed (E_n,1) derivations have yield length 2^n, hence
+  every uniform typed `YieldBound` satisfies 2^n <= τ;
+- source shortest yield `YieldBound` has minimum exactly 1;
+- source reachable/productive symbols U,D,E_0,...,E_n;
+- rule-code decoding sound/complete for all actual source productions,
+  enumerated codes of length 2n+7, and
+  `gapSourceGrammarSymbolBudget n <= 34*(n+1)`
+  under atomic grammar-symbol counting.
+
+Now **submitted but not yet CI-verified**:
+- `V128ThicknessGapProposition.lean`: combines all five properties
+  as `v128_exponential_typed_thickness_gap_package`;
+- `V128ThicknessGapClassMembership.lean`: directly proves
+  `{a,c}^+` is fixed-h substitutable and combines it with the
+  source-grammar/language/size/thickness certificate in one theorem
+  `v128_exponential_gap_manuscript_instance`.
+
+The last two files are *pending a green run at their current commit*.
+This is a proposition-level formalization only, **not** proof of all 30
+v128 manuscript theorem environments. It does not cover alternative
+symbol-index bit encodings and does not automatically certify a
+complexity-theoretic algorithm-independent characteristic-data lower bound.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
