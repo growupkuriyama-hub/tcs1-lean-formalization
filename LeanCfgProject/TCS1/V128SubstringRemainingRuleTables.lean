@@ -96,7 +96,8 @@ theorem v116EpsilonStartTable_iff
     (K : Finset (Word α)) :
     () ∈ v116EpsilonStartTable K ↔ ([] : Word α) ∈ K := by
   classical
-  simp [v116EpsilonStartTable]
+  by_cases h : ([] : Word α) ∈ K <;>
+    simp [v116EpsilonStartTable, h]
 
 /-- No ordinary observed-factor nonterminal has an epsilon rule. -/
 theorem v116NonstartEpsilonRule_false
