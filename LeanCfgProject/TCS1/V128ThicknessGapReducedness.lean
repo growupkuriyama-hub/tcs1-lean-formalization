@@ -72,7 +72,9 @@ theorem gapExponent_source_reachable (n : Nat)
     (n - i.val) (Nat.sub_le n i.val)
   have hidx : (⟨n - (n - i.val),
       Nat.lt_succ_of_le (Nat.sub_le n (n - i.val))⟩ :
-      Fin (n + 1)) = i := Fin.ext (by omega)
+      Fin (n + 1)) = i := Fin.ext (by
+    change n - (n - i.val) = i.val
+    omega)
   simpa only [hidx] using hreach
 
 /-- The source grammar has no unreachable non-start symbols. -/
