@@ -83,7 +83,9 @@ theorem exponentialBranch_to_gapUntyped (n : Nat)
       intro hi
       exact UntypedDerives.terminal
         (GapTerminalRule.exponentC
-          (i := ⟨i + 1, Nat.lt_succ_of_le hi⟩) (by omega))
+          (i := ⟨i + 1, Nat.lt_succ_of_le hi⟩) (by
+            change 0 < i + 1
+            exact Nat.zero_lt_succ i))
 
 /-- The universal symbol U genuinely derives every nonempty Boolean word. -/
 theorem gapUniversal_to_untyped (n : Nat)
