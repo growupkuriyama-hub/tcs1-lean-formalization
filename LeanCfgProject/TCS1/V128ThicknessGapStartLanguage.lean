@@ -44,8 +44,11 @@ theorem gapUniversalYield_nonempty
   induction d with
   | letterA => simp
   | letterC => simp
-  | combine _ _ ihU _ihV =>
-      exact append_ne_nil_of_left_ne_nil ihU
+  | @combine u v _du _dv ihU _ihV =>
+      intro hnil
+      have htake := congrArg (fun z : List Bool => z.take u.length) hnil
+      have hu : u = [] := by simpa using htake
+      exact ihU hu
   | exponentialBranch _ =>
       simp
 
