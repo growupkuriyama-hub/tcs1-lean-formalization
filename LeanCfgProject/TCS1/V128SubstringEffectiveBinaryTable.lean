@@ -111,7 +111,7 @@ theorem v116EffectiveBinaryWordTable_iff
     have hleft : Observed K y p (z ++ q) := by
       constructor
       · exact hy
-      · exact hword
+      · simpa only [List.append_assoc] using hword
     have hright : Observed K z (p ++ y) q := by
       constructor
       · exact hz
@@ -152,7 +152,7 @@ theorem v116EffectiveBinaryWordTable_eq_actual
     have hleft : Observed K y p (z ++ q) := by
       constructor
       · exact hy
-      · exact hword
+      · simpa only [List.append_assoc] using hword
     have hright : Observed K z (p ++ y) q := by
       constructor
       · exact hz
