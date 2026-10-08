@@ -123,7 +123,10 @@ theorem substringBucket_entries_le_factorSlots
         ∑ b ∈ B, Fintype.card
           (SubstringContextBucket H K b.1.1 b.1.2 b.2) := by
     simp [SubstringBucketEntries, Fintype.card_sigma,
-      ← Finset.attach_eq_univ, Finset.sum_attach]
+      ← Finset.attach_eq_univ] <;>
+      exact Finset.sum_attach B
+        (fun b => Fintype.card
+          (SubstringContextBucket H K b.1.1 b.1.2 b.2))
   rwa [hsum] at hcard
 
 /-- The actual O(n_K^3) pair-count consequence, with NO extra
