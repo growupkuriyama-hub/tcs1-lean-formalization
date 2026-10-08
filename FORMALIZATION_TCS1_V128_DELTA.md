@@ -1,6 +1,6 @@
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
-> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#824 SUCCESS**、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
+> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#836 SUCCESS**（run `37818506991`、code commit `d98cf5147`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
 
 Date: 2026-10-08. Manuscript source of truth: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`.
 Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
