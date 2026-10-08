@@ -243,6 +243,7 @@ import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
 import LeanCfgProject.TCS1.V128SubstringCFGPresentation
+import LeanCfgProject.TCS1.V128FiniteSubstringGrammar
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
