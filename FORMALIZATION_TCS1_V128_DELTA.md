@@ -1,6 +1,6 @@
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
-> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#836 SUCCESS**（run `37818506991`、code commit `d98cf5147`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
+> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#858 SUCCESS**（run `37822000555`、code commit `06fe94b630`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
 
 Date: 2026-10-08. Manuscript source of truth: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`.
 Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
@@ -370,9 +370,25 @@ Remaining output bridge: B/L/S/epsilon literal tables, start-rule/epsilon integr
 
 Historical CI #828 was an infrastructure-only DNS failure during elan setup; CI #831 exposed two new Lean type errors subsequently repaired. #836 supersedes both as the last fully green **code** checkpoint. A documentation-only commit after #836 does not extend its proof coverage.
 
+## CI #858 GREEN: exact finite B/U/L/S/epsilon tables and batch-language semantics
+
+**2026-10-09:** [CI #858](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37822000555) SUCCESS, run `37822000555`, code SHA `06fe94b6307adee3b62222c0f9a0f35664e85f20`. New targeted table/grammar modules, historical theorem-facing critical path, complete `TCS1.All`, no-`sorry` and no-project-`axiom` gates ALL passed.
+
+New verified modules:
+- `V128SubstringRemainingRuleTables.lean` supplies actual finite sets for (B) binary, (L) lexical, (S) start and epsilon-start, plus precise iff lemmas against `finiteSubstringGrammar`; non-start epsilon rules are absent. The v116 (U) table and cubic actual U-table cardinal bound were already checked at CI #836.
+- `V128SubstringTabulatedGrammar.lean` forms `v116TabulatedNonstartGrammar` by using membership in those materialized finite B/U/L sets as production predicates, proves both `v116TabulatedDerives_to_finiteCFG` and `finiteCFG_to_v116TabulatedDerives`, and combines start/epsilon table correspondence with the earlier certified quotient to give `v116TabulatedBatchLanguage_eq_batchLanguage`. This equality is quantified over **every** finite K (including K empty and epsilon in K).
+
+Precise limitation:
+- These are noncomputable mathematical `Finset` materializations and verified semantic extensional equality, **not** a verified effective construction with quartic machine-step complexity. In particular B currently filters the full observed-state **triple** universe. That is not the manuscript's three-cut O(n_K^3) candidate enumerator, even though both denote exactly the same binary-rule set.
+- Next formal delta must enumerate B from the existing `ReconstructionSplitSlot K` rather than the broad triple universe and prove sound/complete correspondence. Reuse its already verified `reconstructionSplitSlot_card_le_cube`, then attach L/S/epsilon/U actual effective candidate traversal, canonical factor/context IDs, caching, deduplication, encoding length and runtime. Do not silently discharge `thm:poly-build` or the conditional `substringV116WrittenRules_le_quartic` with cardinality alone.
+- Exact-v128 theorem-environment audit, locally trivial finite-window criterion and characteristic-data corollary remain pending.
+- CI #849 initially failed one epsilon-table membership simp goal; explicit membership case split fixed it before #858.
+
+Documentation commits after the certified code SHA are not an independent verification of a changed Lean proof. PR #8 remains Draft; v88 official release and TCS submitted manuscript are untouched.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
-1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
+1. **Constructor correspondence and effective runtime.** The v115-v116 derivation quotient and finite observed-factor CFG were checked earlier; the literal finite B/U/L/S/epsilon tables and exact start-language equality were checked at CI #858. The remaining obligation is **computable** split-slot-indexed production enumeration (rather than the present broad triple-state filter), O(n^4) encoded-size and step-count certificates, and an exact comparison with every condition of the v128 algorithm.
 2. **Typed-refinement retained-symbol bridge.** Connect the new language
    equality to the trimmed, reachable non-start symbols of Proposition 5.2 and
    to full `L(\widetilde G)=L(G)`.
