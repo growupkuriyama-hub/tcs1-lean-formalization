@@ -245,6 +245,7 @@ import LeanCfgProject.TCS1.V128SubstringQuotient
 import LeanCfgProject.TCS1.V128SubstringCFGPresentation
 import LeanCfgProject.TCS1.V128FiniteSubstringGrammar
 import LeanCfgProject.TCS1.V128ErasureFlagTyping
+import LeanCfgProject.TCS1.V128ThicknessGapCore
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
