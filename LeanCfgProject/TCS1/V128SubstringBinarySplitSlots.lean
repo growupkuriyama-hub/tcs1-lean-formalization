@@ -84,7 +84,10 @@ theorem v116BinarySplitCodes_cover
       p.length + B.1.length + C.1.length - p.length =
         B.1.length + C.1.length := by omega
   rw [hlen]
-  simp [List.append_assoc]
+  have htake :
+      ((B.1 ++ C.1) ++ q).take (B.1 ++ C.1).length =
+        B.1 ++ C.1 := by simp
+  simpa only [List.length_append, List.append_assoc] using htake
 
 /-- Every candidate index in the raw triple-cut space is already
     controlled by the previously verified cubic sample bound. -/
@@ -150,7 +153,9 @@ theorem v116ActualBinaryRule_has_split_slot
       v116BinarySplitCode s = v116BinaryProductionWordCode e.1 := by
   classical
   have hbin : e.1.1.1 = e.1.2.1.1 ++ e.1.2.2.1 := by
-    simpa [v116BinaryRuleTable] using e.2
+    have hm : e.1 ∈ v116BinaryRuleTable K := e.2
+    unfold v116BinaryRuleTable at hm
+    exact (Finset.mem_filter.mp hm).2
   have hcover :=
     v116BinarySplitCodes_cover K e.1.1 e.1.2.1 e.1.2.2 hbin
   unfold v116BinarySplitCodes at hcover
