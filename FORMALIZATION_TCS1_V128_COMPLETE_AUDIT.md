@@ -1,6 +1,6 @@
 # TCS #1 v128 complete Lean re-verification ledger
 
-Status: **FINAL CI IN PROGRESS — do not claim completion until both v128 exact-source CI and the full TCS1 facade CI are green.**
+Status: **COMPLETE — v128 exact-source CI and the full TCS1 facade CI are green.**
 
 ## Frozen manuscript source
 
@@ -14,8 +14,8 @@ English source of truth:
   `e503bfc7b86c963d7ff3b52c3158b06ea9c10c6f`
 - source SHA-256:
   `cb18358871d34f6120fed03bc9da7bfed5f1f3095487cca03b07d40ae4d90128`
-- baseline metadata commit:
-  `92009e7c5e448499105a7dad67c03735dca6180d`
+- baseline metadata commit after final EN/JP synchronization:
+  `283cc2cf18b6a0c52e48607247e18b280eb31f7c`
 - internal paper version: **v128**
 - theorem/proposition/lemma/corollary environments: **30**
 
@@ -82,3 +82,20 @@ only when all of the following hold:
 
 A green CI alone is not a completeness argument; the source freeze and the
 claim ledger are part of the gate.
+
+
+## Completed verification run
+
+The proof-bearing branch passed both release gates before this ledger-only
+status update:
+
+- `TCS1 v128 exact-source verification`: success
+- `TCS1 Lean CI`: success
+- theorem-facing critical path: success
+- `LeanCfgProject.TCS1.All`: success
+- repository TCS1 `sorry` scan: success
+- project-level `axiom` scan: success
+
+This final ledger update changes no Lean declaration.  The same gates are
+triggered again on the ledger-final branch head so that the archived final HEAD
+itself is green.
