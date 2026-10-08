@@ -31,8 +31,9 @@
 - **CI #858 SUCCESS** — run `37822000555`、code commit `06fe94b6307adee3b62222c0f9a0f35664e85f20`。全 B/U/L/S/epsilon 有限テーブルと、再構成文法の言語等式を統合ビルドで検証。四次実行時間の証明ではない。
 - **CI #877 SUCCESS** — run `37826408393`、code commit `d4d61165f950713af141ebec291b5a6ef344f037`。全実 (B) 規則の三カット候補被覆と実規則数 `≤ n_K^3`、統合ビルド、禁止チェックを検証。実行時間の証明ではない。
 - **CI #890 SUCCESS** — run `37830187537`、code commit `e7858324859765065598255ac36cb747aff599e8`。計算可能な B ルール語コードの生成器と実有限 B 規則集合の等号、三次の出力本数、統合ビルド・禁止チェックまで検証（時間計算量の証明ではない）。
+- **CI #901 SUCCESS** — run `37846653643`、code commit `9605407fefad5bf94b34cd83aa4fd504966e03ac`。v128 原稿30件の Lean 宣言 crosswalk（65個の `#check`）を統合ビルド・禁止チェック付きで検証。未閉鎖の主張は明記して残す。
 - 成功 CI には `TCS1.All` ビルド、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止が含まれる。
-- **コードの最後の完全成功は CI #890。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
+- **コードの最後の完全成功は CI #901（監査索引の統合）**。旧数学的内容を直接追加した直近 checkpoint は CI #890。 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
 
 ## 3. 絶対に捨てない既存の検証済み資産
 
@@ -121,6 +122,16 @@
 - **次に行うこと**：二カット部分語集合を一度だけ前処理する構成へ移し、三カット走査と妥当性判定を評価するコストモデルを用意する。候補語の**リスト出力で重複を許す仕様**も検討し、意味論的には同一の規則が重複しても構わないことを利用できるか検証する。出力表現を確定してから、(U) バケット、(L)/(S)/epsilon、型値キャッシュ、符号化長・書字ステップを結ぶ。TCS 原稿 `thm:poly-build` の O(n_K^4) 説明との**正確な**対応を監査する。
 - CI #887 は `Observed` と `List.append_assoc` の書き換え3箇所で失敗。#888 は連結の左右括弧の差2箇所を検出。修正後の #890 は完全成功した。
 
+## 4-I. v128 番号付き30件の一対一監査（CI #901 成功）
+
+- **監査表の正本**：[`V128_NUMBERED_CLAIMS_ONE_TO_ONE_AUDIT_2026-10-09.md`](./V128_NUMBERED_CLAIMS_ONE_TO_ONE_AUDIT_2026-10-09.md)。`Papers/01_fixed-h-cfg/main.tex` 内の番号付き `theorem/proposition/lemma/corollary` **30件すべて**（ラベルのない1636行の系も含む）を原稿順に列挙し、各項目に旧 v79/v88 または現行 v128 の具体的 Lean 定理名と未完了の差分を対応させた。
+- **Lean 側の照合索引**：`LeanCfgProject/TCS1/V128ThirtyClaimCrosswalk.lean`。30個の見出しと **65個の `#check`**。未閉鎖の命題は明示的に OPEN と記載し、`True` の成功マーカーで完了を偽装していない。
+- **CI #901 SUCCESS** — [run `37846653643`](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37846653643)、**Lean code SHA `9605407fefad5bf94b34cd83aa4fd504966e03ac`**。v128 delta 先行ビルド、旧定理群、`TCS1.All`、`sorry`/独自 `axiom` 禁止チェックすべて成功。これは旧定理参照先の**存在と型検査の検証**であり、未完の v128 原稿命題を証明したことを意味しない。前回 CI #890 の計算可能 B テーブルの定理もそのまま成功。
+- **30件の監査分類**：**既存 Lean 数学的証明の再利用先あり R=24、橋渡し B=3（`thm:main`、`cor:ilt`、`thm:poly-build`）、部分 P=1（`prop:finite-info-closure` の RS 側は証明済み、CFL 閉包は古典的外部事実）、未閉鎖 O=2（`prop:li-window`、`cor:li-thickness`）**。
+- **重要な方針修正**：旧 `MaterializedProductionCost.lean` と `MainTheoremMaterializedPackage.lean` は実行可能なパーサ・学習器と多項式の**組合せ的操作数評価**まで既に機械検証している。v128 の規則構成と厳密四次評価への接続は必要だが、論文で約束していない Lean evaluator/CPU の1命令単位 semantics を新しい必須検証基準として上乗せしない。**原稿の「多項式時間」の定理文と証明本文の「四次時間」の具体的評価は区別する**。
+- **本当に優先する新規数学的証明**：`prop:li-window` が述べる locally trivial positive-image の fixed-window kernel refinement criterion（明示 `(n,n)`、局所自明性、類の union）。原稿中の Pin 2025 に依存する補題を境界として明示し、既存の固定窓 typing / refinement theorem を再利用。次に `cor:li-thickness` の retained typed language / trimming / thickness bridge を証明する。古い Gold learner、規則、固定窓の section 7 を再実装しない。
+- **注意**：R=24 は各 v128 主張について再利用可能な非自明な Lean 定理が確認できたという意味。30件すべてが manuscript-exact に一対一の定理文で formal proof complete になったという意味ではない。行ごとの最終的な hypothesis/conclusion の全称量化・境界チェックは別途監査対象。
+
 ## 5. まだ完了していないこと（最優先順）
 
 1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。(B) 実規則の三カット候補被覆と三次本数上界は CI #877 で完了。**計算可能な (B) 有効性フィルタと実規則集合への正確な出力接続は CI #890 で完了**。次は二カット集合のキャッシュと列挙器の machine-step 証明を設計し、(L)/(S)/epsilon・(U) を計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
@@ -139,7 +150,7 @@
 
 ## 7. 再開を楽にする短いプロンプト
 
-> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #890 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
+> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #901 までの監査と既存証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
 
 **本書は GitHub に永続化した作業履歴の入口です。チャット履歴の保存・圧縮に依存しません。**
 
