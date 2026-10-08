@@ -1,4 +1,3 @@
-import LeanCfgProject.TCS1.V126ExactSourceAudit
 import LeanCfgProject.TCS1.FixedWindowConcreteMonoid
 import LeanCfgProject.TCS1.ReconstructionSoundness
 
