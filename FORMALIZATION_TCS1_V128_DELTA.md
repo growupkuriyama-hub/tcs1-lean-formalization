@@ -235,6 +235,24 @@ O(n), and unrelated remaining v128 statements, are not thereby
 formally verified. The numerical `gapSourceRuleCount_linear`
 arithmetic already in the library is not a counted-rule certificate.
 
+## Gap production enumeration — source-rule correspondence (CI pending)
+
+CI #774 failed only in `V128ThicknessGapReducedness.lean` at an
+index coercion that needed an explicit `Fin.ext` natural-value goal.
+The correction was committed as `ab0393a1`. CI #776 was superseded/
+cancelled when further code was pushed; do not label it successful.
+
+`V128ThicknessGapRuleEnumeration.lean` now defines a source-rule code
+family (7 fixed and 2×n indexed), a decoder to **actual** terminal,
+binary and start production datums, soundness of every decoded rule,
+surjective coverage of each actual rule, and concrete enumerated-list
+length `2*n+7` with an O(n) upper bound. Its intended scope is
+the standard grammar-symbol counting convention where E_i counts as
+an atomic nonterminal. The explicit `List.Nodup`/injectivity and
+bit-level integer index encoding analyses are not yet formalized.
+The code and the ordinary thickness/reducedness modules are now
+awaiting the newest integrated CI #780.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
