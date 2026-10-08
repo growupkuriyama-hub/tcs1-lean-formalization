@@ -58,7 +58,8 @@ theorem typedNonstartLanguage_eq_inter_fiber
         TypedDerives H terminalRule binaryRule (A, H.h w) w :=
       untypedDerives_lift H terminalRule binaryRule d
     change TypedDerives H terminalRule binaryRule (A, μ) w
-    simpa only [ht] using hLift
+    rw [ht] at hLift
+    exact hLift
 
 end TypedLanguageEquality
 
