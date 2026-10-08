@@ -171,6 +171,28 @@ trim-survival bridge, (iii) the exact formal typed-thickness definition
 and source-size accounting. In particular do not infer
 `τ_h^typ(G_n) ≥ 2^n` yet merely from the E-branch lemma.
 
+## Retained typed non-start language equality — submitted for CI
+
+`V128RetainedTypedLanguageEquality.lean` now contains a candidate
+exact statement of v128 Proposition 5.2 for **every** retained
+non-start symbol `(A, μ)` under the concrete productive/reachable trim:
+
+`retainedTypedNonstartLanguage(A, μ) =
+  untypedNonstartLanguage(A) ∩ {w | h(w) = μ}`.
+
+It uses already verified `concreteTypedActive_trimClosure` to
+restrict any full typed derivation rooted at an active state, while
+`reducedTypedDerives_to_typedDerives` and
+`typedDerives_yield_type` handle the reverse direction.
+The **start-language** equality was previously verified in
+`concreteTypedActive_language_eq_untyped`.
+The new bridge itself must pass CI before it is called machine-verified.
+
+CI #738 failed due to an unrecognized append nonemptiness helper in
+`V128ThicknessGapStartLanguage.lean`, fixed in commit
+`89a3c3f6f2068bb0c4d058d8a8f2c6b019516c2e`. The fix and
+the retained-language theorem are subject to the next integrated CI.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
