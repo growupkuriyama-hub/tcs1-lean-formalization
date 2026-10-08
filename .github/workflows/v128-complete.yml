@@ -1,0 +1,41 @@
+name: TCS1 v128 exact-source verification
+
+on:
+  push:
+    branches: [tcs1-v128-complete-reverification]
+    paths:
+      - 'LeanCfgProject/TCS1/V128*.lean'
+      - 'LeanCfgProject/TCS1/All.lean'
+      - '.github/workflows/v128-complete.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: tcs1-v128-complete-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  v128:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Lean and Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+          build: false
+          test: false
+          lint: false
+      - name: Build v128 source precision audit
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V128SourcePrecisionAudit \
+            LeanCfgProject.TCS1.V128ExactSourceAudit
+      - name: Build full TCS1 facade
+        run: lake build LeanCfgProject.TCS1.All
+      - name: Reject proof placeholders and project axioms
+        run: |
+          if grep -R -nE '^[[:space:]]*(sorry|axiom)[[:space:]]' LeanCfgProject/TCS1 --include="*.lean"; then
+            echo "::error::proof placeholder or project axiom detected"
+            exit 1
+          fi
