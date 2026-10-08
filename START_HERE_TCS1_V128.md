@@ -27,8 +27,9 @@
 - **CI #798 SUCCESS** — run `37790263534`。v128 指数的 typed-thickness gap 命題を単一 Lean 定理として完結。
 - **CI #818 SUCCESS** — run `37812248496`、commit `eec832f7a0dfefa3d0d422d1a8501c77d4dfa253`。v116 の単項規則バケット列挙と三次候補上界を統合ビルドで検証。
 - **CI #824 SUCCESS** — run `37813893036`、commit `371fafb3c62ef8c589c37b3b90f19a67eeee6aa5`。v116 の四次直接出力 **候補記述量 envelope** を統合ビルドで検証。重要：**これは実出力器の四次実行時間の証明ではない**。
+- **CI #836 SUCCESS** — run `37818506991`、code commit `d98cf514709bcefbdb6f65ead19498e71311e315`。実有限 (U) 規則集合の sound/complete 一致と `n_K^3` 本数証明、加えて `TCS1.All`、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止の全ゲート通過。
 - 成功 CI には `TCS1.All` ビルド、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止が含まれる。
-- この引継書やその他の Markdown を追加した後の新しい HEAD は CI #824 の commit と異なり得る。再開時は CI を再確認。
+- **コードの最後の完全成功は CI #836。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
 
 ## 3. 絶対に捨てない既存の検証済み資産
 
@@ -106,7 +107,7 @@
 
 ## 7. 再開を楽にする短いプロンプト
 
-> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #824 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
+> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #836 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
 
 **本書は GitHub に永続化した作業履歴の入口です。チャット履歴の保存・圧縮に依存しません。**
 
