@@ -1,6 +1,6 @@
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
-> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#890 SUCCESS**（run `37830187537`、code commit `e7858324`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
+> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#901 SUCCESS**（run `37846653643`、crosswalk code commit `9605407f`）。直近の新しい数学的証明を追加した checkpoint は **#890**（run `37830187537`、`e7858324`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
 
 Date: 2026-10-08. Manuscript source of truth: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`.
 Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
@@ -419,6 +419,18 @@ New `V128SubstringEffectiveBinaryTable.lean` closes the **computability and corr
 **Important strict scope:** Compiling these Lean `def`s without `noncomputable` plus proving their output correct is NOT a certified worst-case machine-step bound. The `Finset` construction may redo factor scans and its `image`/comparison/dedup/serialization cost has not been bounded. A literal output representation with stable canonical state IDs (or a justified duplicate-tolerant rule-list semantics), a cached finite-monoid `h` table, and effective U/L/S/epsilon production emitters with explicit per-stage step costs remain necessary. In the manuscript `thm:poly-build`, cardinality of B and U candidates is cubic, fixed-monoid values are cached via O(n²) extensions, and emitted rules may cost O(n) in literal encoding. None of the corresponding time-accounting assumptions should be silently replaced by Finset-cardinality alone. This also does not close `prop:li-window` or the characteristic-data result, and v128's 30-statement exact audit remains incomplete.
 
 Initial CI #887 failed three `Observed` / list-associativity proof simplifications, #888 narrowed this to two list-parenthesization obligations, and CI #890 passed after the corrections. Subsequent documentation-only commits must not be counted as a new Lean proof checkpoint until their own CI is checked.
+
+## CI #901 GREEN: source-exact 30-row first-pass crosswalk; two genuine open Lean claims
+
+New [`V128_NUMBERED_CLAIMS_ONE_TO_ONE_AUDIT_2026-10-09.md`](./V128_NUMBERED_CLAIMS_ONE_TO_ONE_AUDIT_2026-10-09.md) extracts all **30 numbered mathematical statement environments** in the **current v128** `Papers/01_fixed-h-cfg/main.tex`, including the one unlabeled corollary. It maps every item to **explicit existing Lean mathematical theorem names**, records the specific v128 delta and separates external standard facts.
+
+New `LeanCfgProject/TCS1/V128ThirtyClaimCrosswalk.lean` has 30 ordered entries and **65 `#check` occurrences**. [CI #901](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37846653643) SUCCESS at code SHA `9605407fefad5bf94b34cd83aa4fd504966e03ac`, including focused crosswalk build, old theorem-facing critical path, integrated `TCS1.All`, no-`sorry`, no-project-`axiom` gates.
+
+Classification: **24 reusable theorem sources (R)**; **3 v128 bridges (B)**: main theorem packaging, Gold corollary packaging, reconstruction polynomial/quartic algorithmic comparison; **1 partially formalized proposition (P)**: finite-information closure (RS component all clauses complete but the ordinary CFL closure ingredients not made into internal Lean types); **2 open (O)**: `prop:li-window` (locally trivial positive image iff some fixed-window positive-word kernel refinement, explicit `(n,n)`, local triviality of window image, union characterization), `cor:li-thickness` (locally trivial typed-thickness/characteristic-data transfer). `thm:main` item (iv) depends on the two open cases.
+
+**No old Lean proofs were replaced or invalidated.** The v79/v88 executable learner, materialized production table, CYK membership, Gold stabilization, combinatorial scan/candidate envelopes, typed-thickness/witness and linear/fixed-window results survive and are reused. Low-level CPU/Lean evaluator small-step cost semantics was **explicitly outside** the older project's stated boundary. The v128 direct B/U cubic candidates and quartic literal-output budget still need a concrete O(n_K^4) v116 algorithmic **operation-accounting bridge**; this is distinct from implementing a machine-code operational semantics.
+
+A `#check` only typechecks an existing proof declaration; it does not automatically establish textual equivalence with the v128 quantifiers and exact hypotheses. Accordingly this is a **first-pass complete mapping of all 30 environments**, **not** a declaration that the entire exact v128 has been internally verified. Full theorem-type equivalence, assumptions/axiom dependency and unnumbered mathematical exposition remain to be checked.
 
 ## Blocking obligations for a genuine v128 checkpoint
 
