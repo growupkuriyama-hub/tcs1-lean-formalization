@@ -28,7 +28,8 @@ jobs:
         run: |
           lake build \
             LeanCfgProject.TCS1.V128SubstringUnaryRuleTable \
-            LeanCfgProject.TCS1.V128SubstringRemainingRuleTables
+            LeanCfgProject.TCS1.V128SubstringRemainingRuleTables \
+            LeanCfgProject.TCS1.V128SubstringTabulatedGrammar
 
       - name: Build theorem-facing critical path
         run: |
