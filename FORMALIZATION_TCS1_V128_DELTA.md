@@ -133,6 +133,24 @@ For Proposition 3.3(iii), `V128ErasureFlagTyping.lean` now builds
 the concrete two-element monoid and product observer as candidate code,
 but must pass CI. The CFL-side closure statements are still open.
 
+## Green CI checkpoint #726 and next gap-family bridge
+
+CI run **#726 (37740560683)** at commit
+`5d71f296f1b9ce62d0c315aedc3bde9ca5cb84e8` **passed**
+the theorem-facing build, entire `LeanCfgProject.TCS1.All`, no-`sorry`
+and project-`axiom` checks. The concrete two-element erasure flag
+observer and `V128ThicknessGapCore` are hence machine-checked at their
+formally stated scope. This does not imply full exact-v128 verification.
+
+`V128ThicknessGapStartLanguage.lean` is a new, CI-*pending* extension
+modeling U's four source productions, S₀ → U and D → c,
+alongside the already-checked E-index derivations. It seeks to show
+(i) L(G_n) = {a,c}^+, (ii) every no-c E_n yield is exponential and
+there exists such a witness participating in a successful start tree,
+(iii) one-letter E_i source yields, and (iv) linear production accounting.
+A separate bridge to an explicitly constructed finite reduced SSBNF grammar
+and trimmed h_c-typed refinement is still missing.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
