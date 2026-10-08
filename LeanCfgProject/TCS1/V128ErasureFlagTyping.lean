@@ -57,12 +57,12 @@ theorem erasureFlagValue_append
   cases hx : φ x with
   | nil =>
       cases hy : φ y with
-      | nil => simp [hx, hy]
-      | cons b bs => simp [hx, hy]
+      | nil => simp [hx, hy] <;> rfl
+      | cons b bs => simp [hx, hy] <;> rfl
   | cons a as =>
       cases hy : φ y with
-      | nil => simp [hx, hy]
-      | cons b bs => simp [hx, hy]
+      | nil => simp [hx, hy] <;> rfl
+      | cons b bs => simp [hx, hy] <;> rfl
 
 /-- The erasure status is itself a fixed finite-monoid typing. -/
 def erasureFlagTyping
@@ -73,7 +73,7 @@ def erasureFlagTyping
   h := erasureFlagValue φ
   map_nil := by
     change erasureFlagValue φ [] = (1 : ErasureFlag)
-    simp [erasureFlagValue, φ_nil]
+    simp [erasureFlagValue, φ_nil] <;> rfl
   map_append := erasureFlagValue_append φ φ_append
 
 /-- Precomposition of a finite typing with an arbitrary word morphism. -/
