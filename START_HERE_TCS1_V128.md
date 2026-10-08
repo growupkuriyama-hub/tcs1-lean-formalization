@@ -30,8 +30,9 @@
 - **CI #836 SUCCESS** — run `37818506991`、code commit `d98cf514709bcefbdb6f65ead19498e71311e315`。実有限 (U) 規則集合の sound/complete 一致と `n_K^3` 本数証明、加えて `TCS1.All`、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止の全ゲート通過。
 - **CI #858 SUCCESS** — run `37822000555`、code commit `06fe94b6307adee3b62222c0f9a0f35664e85f20`。全 B/U/L/S/epsilon 有限テーブルと、再構成文法の言語等式を統合ビルドで検証。四次実行時間の証明ではない。
 - **CI #877 SUCCESS** — run `37826408393`、code commit `d4d61165f950713af141ebec291b5a6ef344f037`。全実 (B) 規則の三カット候補被覆と実規則数 `≤ n_K^3`、統合ビルド、禁止チェックを検証。実行時間の証明ではない。
+- **CI #890 SUCCESS** — run `37830187537`、code commit `e7858324859765065598255ac36cb747aff599e8`。計算可能な B ルール語コードの生成器と実有限 B 規則集合の等号、三次の出力本数、統合ビルド・禁止チェックまで検証（時間計算量の証明ではない）。
 - 成功 CI には `TCS1.All` ビルド、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止が含まれる。
-- **コードの最後の完全成功は CI #877。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
+- **コードの最後の完全成功は CI #890。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
 
 ## 3. 絶対に捨てない既存の検証済み資産
 
@@ -110,9 +111,19 @@
 - **注意すべき限界**：`v116BinarySplitCodes` の生の候補集合は反転・空部分など無効候補を含み得るため、**そのすべてを (B) として出力してよいわけではない**。実規則から代表スロットへの単射には `Classical.choose` を用いる。現在の `v116BinaryRuleTable` も `noncomputable` な三状態全組のフィルタに基づく。したがって**三次の実規則数上界は Lean で完了したが、三次で走る有効な (B) 規則列挙器と四次の全構築 step-count は未完**。
 - 初回 #869 は親 factor の `take` と切断長の正規化が未解決。#873 は List prefix と Finset membership の補題指定が必要だった。#875 で残った List prefix の証明に `List.take_append_length` を明示し、#877 が green となった。
 
+## 4-H. 計算可能な (B) 規則語テーブルと実テーブルの完全一致（CI #890 成功）
+
+- **CI #890 SUCCESS** — [run `37830187537`](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37830187537)、最後の検証済み **Lean code commit `e7858324859765065598255ac36cb747aff599e8`**。新規モジュール専用ビルド、既存 theorem-facing critical path、`TCS1.All`、`sorry`/独自 `axiom` 禁止チェックの全ゲート成功。
+- **新規ファイル**：`V128SubstringEffectiveBinaryTable.lean`。`noncomputable` 指定のない `def` として、①二カット `ReconstructionFactorSlot K` を走査し標本内の**非空観測部分語**を有限集合へ列挙（`v116EffectiveObservedFactorWords`）、②既存の三カット `ReconstructionSplitSlot K` を `v116BinarySplitCode` で復号（`v116EffectiveRawBinaryCodes`）、③語の連結条件、左右の非空条件、親語の標本内出現を判定して `Finset.filter` する `v116EffectiveBinaryWordTable` を定義した。
+- `v116EffectiveObservedFactorWords_iff` が二カット観測テーブルの sound/complete、`v116EffectiveBinaryWordTable_iff` が実行可能な (B) テーブルの**正しい規則条件**との双方向対応を証明。**`v116EffectiveBinaryWordTable_eq_actual`** は計算可能な語コードの集合と、CI #858 で認証済みの非計算的・証明付き状態の `v116BinaryRuleTable K` を `v116BinaryProductionWordCode` で写した集合との**厳密な等号**である。
+- `v116EffectiveBinaryWordTable_card_le_cube` はフィルタされた実出力の種類数 `≤ (reconstructionSampleNorm K)^3` を、CI #877 で検証済みの三カット候補数上界から得る。既存の (U) テーブル三次上界もそのまま維持される。
+- **限界**：これは Lean 上の**実行可能な有限 `Finset` 定義と extensional correctness** の検証である。二カット観測テーブルをフィルタのたびに再計算しないための明示的キャッシュ、`Finset.image/filter` の単語比較／重複除去のマシンステップ数、正規化済み状態 ID、型値 `h` のキャッシュ、U/L/S/epsilon の有効出力器、文字列 serializer、end-to-end `O(n_K^4)` 時間は**まだ証明していない**。有限出力個数が三次であるだけでは四次実行時間を意味しない。
+- **次に行うこと**：二カット部分語集合を一度だけ前処理する構成へ移し、三カット走査と妥当性判定を評価するコストモデルを用意する。候補語の**リスト出力で重複を許す仕様**も検討し、意味論的には同一の規則が重複しても構わないことを利用できるか検証する。出力表現を確定してから、(U) バケット、(L)/(S)/epsilon、型値キャッシュ、符号化長・書字ステップを結ぶ。TCS 原稿 `thm:poly-build` の O(n_K^4) 説明との**正確な**対応を監査する。
+- CI #887 は `Observed` と `List.append_assoc` の書き換え3箇所で失敗。#888 は連結の左右括弧の差2箇所を検出。修正後の #890 は完全成功した。
+
 ## 5. まだ完了していないこと（最優先順）
 
-1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。(B) 実規則の三カット候補被覆と三次本数上界は CI #877 で完了。次は**有効な**三カット候補フィルタと実規則への出力接続を実装し、(L)/(S)/epsilon・(U) も計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
+1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。(B) 実規則の三カット候補被覆と三次本数上界は CI #877 で完了。**計算可能な (B) 有効性フィルタと実規則集合への正確な出力接続は CI #890 で完了**。次は二カット集合のキャッシュと列挙器の machine-step 証明を設計し、(L)/(S)/epsilon・(U) を計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
 2. **`prop:li-window`**：有限モノイドの正の像 semigroup が locally trivial ⇔ ある finite-window `h_(k,l)` の kernel が `ker h` を（正語上で）refine。古い fixed-window の基礎定理と区別し、新命題を直接形式化する。既存証明と原稿の正確な定義・既往文献帰属を必ず照合。
 3. 上記からの characteristic-data corollary と `prop:finite-info-closure` の **完全な CFL closure 側** の義務。
 4. v128 の全30個の theorem/proposition/lemma/corollary environment と Lean 宣言の exact correspondence（旧版の audit `True` marker を v128 の完全証明と誤認しない）。
@@ -128,7 +139,7 @@
 
 ## 7. 再開を楽にする短いプロンプト
 
-> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #877 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
+> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #890 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
 
 **本書は GitHub に永続化した作業履歴の入口です。チャット履歴の保存・圧縮に依存しません。**
 
