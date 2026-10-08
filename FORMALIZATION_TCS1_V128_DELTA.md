@@ -206,6 +206,35 @@ G_n is encoded in the generic SSBNF formalization. It is not
 the instance-specific exponential gap theorem yet. A green CI for the
 new module is required before describing it as checked.
 
+## Typed-thickness CI #764 green; ordinary source and reducedness under checking
+
+**CI #764 (run 37753966708) passed** the TCS1 critical path, complete
+`TCS1.All` build, no-`sorry`, and project-`axiom` checks. This
+checks the *actual finite SSBNF family* (U,D,E_0,...,E_n) in
+`V128ThicknessGapFiniteSSBNF.lean`, the E_n typed-unit witness
+and its retention after trimming, plus
+`V128ThicknessGapYieldBound.lean` which proves that **every**
+uniform `YieldBound` for the trimmed typed non-start languages is
+at least 2^n. Earlier #752 was the prior checkpoint, superseded by
+this verified one.
+
+`V128ThicknessGapOrdinary.lean` now contains candidate theorems:
+every original source nonterminal has a one-letter yield, no
+uniform original-language `YieldBound` can be zero, and the
+ordinary-vs-typed thickness separation holds using the *same*
+`YieldBound` interface.
+
+`V128ThicknessGapReducedness.lean` now defines source nonterminal
+graph reachability using the precise `GapBinaryRule` relation
+and seeks to prove every U,D,E_i is reachable from the start child
+U and productive, for all n including n=0.
+
+**These last two modules are still CI-pending** (newest run #772).
+The exact source production enumeration/encoded representation size
+O(n), and unrelated remaining v128 statements, are not thereby
+formally verified. The numerical `gapSourceRuleCount_linear`
+arithmetic already in the library is not a counted-rule certificate.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
