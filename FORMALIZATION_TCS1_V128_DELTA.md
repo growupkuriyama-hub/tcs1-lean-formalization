@@ -317,6 +317,40 @@ two-cut occurrence-slot count and the final direct-production encoding
 remains open. In particular the historical O(n_K⁵) direct bound
 does not imply the revised v116 O(n_K⁴) claim.
 
+## CI #818 green: exact v116 bucket-count delta and quartic candidate budget
+
+**Lean CI #818 (run 37812248496), successful.** The full `TCS1.All`
+facade, theorem critical path, no-`sorry` check and no project-level
+`axiom` check passed on head `eec832f7a0dfefa3d0d422d1a8501c77d4dfa253`.
+
+Thus the following NEW v116 delta theorems are now machine-checked:
+- `SubstringContextBucket` has size at most `K.card`.
+- All entries over arbitrary finite bucket keys inject into the
+  previously checked `ReconstructionFactorSlot K`; total entries
+  are at most the two-cut slot count (quadratic).
+- `substringBucketKeys` is an explicitly finite image of the old
+  factor-slot indexing space, and it covers **every** instance of
+  `SubstringUnaryRelated H K x y`.
+- `substringBucketKeys_unaryCandidateCount_le_cube` gives the
+  unconditional `sum_B |B|² ≤ n_K³` for the enumerated bucket keys.
+
+New code at the next head (NOT yet kernel verified):
+`V128SubstringQuarticEnvelope.lean` reuses the old verified
+`reconstructionSplitSlotCount_le_cube`,
+`reconstructionFactorSlotCount_le_sq`,
+`reconstructionSample_card_le_norm`, plus the new checked cubic
+unary bound to form the precise **candidate-count budget**
+`1+n_K+n_K²+2n_K³ ≤ 4(n_K+1)³`, and a bound
+`4(n_K+1)⁴` after charging up to `n_K+1` symbols per
+*enumerated candidate*. The candidate-count arithmetic has no
+additional bucket-count hypothesis; the final literal written-rule
+theorem still depends on a rule-count/encoding-length interface.
+
+Do not confuse this envelope with a verified executable `B_h(K)`
+emitter. Exact binding of the output writer to the revised v116 tables,
+and its O(n_K⁴) *time* implementation (canonical factor IDs, fixed
+h caching, key deduplication and rule checks), remains open.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
