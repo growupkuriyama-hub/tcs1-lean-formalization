@@ -117,8 +117,10 @@ theorem gapSource_startLanguage_eq_nonempty (n : Nat) :
       (GapTerminalRule n) (GapBinaryRule n) (GapStartRule n) False w at hw
     cases hw with
     | nonempty _ d =>
-        exact ne_of_gt (untypedDerives_length_pos
-          (GapTerminalRule n) (GapBinaryRule n) d)
+        intro hnil
+        have hpos := untypedDerives_length_pos
+          (GapTerminalRule n) (GapBinaryRule n) d
+        simp [hnil] at hpos
     | epsilon heps =>
         exact False.elim heps
   · intro hw
