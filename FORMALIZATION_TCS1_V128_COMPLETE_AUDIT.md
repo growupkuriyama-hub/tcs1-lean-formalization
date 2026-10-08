@@ -1,6 +1,14 @@
 # TCS #1 v128 complete Lean re-verification ledger
 
-Status: **COMPLETE — v128 exact-source CI and the full TCS1 facade CI are green.**
+Status: **COMPLETE for exact-source synchronization relative to the explicit literature and representation/cost boundaries below — v128 exact-source CI and the full TCS1 facade CI are green.**
+
+
+For the stronger question whether *every* cited/background theorem and every
+asymptotic runtime phrase is itself reproved inside a self-contained Lean
+machine-cost model, see
+`FORMALIZATION_TCS1_V128_STRICT_REPRO_AUDIT.md`.  That stricter answer is
+**no**: the paper-owned semantic core is synchronized, while a small set of
+explicit literature inputs and cost-model boundaries remains external.
 
 ## Frozen manuscript source
 
