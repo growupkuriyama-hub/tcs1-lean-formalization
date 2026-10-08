@@ -241,6 +241,7 @@ import LeanCfgProject.TCS1.V88FullManuscriptAudit
 import LeanCfgProject.TCS1.V128TypedLanguageEquality
 import LeanCfgProject.TCS1.V128RetainedTypedLanguageEquality
 import LeanCfgProject.TCS1.V128TypedTrimSuccessfulBranch
+import LeanCfgProject.TCS1.V128ThicknessGapFiniteSSBNF
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
