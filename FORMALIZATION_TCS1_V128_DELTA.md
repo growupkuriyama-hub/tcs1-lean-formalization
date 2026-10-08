@@ -71,6 +71,22 @@ These branch additions have not been independently confirmed by a successful
 GitHub Actions run, so their status is **Lean code submitted for checking**,
 not machine-checked or merged.
 
+### Erasing inverse-image semantic kernel
+
+`LeanCfgProject/TCS1/V128InverseImageKernel.lean` adds a candidate
+formal proof that pulling back a substitutable language through an arbitrary
+concatenation-preserving word map preserves distribution equality when
+equal observed types include (a) equality of image h-types and
+(b) agreement on whether images are empty. This treats the manuscript's
+essential empty/nonempty split without assuming a nonerasing map.
+
+**Remaining exact-statement gap:** Construct the two-element erasure monoid
+`B_phi`, its homomorphism `e_phi`, and the finite product typing
+`(h ∘ phi, e_phi)`, then derive these two hypotheses from equality
+of the product observer. The context-free inverse-homomorphism closure
+component is not internally formalized. This module and earlier new modules
+still require green CI; source-code submission is not machine verification.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** Prove the v116 substring-indexed quotient
