@@ -127,7 +127,10 @@ theorem substringDerives_to_finiteCFG
       have hy : ∃ p q : Word α, Observed K y p q := by
         rcases hrel.2 with ⟨p, q, _hx, hy⟩
         exact ⟨p, q, hy⟩
-      exact BinaryNullableDerives.unit hrel (ih hy)
+      apply BinaryNullableDerives.unit
+        (B := (⟨y, hy⟩ : ObservedSubstringNonterminal K))
+      · exact hrel
+      · exact ih hy
   | @binary x y w₁ w₂ hparent hx hy _dx _dy ihx ihy =>
       intro _hroot
       rcases hparent with ⟨p, q, hp⟩
@@ -139,9 +142,12 @@ theorem substringDerives_to_finiteCFG
         constructor
         · exact hy
         · simpa only [List.append_assoc] using hp.2
-      exact BinaryNullableDerives.binary rfl
-        (ihx ⟨p, y ++ q, hleft⟩)
-        (ihy ⟨p ++ x, q, hright⟩)
+      apply BinaryNullableDerives.binary
+        (B := (⟨x, ⟨p, y ++ q, hleft⟩⟩ : ObservedSubstringNonterminal K))
+        (C := (⟨y, ⟨p ++ x, q, hright⟩⟩ : ObservedSubstringNonterminal K))
+      · rfl
+      · exact ihx ⟨p, y ++ q, hleft⟩
+      · exact ihy ⟨p ++ x, q, hright⟩
 
 /-- Finite grammar derivations admit precisely the v116 substring rules. -/
 theorem finiteCFG_to_substringDerives
@@ -152,9 +158,10 @@ theorem finiteCFG_to_substringDerives
     SubstringDerives H K A.1 w := by
   induction d with
   | @terminal A a hterm =>
-      have hobs : ∃ p q : Word α, Observed K [a] p q := by
-        simpa [hterm] using A.2
       change A.1 = [a] at hterm
+      have hobs : ∃ p q : Word α, Observed K [a] p q := by
+        rw [← hterm]
+        exact A.2
       rw [hterm]
       exact SubstringDerives.letter hobs
   | epsilon heps =>
