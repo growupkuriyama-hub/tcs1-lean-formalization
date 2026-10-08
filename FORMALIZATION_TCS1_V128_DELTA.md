@@ -151,6 +151,26 @@ there exists such a witness participating in a successful start tree,
 A separate bridge to an explicitly constructed finite reduced SSBNF grammar
 and trimmed h_c-typed refinement is still missing.
 
+## Further typed-thickness integration — pending CI
+
+`V128ThicknessGapStartLanguage.lean` models the explicit U productions
+and proves at the derivation-semantics level that the start language is
+`{a,c}⁺`, independently of n, and that the exponential E_n branch
+occurs in a successful start derivation (U → E_n D).
+
+`V128ThicknessGapTypedFiber.lean` defines a *fixed* two-element monoid
+typing h_c (a ↦ 1, c ↦ 0), connects the h_c-unit fibre with absence of c,
+and specializes the E_n exponential lower bound to that actual typing,
+with a successful-tree witness. Both new modules are submitted for CI
+and must not be represented as kernel-verified until a green run.
+
+Still missing for the exact paper proposition: (i) a literal finite,
+reduced SSBNF grammar carrying this indexed family, with full start,
+production, productive and reachable semantics, (ii) the typed-refinement
+trim-survival bridge, (iii) the exact formal typed-thickness definition
+and source-size accounting. In particular do not infer
+`τ_h^typ(G_n) ≥ 2^n` yet merely from the E-branch lemma.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
