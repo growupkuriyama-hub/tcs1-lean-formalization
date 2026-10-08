@@ -353,6 +353,23 @@ emitter. Exact binding of the output writer to the revised v116 tables,
 and its O(n_K⁴) *time* implementation (canonical factor IDs, fixed
 h caching, key deduplication and rule checks), remains open.
 
+## Green CI #836: literal v116 unary-production set, not yet effective end-to-end emitter
+
+**2026-10-09 checkpoint.** `V128SubstringUnaryRuleTable.lean` was added on the Draft PR #8 branch, imported into `TCS1.All`, and verified by [CI #836](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37818506991) (run `37818506991`, checked commit `d98cf514709bcefbdb6f65ead19498e71311e315`). This CI passed: targeted v128 unary module, legacy theorem critical path, integrated `TCS1.All`, no-`sorry`, and no project `axiom`.
+
+The NEW machine-checked declarations are:
+
+- `v116UnaryRuleTable_sound`: every (x,y) in the finite emitted (U) table satisfies the actual `SubstringUnaryRelated` predicate.
+- `v116UnaryRuleTable_complete`: every v116 semantic unary rule (x,y) is present in the table.
+- `v116UnaryRuleTable_iff`: literal table membership is equivalent to `finiteSubstringGrammar.unitRule` for observed-factor states.
+- `v116UnaryCandidate_card_eq` and `v116UnaryRuleTable_card_le_cube`: a concrete `Finset` of (U) productions has cardinality at most `(reconstructionSampleNorm K)^3`. Unlike the previous candidate envelope, this bound applies to the *actual finite unary table*.
+
+These theorems use the existing finite bucket enumeration and its verified cubic bound, not a reimplementation of the v88 learning/complexity proof. The `Finset` is **noncomputable** because its finite indexed state/bucket presentation uses classical choice. Therefore this is a literal finite mathematical production set with proven soundness, completeness and size, **not** a verified executable enumerator / deduplicator / serializer and **not** the claimed `O(n_K^4)` time theorem.
+
+Remaining output bridge: B/L/S/epsilon literal tables, start-rule/epsilon integration, canonical finite factor identifiers and context IDs, effective type-cache and stable deduplication, per-rule encoding size bound, and machine-step work proof. Other outstanding v128 exact-version claims (`prop:li-window`, `cor:li-thickness`, full finite-information closure and all 30 environments) remain as documented below.
+
+Historical CI #828 was an infrastructure-only DNS failure during elan setup; CI #831 exposed two new Lean type errors subsequently repaired. #836 supersedes both as the last fully green **code** checkpoint. A documentation-only commit after #836 does not extend its proof coverage.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
