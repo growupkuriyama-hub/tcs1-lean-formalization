@@ -49,6 +49,15 @@ abbrev SubstringContextBucket
   {A : ObservedSubstringNonterminal K //
     Observed K A.1 p q ∧ H.h A.1 = μ}
 
+/-- Finite bucket membership is inherited from the finite observed-factor type. -/
+noncomputable instance substringContextBucketFintype
+    (H : FixedFiniteMonoidHom α M)
+    (K : Finset (Word α))
+    (p q : Word α) (μ : M) :
+    Fintype (SubstringContextBucket H K p q μ) := by
+  classical
+  infer_instance
+
 /-- Associate each bucket factor with its containing sample word. -/
 def substringContextBucketSample
     (H : FixedFiniteMonoidHom α M)
@@ -68,8 +77,9 @@ theorem substringContextBucketSample_injective
   intro A B heq
   have hw : p ++ A.1.1 ++ q = p ++ B.1.1 ++ q :=
     congrArg Subtype.val heq
-  have hafter : A.1.1 ++ q = B.1.1 ++ q :=
-    List.append_cancel_left hw
+  have hafter : A.1.1 ++ q = B.1.1 ++ q := by
+    apply List.append_cancel_left
+    simpa only [List.append_assoc] using hw
   have hfactor : A.1.1 = B.1.1 :=
     List.append_cancel_right hafter
   apply Subtype.ext
