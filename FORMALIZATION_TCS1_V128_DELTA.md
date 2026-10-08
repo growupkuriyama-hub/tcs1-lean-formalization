@@ -1,6 +1,6 @@
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
-> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#877 SUCCESS**（run `37826408393`、code commit `d4d61165`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
+> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#890 SUCCESS**（run `37830187537`、code commit `e7858324`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
 
 Date: 2026-10-08. Manuscript source of truth: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`.
 Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
@@ -403,6 +403,22 @@ This reuses the v88 split-slot cardinality bound and the CI #858 verified litera
 CI fixes on the route to green: #869 length normalization, #873 filter membership and List-take normalization, #875 explicit standard `List.take_append_length` lemma. #877 passed.
 
 Documentation commits after the verified code SHA may have their own pending CI; do not silently extend proof coverage from them.
+
+## CI #890 GREEN: computable (B) enumeration is extensionally exact
+
+**2026-10-09 checkpoint.** [CI #890](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37830187537) is fully SUCCESS at Lean code SHA `e7858324859765065598255ac36cb747aff599e8` (focused module build, unchanged theorem-facing critical path, integrated `TCS1.All`, no-`sorry` and no-project-`axiom` gates).
+
+New `V128SubstringEffectiveBinaryTable.lean` closes the **computability and correctness** gap for the binary **word-code** rule set:
+- `v116EffectiveObservedFactorWords` is a computable two-cut `Finset` scan, with `v116EffectiveObservedFactorWords_iff` proving exact agreement with nonempty observed factors, rejecting invalid occurrences.
+- `v116EffectiveRawBinaryCodes` is a computable three-cut candidate image; `v116EffectiveRawBinaryCodes_eq` equates it to the previous CI #877 raw candidate set.
+- `v116EffectiveBinaryWordTable` is an ordinary computable `Finset.filter` of those candidate triples, checking parent = left ++ right, both children nonempty and parent present among the observed factor words.
+- `v116EffectiveBinaryWordTable_iff` characterizes the output by exactly the semantic v116 (B) rule predicate. Crucially, **`v116EffectiveBinaryWordTable_eq_actual`** proves equality with the image of the older finite materialized `v116BinaryRuleTable K` under `v116BinaryProductionWordCode`. No arbitrary invalid split is emitted. This is a verified bridge from **effective finite enumeration** to **semantic CFG rules**.
+- `v116EffectiveBinaryWordTable_card_le_cube` proves this effective table contains at most `(reconstructionSampleNorm K)^3` different word-coded productions, reusing verified cubic three-cut enumeration.
+- The noncomputable older table and earlier semantics/derivations were **not modified or re-proved**. Both current effective B and older noncomputable B denote exactly the same rules.
+
+**Important strict scope:** Compiling these Lean `def`s without `noncomputable` plus proving their output correct is NOT a certified worst-case machine-step bound. The `Finset` construction may redo factor scans and its `image`/comparison/dedup/serialization cost has not been bounded. A literal output representation with stable canonical state IDs (or a justified duplicate-tolerant rule-list semantics), a cached finite-monoid `h` table, and effective U/L/S/epsilon production emitters with explicit per-stage step costs remain necessary. In the manuscript `thm:poly-build`, cardinality of B and U candidates is cubic, fixed-monoid values are cached via O(n²) extensions, and emitted rules may cost O(n) in literal encoding. None of the corresponding time-accounting assumptions should be silently replaced by Finset-cardinality alone. This also does not close `prop:li-window` or the characteristic-data result, and v128's 30-statement exact audit remains incomplete.
+
+Initial CI #887 failed three `Observed` / list-associativity proof simplifications, #888 narrowed this to two list-parenthesization obligations, and CI #890 passed after the corrections. Subsequent documentation-only commits must not be counted as a new Lean proof checkpoint until their own CI is checked.
 
 ## Blocking obligations for a genuine v128 checkpoint
 
