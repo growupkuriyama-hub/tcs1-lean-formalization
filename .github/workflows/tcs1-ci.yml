@@ -24,8 +24,11 @@ jobs:
           test: false
           lint: false
 
-      - name: Build v128 substring unary delta first
-        run: lake build LeanCfgProject.TCS1.V128SubstringUnaryRuleTable
+      - name: Build v128 finite-rule delta first
+        run: |
+          lake build \
+            LeanCfgProject.TCS1.V128SubstringUnaryRuleTable \
+            LeanCfgProject.TCS1.V128SubstringRemainingRuleTables
 
       - name: Build theorem-facing critical path
         run: |
