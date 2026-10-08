@@ -239,6 +239,7 @@ import LeanCfgProject.TCS1.V88CenterMarkerGrammar
 import LeanCfgProject.TCS1.V88CenterMarkerNonlinear
 import LeanCfgProject.TCS1.V88FullManuscriptAudit
 import LeanCfgProject.TCS1.V128TypedLanguageEquality
+import LeanCfgProject.TCS1.V128RetainedTypedLanguageEquality
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
