@@ -87,6 +87,27 @@ of the product observer. The context-free inverse-homomorphism closure
 component is not internally formalized. This module and earlier new modules
 still require green CI; source-code submission is not machine verification.
 
+## v115/v116 semantic quotient and CFG presentation
+
+Two new modules were added on this branch:
+
+- `V128SubstringQuotient.lean`: candidate proof of language equality
+  between the context-indexed v115 batch semantics and substring-indexed
+  v116 batch semantics, *for all finite K*, including the empty-word case.
+  The reverse simulation is strengthened to any observed occurrence.
+- `V128SubstringCFGPresentation.lean`: candidate bidirectional semantic
+  bridge between v116 inductive derivations and a conventional
+  terminal/binary/unit grammar presentation on word-indexed states.
+
+These are **not** a completed proof of the finite-state implementation size:
+the displayed CFG has the infinite type `Word α` as carrier, although its
+active productions are occurrence-guarded by finite K. A separate finite
+observed-factor type/encoding and the O(n^4) size estimate remain open.
+
+CI run #696 failed in `V128TypedLanguageEquality.lean`; a further rewrite
+fix has been committed, and subsequent CI must confirm it before claiming
+machine verification. All new results remain provisional until CI succeeds.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** Prove the v116 substring-indexed quotient
