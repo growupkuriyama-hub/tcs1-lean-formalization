@@ -57,6 +57,20 @@ explicit bridge establishing removal of unproductive/inaccessible states does
 not change the surviving symbol languages. The start-language equality likewise
 needs its existing start-production semantics tied to this result.
 
+## Further formalization added
+
+`LeanCfgProject/TCS1/V128FiniteInformationClosure.lean` now contains a
+product finite-monoid typing and candidate formal proofs of
+`fixedHSubstitutable_inter_product` (Proposition 3.3(i)) and
+`fixedHSubstitutable_regularFilter_product` (the distributional
+substitutability part of Proposition 3.3(ii)).
+
+These do **not** yet constitute full Proposition 3.3: the CFL closure
+component and erasing inverse-homomorphism clause (iii) remain separate.
+These branch additions have not been independently confirmed by a successful
+GitHub Actions run, so their status is **Lean code submitted for checking**,
+not machine-checked or merged.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** Prove the v116 substring-indexed quotient
@@ -66,9 +80,7 @@ needs its existing start-production semantics tied to this result.
 2. **Typed-refinement retained-symbol bridge.** Connect the new language
    equality to the trimmed, reachable non-start symbols of Proposition 5.2 and
    to full `L(\widetilde G)=L(G)`.
-3. **Finite-information closure.** Formalize all subclauses of
-   Proposition 3.3, particularly erasing inverse image with the empty-image
-   flag and the target CFL restrictions.
+3. **Finite-information closure.** Confirm the new product/intersection and filter Lean code builds, then formalize the remaining CFL-closure bridge and erasing inverse image with the empty-image flag in Proposition 3.3(iii).
 4. **Locally trivial criterion.** Formalize Proposition 3.5, including
    `n = |h(Σ+)| + 1`, `(n,n)` window selection, and both kernel directions.
    The classical semigroup criterion should remain attributed to Pin.
