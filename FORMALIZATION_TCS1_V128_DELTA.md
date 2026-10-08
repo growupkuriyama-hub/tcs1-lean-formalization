@@ -67,9 +67,7 @@ substitutability part of Proposition 3.3(ii)).
 
 These do **not** yet constitute full Proposition 3.3: the CFL closure
 component and erasing inverse-homomorphism clause (iii) remain separate.
-These branch additions have not been independently confirmed by a successful
-GitHub Actions run, so their status is **Lean code submitted for checking**,
-not machine-checked or merged.
+These branch additions were confirmed in CI #708 at the formal statement scope described above; this does not establish the full closure proposition or merger.
 
 ### Erasing inverse-image semantic kernel
 
@@ -84,8 +82,7 @@ essential empty/nonempty split without assuming a nonerasing map.
 `B_phi`, its homomorphism `e_phi`, and the finite product typing
 `(h ∘ phi, e_phi)`, then derive these two hypotheses from equality
 of the product observer. The context-free inverse-homomorphism closure
-component is not internally formalized. This module and earlier new modules
-still require green CI; source-code submission is not machine verification.
+component is not internally formalized. The semantic kernel was built in CI #708. The concrete erasure observer is pending its own passing CI.
 
 ## v115/v116 semantic quotient and CFG presentation
 
@@ -104,16 +101,41 @@ the displayed CFG has the infinite type `Word α` as carrier, although its
 active productions are occurrence-guarded by finite K. A separate finite
 observed-factor type/encoding and the O(n^4) size estimate remain open.
 
-CI run #696 failed in `V128TypedLanguageEquality.lean`; a further rewrite
-fix has been committed, and subsequent CI must confirm it before claiming
-machine verification. All new results remain provisional until CI succeeds.
+CI #708 confirmed the typed-language correction and the substring quotient and CFG presentation. The later finite-state grammar module built in CI #718. These checkpoints do not verify every claim of manuscript v128.
+
+## Verified checkpoint and new pending work (2026-10-08)
+
+Lean CI **#708** passed critical-path build, full `TCS1.All`, no-`sorry`,
+and no project `axiom`. This certifies the then-present new modules:
+typed non-start equality, finite-information intersection/filtering,
+inverse-image semantic kernel, v115-v116 substring semantics and
+binary-CFG presentation. It does **not** certify the entire v128 manuscript.
+
+CI **#718** failed only on `V128ErasureFlagTyping.lean`, whose four
+small multiplication goals and unit-value goal were amended in commit
+`3ebba04c356422385e02f78600a00c8d40363d0b`.
+
+CI #718 **successfully built** `V128FiniteSubstringGrammar.lean`:
+the observed nonempty-factor Fintype, quadratic nonterminal count,
+and its exact start-language equality with the previous batch semantics
+(including epsilon). This does not certify a literal O(n^4) output encoding.
+
+`V128ThicknessGapCore.lean` has now been added to encode precisely the
+E_0 → a / E_(n+1) → E_n E_n | c derivation subfamily of
+Proposition `prop:typed-thickness-gap`. Its candidate theorems show
+one-letter ordinary yields, a c-free witness of length 2^n, and the
+2^n lower bound on all c-free yields. A successful CI **after its import**
+is still required. The full proposition additionally needs the source
+family G_n, h_c-typed refinement, trimming, source-grammar size and
+the typed-thickness definition.
+
+For Proposition 3.3(iii), `V128ErasureFlagTyping.lean` now builds
+the concrete two-element monoid and product observer as candidate code,
+but must pass CI. The CFL-side closure statements are still open.
 
 ## Blocking obligations for a genuine v128 checkpoint
 
-1. **Constructor correspondence.** Prove the v116 substring-indexed quotient
-   constructor `B_h(K)` language-equivalent to the v88 context-indexed
-   reconstruction, for every finite sample including the empty sample. A prose
-   equivalence memo is not an exact Lean theorem.
+1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
 2. **Typed-refinement retained-symbol bridge.** Connect the new language
    equality to the trimmed, reachable non-start symbols of Proposition 5.2 and
    to full `L(\widetilde G)=L(G)`.
