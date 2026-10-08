@@ -29,8 +29,9 @@
 - **CI #824 SUCCESS** — run `37813893036`、commit `371fafb3c62ef8c589c37b3b90f19a67eeee6aa5`。v116 の四次直接出力 **候補記述量 envelope** を統合ビルドで検証。重要：**これは実出力器の四次実行時間の証明ではない**。
 - **CI #836 SUCCESS** — run `37818506991`、code commit `d98cf514709bcefbdb6f65ead19498e71311e315`。実有限 (U) 規則集合の sound/complete 一致と `n_K^3` 本数証明、加えて `TCS1.All`、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止の全ゲート通過。
 - **CI #858 SUCCESS** — run `37822000555`、code commit `06fe94b6307adee3b62222c0f9a0f35664e85f20`。全 B/U/L/S/epsilon 有限テーブルと、再構成文法の言語等式を統合ビルドで検証。四次実行時間の証明ではない。
+- **CI #877 SUCCESS** — run `37826408393`、code commit `d4d61165f950713af141ebec291b5a6ef344f037`。全実 (B) 規則の三カット候補被覆と実規則数 `≤ n_K^3`、統合ビルド、禁止チェックを検証。実行時間の証明ではない。
 - 成功 CI には `TCS1.All` ビルド、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止が含まれる。
-- **コードの最後の完全成功は CI #858。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
+- **コードの最後の完全成功は CI #877。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
 
 ## 3. 絶対に捨てない既存の検証済み資産
 
@@ -100,9 +101,18 @@
 - **次の一手**：既存の `ReconstructionSplitSlot K`（三カット有限型）から (B) 規則を sound/complete に列挙し、既存 `reconstructionSplitSlot_card_le_cube` をそのまま使って三次の出力候補上界を得る。(L)/(S) も有限候補を直接走査する計算可能な表現へ橋渡しし、canonical factor/context IDs、`h` cache、dedup、規則の文字列 encoder と step-count を結ぶ。
 - 初回 CI #849 で epsilon 表への所属補題のみ未解決。空語が K に属する場合分けで修正し、#858 で正式検証。
 
+## 4-G. (B) 実規則数の三次上界を三カットへ接続（CI #877 成功）
+
+- **CI #877 SUCCESS** — [run `37826408393`](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37826408393)、**Lean コード SHA `d4d61165f950713af141ebec291b5a6ef344f037`**。新規モジュール先行ビルド・既存重要定理群・`TCS1.All`・`sorry`/独自 `axiom` 禁止の全ゲート成功。
+- **新規ファイル**：`LeanCfgProject/TCS1/V128SubstringBinarySplitSlots.lean`。旧版で検証済みの `ReconstructionSplitSlot K`（標本語と三つの切断位置）から `v116BinarySplitCode` で (親, 左子, 右子) の**候補語**を復号。`v116BinarySplitCodes_cover` は実際の v116 (B) 規則すべてがこの候補の像に入ることを証明する。
+- **新しい定理**：`v116BinarySplitCodes_card_le_cube` により三カット候補語集合の濃度 `≤ (reconstructionSampleNorm K)^3`。さらに `v116BinaryProductionWordCode_injective`、`v116ActualBinaryRule_has_split_slot`、`v116ActualBinaryRuleToSplitSlot_injective` で**実際の** `v116BinaryRuleTable K` の各規則から三カットスロットへの単射を構成し、`v116BinaryRuleTable_card_le_cube` により **実 (B) 規則数** `≤ n_K^3` を無条件に証明した。
+- 新しい証明は前回 CI #858 の全 B/U/L/S/epsilon 有限規則テーブルと言語等式、CI #836 の U 規則三次本数上界、およびさらに前の三カット cardinality 補題を再利用。古い v88 を作り直していない。
+- **注意すべき限界**：`v116BinarySplitCodes` の生の候補集合は反転・空部分など無効候補を含み得るため、**そのすべてを (B) として出力してよいわけではない**。実規則から代表スロットへの単射には `Classical.choose` を用いる。現在の `v116BinaryRuleTable` も `noncomputable` な三状態全組のフィルタに基づく。したがって**三次の実規則数上界は Lean で完了したが、三次で走る有効な (B) 規則列挙器と四次の全構築 step-count は未完**。
+- 初回 #869 は親 factor の `take` と切断長の正規化が未解決。#873 は List prefix と Finset membership の補題指定が必要だった。#875 で残った List prefix の証明に `List.take_append_length` を明示し、#877 が green となった。
+
 ## 5. まだ完了していないこと（最優先順）
 
-1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。次は (B) の三カット列挙を実規則へ sound/complete に接続し、(L)/(S)/epsilon・(U) も計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
+1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。(B) 実規則の三カット候補被覆と三次本数上界は CI #877 で完了。次は**有効な**三カット候補フィルタと実規則への出力接続を実装し、(L)/(S)/epsilon・(U) も計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
 2. **`prop:li-window`**：有限モノイドの正の像 semigroup が locally trivial ⇔ ある finite-window `h_(k,l)` の kernel が `ker h` を（正語上で）refine。古い fixed-window の基礎定理と区別し、新命題を直接形式化する。既存証明と原稿の正確な定義・既往文献帰属を必ず照合。
 3. 上記からの characteristic-data corollary と `prop:finite-info-closure` の **完全な CFL closure 側** の義務。
 4. v128 の全30個の theorem/proposition/lemma/corollary environment と Lean 宣言の exact correspondence（旧版の audit `True` marker を v128 の完全証明と誤認しない）。
@@ -118,7 +128,7 @@
 
 ## 7. 再開を楽にする短いプロンプト
 
-> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #858 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
+> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #877 までの証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
 
 **本書は GitHub に永続化した作業履歴の入口です。チャット履歴の保存・圧縮に依存しません。**
 
