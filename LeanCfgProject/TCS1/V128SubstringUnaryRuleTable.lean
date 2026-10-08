@@ -74,7 +74,7 @@ theorem v116UnaryRuleTable_sound
   have hy : e.2.2.1.1 = y := congrArg Prod.snd he
   rw [← hx, ← hy]
   exact ⟨(e.2.1.2.2).trans (e.2.2.2.2).symm,
-    e.1.1.1, e.1.1.2, e.2.1.2.1, e.2.2.2.1⟩
+    e.1.1.1.1, e.1.1.1.2, e.2.1.2.1, e.2.2.2.1⟩
 
 /-- Every semantic v116 (U) rule occurs in the finite table. -/
 theorem v116UnaryRuleTable_complete
@@ -115,10 +115,11 @@ theorem v116UnaryCandidate_card_eq
   classical
   simp only [V116UnaryCandidate, Fintype.card_sigma, Fintype.card_prod]
   rw [← Finset.attach_eq_univ]
-  simpa [pow_two] using
-    (Finset.sum_attach (substringBucketKeys H K)
-      (fun b => (Fintype.card
-        (SubstringContextBucket H K b.1.1 b.1.2 b.2)) ^ 2))
+  simp only [pow_two]
+  exact Finset.sum_attach (substringBucketKeys H K)
+    (fun b =>
+      Fintype.card (SubstringContextBucket H K b.1.1 b.1.2 b.2) *
+      Fintype.card (SubstringContextBucket H K b.1.1 b.1.2 b.2))
 
 /-- **Unconditional cubic bound on the actual finite (U) rule table.**
     No external rule-count assumption is used. -/
