@@ -62,7 +62,7 @@ theorem v116EffectiveObservedFactorWords_iff
     refine ⟨observedReconstructionFactorSlot K hobs, ?_, ?_⟩
     · apply Finset.mem_filter.mpr
       refine ⟨Finset.mem_univ _, ?_⟩
-      simpa [reconstructionFactorSlotNonterminal_observed] using hobs
+      simpa [Observed, reconstructionFactorSlotNonterminal_observed, List.append_assoc] using hobs
     · simpa [reconstructionFactorSlotNonterminal_observed]
 
 /-- The raw three-cut decoder, now given by a transparent computable def.
@@ -103,14 +103,19 @@ theorem v116EffectiveBinaryWordTable_iff
     exact ⟨hv.1, hv.2.1, hv.2.2.1,
       (v116EffectiveObservedFactorWords_iff K x).mp hv.2.2.2⟩
   · rintro ⟨hxyz, hy, hz, p, q, hobs⟩
+    have hword : p ++ (y ++ (z ++ q)) ∈ K := by
+      have hm : p ++ (x ++ q) ∈ K := by
+        simpa only [List.append_assoc] using hobs.2
+      rw [hxyz, List.append_assoc] at hm
+      exact hm
     have hleft : Observed K y p (z ++ q) := by
       constructor
       · exact hy
-      · simpa only [List.append_assoc, ← hxyz] using hobs.2
+      · exact hword
     have hright : Observed K z (p ++ y) q := by
       constructor
       · exact hz
-      · simpa only [List.append_assoc, ← hxyz] using hobs.2
+      · simpa only [List.append_assoc] using hword
     have hraw :
         (x, (y, z)) ∈ v116EffectiveRawBinaryCodes K := by
       have hc := v116BinarySplitCodes_cover K
@@ -139,14 +144,19 @@ theorem v116EffectiveBinaryWordTable_eq_actual
   · intro he
     rcases (v116EffectiveBinaryWordTable_iff K x y z).mp he with
       ⟨hxyz, hy, hz, p, q, hobs⟩
+    have hword : p ++ (y ++ (z ++ q)) ∈ K := by
+      have hm : p ++ (x ++ q) ∈ K := by
+        simpa only [List.append_assoc] using hobs.2
+      rw [hxyz, List.append_assoc] at hm
+      exact hm
     have hleft : Observed K y p (z ++ q) := by
       constructor
       · exact hy
-      · simpa only [List.append_assoc, ← hxyz] using hobs.2
+      · exact hword
     have hright : Observed K z (p ++ y) q := by
       constructor
       · exact hz
-      · simpa only [List.append_assoc, ← hxyz] using hobs.2
+      · simpa only [List.append_assoc] using hword
     let A : ObservedSubstringNonterminal K := ⟨x, ⟨p, q, hobs⟩⟩
     let B : ObservedSubstringNonterminal K := ⟨y, ⟨p, z ++ q, hleft⟩⟩
     let C : ObservedSubstringNonterminal K := ⟨z, ⟨p ++ y, q, hright⟩⟩
