@@ -250,6 +250,7 @@ import LeanCfgProject.TCS1.V128ThicknessGapGrammarSize
 import LeanCfgProject.TCS1.V128ThicknessGapProposition
 import LeanCfgProject.TCS1.V128ThicknessGapClassMembership
 import LeanCfgProject.TCS1.V128SubstringBucketCount
+import LeanCfgProject.TCS1.V128SubstringBucketEntryBound
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
