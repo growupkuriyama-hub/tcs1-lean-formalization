@@ -78,9 +78,19 @@
   `substringV116DirectOutputBudget H K ≤ 4(n_K+1)⁴`。
   `substringV116WrittenRules_le_quartic` は **実際の出力本数** と **実際の規則記述長** に関する前提を持つ条件付きインターフェース。
 
+## 4-E. v116 の実有限 (U) 規則テーブル（2026-10-09、CI #836 成功）
+
+- **CI #836 SUCCESS** — run `37818506991`、code/head commit `d98cf514709bcefbdb6f65ead19498e71311e315`。新しい `V128SubstringUnaryRuleTable.lean` の単独ビルド、旧 theorem-facing critical path、統合 `TCS1.All`、`sorry`/独自 `axiom` 禁止検査の **すべて成功**。
+- `v116UnaryRuleTable` は `substringBucketKeys` の有限な各 context/type bucket 内の ordered factor pairs を (U) production `(x,y)` へ写した具体的な `Finset (Word α × Word α)`。重複は有限集合の image で除去。
+- `v116UnaryRuleTable_sound` / `v116UnaryRuleTable_complete` は実テーブルと `SubstringUnaryRelated H K x y` の双方向を証明。`v116UnaryRuleTable_iff` は `finiteSubstringGrammar.unitRule` との完全一致。
+- `v116UnaryCandidate_card_eq` および `v116UnaryRuleTable_card_le_cube` は実テーブルの規則数が `reconstructionSampleNorm K ^ 3` 以下であることを、以前に検証済みの cubic bucket theorem から得る。
+- **厳密な範囲**：この有限 `Finset` は `noncomputable` な状態/bucket 列挙を用いる。これは (U) の **有限実規則集合の sound/complete + 本数評価** であり、実行可能な serializer、canonical IDs、deduplication の machine step、モノイド値キャッシュ、end-to-end `O(n_K^4)` **実行時間** を証明していない。
+- 直前の CI #828 は `release.lean-lang.org` の DNS 名前解決障害による elan setup failure（Lean 自体は未起動）。続く #831 で新規ファイルの Sigma key 射影と `pow_two`/sum の二つの型エラーを検出し、修正。その後の #836 がすべて成功した。
+- CI workflow の `Build v128 substring unary delta first` によって、今後は新しい部分だけを先にビルドし、旧版の巨大な critical path を失敗原因探索のために繰り返し待つ必要がない。
+
 ## 5. まだ完了していないこと（最優先順）
 
-1. **v116 の実出力器との橋渡し**：`finiteSubstringGrammar` の (B)/(U)/(L)/(S)/epsilon の実際の有限規則テーブル、候補との sound/complete 対応、規則の書字コスト（または canonical ID）、構築・dedup・型計算の step-count。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
+1. **v116 の残りの実出力器との橋渡し**：`finiteSubstringGrammar` の (B)/(L)/(S)/epsilon の実際の有限規則テーブル（(U) の非計算的 Finset は CI #836 済み）、候補との sound/complete 対応、規則の書字コスト（または canonical ID）、構築・dedup・型計算の step-count。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
 2. **`prop:li-window`**：有限モノイドの正の像 semigroup が locally trivial ⇔ ある finite-window `h_(k,l)` の kernel が `ker h` を（正語上で）refine。古い fixed-window の基礎定理と区別し、新命題を直接形式化する。既存証明と原稿の正確な定義・既往文献帰属を必ず照合。
 3. 上記からの characteristic-data corollary と `prop:finite-info-closure` の **完全な CFL closure 側** の義務。
 4. v128 の全30個の theorem/proposition/lemma/corollary environment と Lean 宣言の exact correspondence（旧版の audit `True` marker を v128 の完全証明と誤認しない）。
