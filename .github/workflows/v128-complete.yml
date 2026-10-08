@@ -7,6 +7,7 @@ on:
       - 'LeanCfgProject/TCS1/V128*.lean'
       - 'LeanCfgProject/TCS1/All.lean'
       - '.github/workflows/v128-complete.yml'
+      - 'FORMALIZATION_TCS1_V128_COMPLETE_AUDIT.md'
   workflow_dispatch:
 
 concurrency:
