@@ -86,7 +86,7 @@ theorem v116BinarySplitCodes_cover
   rw [hlen]
   have htake :
       ((B.1 ++ C.1) ++ q).take (B.1 ++ C.1).length =
-        B.1 ++ C.1 := by simp
+        B.1 ++ C.1 := List.take_append_length
   simpa only [List.length_append, List.append_assoc] using htake
 
 /-- Every candidate index in the raw triple-cut space is already
