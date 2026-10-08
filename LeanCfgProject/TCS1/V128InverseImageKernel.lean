@@ -65,6 +65,26 @@ theorem inverseImage_fixedHSubstitutable_kernel
     simpa only [Distribution, Set.mem_setOf_eq,
       φ_append] using hc
 
+
+/-- Full fixed-typing substitutability transfer under a finite observer which
+    records both the image h-type and whether the image is empty. -/
+theorem inverseImage_fixedHSubstitutable_of_observer
+    {P : Type*} [Monoid P] [Fintype P]
+    (H : FixedFiniteMonoidHom α M)
+    (Hfine : FixedFiniteMonoidHom β P)
+    (φ : Word β → Word α)
+    (φ_append : ∀ x y, φ (x ++ y) = φ x ++ φ y)
+    (L : Set (Word α))
+    (hsub : FixedHSubstitutable H L)
+    (hType : ∀ x y : Word β,
+      Hfine.h x = Hfine.h y → H.h (φ x) = H.h (φ y))
+    (hErase : ∀ x y : Word β,
+      Hfine.h x = Hfine.h y → ((φ x = []) ↔ (φ y = []))) :
+    FixedHSubstitutable Hfine (wordInverseImage φ L) := by
+  intro x y _hx _hy hxy hshared
+  exact inverseImage_fixedHSubstitutable_kernel H φ φ_append L hsub
+    (hType x y hxy) (hErase x y hxy) hshared
+
 end InverseImageKernel
 
 end TCS1
