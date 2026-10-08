@@ -254,6 +254,7 @@ import LeanCfgProject.TCS1.V128SubstringBucketEntryBound
 import LeanCfgProject.TCS1.V128SubstringBucketEnumeration
 import LeanCfgProject.TCS1.V128SubstringQuarticEnvelope
 import LeanCfgProject.TCS1.V128SubstringUnaryRuleTable
+import LeanCfgProject.TCS1.V128SubstringRemainingRuleTables
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
