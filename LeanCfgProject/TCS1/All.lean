@@ -243,6 +243,7 @@ import LeanCfgProject.TCS1.V128RetainedTypedLanguageEquality
 import LeanCfgProject.TCS1.V128TypedTrimSuccessfulBranch
 import LeanCfgProject.TCS1.V128ThicknessGapFiniteSSBNF
 import LeanCfgProject.TCS1.V128ThicknessGapYieldBound
+import LeanCfgProject.TCS1.V128ThicknessGapOrdinary
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
