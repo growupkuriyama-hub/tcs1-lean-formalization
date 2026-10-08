@@ -286,6 +286,37 @@ v128 manuscript theorem environments. It does not cover alternative
 symbol-index bit encodings and does not automatically certify a
 complexity-theoretic algorithm-independent characteristic-data lower bound.
 
+## Green CI #798: consolidated gap theorem; v116 cubic unary-rule bound in progress
+
+**CI #798 (run 37790263534) succeeded:** integrated `TCS1.All`,
+critical path, no `sorry`, no project-level `axiom`. The
+single `v128_exponential_gap_manuscript_instance` theorem is verified:
+the actual finite source gap grammar, start language `{a,c}⁺`,
+fixed-h substitutability, source reducedness, ordinary thickness one,
+the exponential trimmed-typed `YieldBound` lower bound, and an O(n)
+atomic grammar-symbol budget. This verifies this *proposition-facing
+package*, not the complete v128 manuscript.
+
+For the **v116 O(n_K^4) explicit learner-output issue**, the v128
+manuscript's argument is sharper than the legacy v88 quartic
+pair-of-all-occurrence-slots count: it uses context/type buckets,
+each having at most `|K|` entries, and total bucket membership
+O(n_K²), giving **O(n_K³) unary U-rule candidates** and O(n_K⁴)
+output size under literal O(n_K)-length per production.
+
+`V128SubstringBucketCount.lean` has been added to:
+- define actual observed-factor/context/type buckets;
+- inject every factor in one fixed bucket into the sampled-word type,
+  hence `|bucket| ≤ |K|`;
+- formally prove the sum-of-squares cubic bound **conditional**
+  on total bucket entries being at most the two-cut slot count.
+
+**CI #802 pending** for the new file. The necessary unconditional
+connection from the actual finitely enumerable bucket keys to a
+two-cut occurrence-slot count and the final direct-production encoding
+remains open. In particular the historical O(n_K⁵) direct bound
+does not imply the revised v116 O(n_K⁴) claim.
+
 ## Blocking obligations for a genuine v128 checkpoint
 
 1. **Constructor correspondence.** The v115-v116 derivation quotient and start-language equivalence for all finite K were checked in CI #708; the finite observed-factor CFG and start-language equivalence built in CI #718. The remaining obligation is literal finite production enumeration and O(n^4) encoded-size analysis, plus a final exact comparison with every condition of the v128 algorithm.
