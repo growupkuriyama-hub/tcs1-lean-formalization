@@ -246,6 +246,7 @@ import LeanCfgProject.TCS1.V128ThicknessGapYieldBound
 import LeanCfgProject.TCS1.V128ThicknessGapOrdinary
 import LeanCfgProject.TCS1.V128ThicknessGapReducedness
 import LeanCfgProject.TCS1.V128ThicknessGapRuleEnumeration
+import LeanCfgProject.TCS1.V128ThicknessGapGrammarSize
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
