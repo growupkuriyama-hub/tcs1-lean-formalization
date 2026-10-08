@@ -1,6 +1,6 @@
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
-> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#858 SUCCESS**（run `37822000555`、code commit `06fe94b630`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
+> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#877 SUCCESS**（run `37826408393`、code commit `d4d61165`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
 
 Date: 2026-10-08. Manuscript source of truth: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`.
 Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
@@ -385,6 +385,24 @@ Precise limitation:
 - CI #849 initially failed one epsilon-table membership simp goal; explicit membership case split fixed it before #858.
 
 Documentation commits after the certified code SHA are not an independent verification of a changed Lean proof. PR #8 remains Draft; v88 official release and TCS submitted manuscript are untouched.
+
+## CI #877 GREEN: cubic cardinality of the *actual* finite v116 binary production set
+
+**2026-10-09 code checkpoint:** [CI #877](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37826408393), run `37826408393`, verified Lean SHA `d4d61165f950713af141ebec291b5a6ef344f037`. All checks passed: focused new-delta build, theorem-facing critical path, integrated `TCS1.All`, absence of `sorry` and absence of project-level `axiom`.
+
+Added `V128SubstringBinarySplitSlots.lean`:
+- `v116BinarySplitCode` decodes each old `ReconstructionSplitSlot K` as a potential `(parent,left,right)` word triple; `v116BinarySplitCodes` takes its finite image.
+- `v116BinarySplitCodes_cover` proves every **actual** B production from `v116BinaryRuleTable K` has a witness in that finite three-cut candidate image. The raw candidate set deliberately includes some invalid/reversed/empty splits, which must **not** be emitted as real rules without a validity check.
+- `v116BinarySplitCodes_card_le_cube` uses the old proved `reconstructionSplitSlot_card_le_cube`.
+- `v116BinaryProductionWordCode_injective` proves unique factor-word identifiers preserve entire binary rows. `v116ActualBinaryRule_has_split_slot` plus `v116ActualBinaryRuleToSplitSlot_injective` choose a witness three-cut slot per actual rule and prove an injection into the old candidate space. Thus **`v116BinaryRuleTable_card_le_cube` unconditionally proves that the actual B production count is at most `(reconstructionSampleNorm K)^3`**. This is a stronger actual-table result than the previous standalone *candidate* envelope.
+
+This reuses the v88 split-slot cardinality bound and the CI #858 verified literal rule tables and semantic language equivalence, with no changes to historical proof modules. The same cubic actual U-rule bound was certified at CI #836.
+
+**Still missing for the exact polynomial-reconstruction theorem:** A genuinely effective scan/filter/deduplication/serialization algorithm, rather than a noncomputable image and `Classical.choose` representative; canonical state/context identifiers and cached `h` evaluation; quantified work/encoding per emitted rule; a complete end-to-end `O(n_K^4)` machine-step certificate. Cardinality ≤ cubic by itself is *not* a runtime proof. The locally trivial image theorem, characteristic-data corollary and exact-v128 thirty-theorem audit remain open independently.
+
+CI fixes on the route to green: #869 length normalization, #873 filter membership and List-take normalization, #875 explicit standard `List.take_append_length` lemma. #877 passed.
+
+Documentation commits after the verified code SHA may have their own pending CI; do not silently extend proof coverage from them.
 
 ## Blocking obligations for a genuine v128 checkpoint
 
