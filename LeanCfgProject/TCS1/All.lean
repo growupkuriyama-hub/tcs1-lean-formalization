@@ -130,6 +130,8 @@ import LeanCfgProject.TCS1.V126LinearAllFilter
 import LeanCfgProject.TCS1.V126PinFactorizationBridge
 import LeanCfgProject.TCS1.V126DeltaStarCriterion
 import LeanCfgProject.TCS1.V126ExactSourceAudit
+import LeanCfgProject.TCS1.V128SourcePrecisionAudit
+import LeanCfgProject.TCS1.V128ExactSourceAudit
 
 import LeanCfgProject.TCS1.SSBNFThicknessBounds
 import LeanCfgProject.TCS1.SSBNFNormalizationCombinatorics
