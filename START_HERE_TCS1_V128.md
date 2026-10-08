@@ -28,8 +28,9 @@
 - **CI #818 SUCCESS** — run `37812248496`、commit `eec832f7a0dfefa3d0d422d1a8501c77d4dfa253`。v116 の単項規則バケット列挙と三次候補上界を統合ビルドで検証。
 - **CI #824 SUCCESS** — run `37813893036`、commit `371fafb3c62ef8c589c37b3b90f19a67eeee6aa5`。v116 の四次直接出力 **候補記述量 envelope** を統合ビルドで検証。重要：**これは実出力器の四次実行時間の証明ではない**。
 - **CI #836 SUCCESS** — run `37818506991`、code commit `d98cf514709bcefbdb6f65ead19498e71311e315`。実有限 (U) 規則集合の sound/complete 一致と `n_K^3` 本数証明、加えて `TCS1.All`、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止の全ゲート通過。
+- **CI #858 SUCCESS** — run `37822000555`、code commit `06fe94b6307adee3b62222c0f9a0f35664e85f20`。全 B/U/L/S/epsilon 有限テーブルと、再構成文法の言語等式を統合ビルドで検証。四次実行時間の証明ではない。
 - 成功 CI には `TCS1.All` ビルド、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止が含まれる。
-- **コードの最後の完全成功は CI #836。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
+- **コードの最後の完全成功は CI #858。** 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
 
 ## 3. 絶対に捨てない既存の検証済み資産
 
@@ -89,9 +90,19 @@
 - 直前の CI #828 は `release.lean-lang.org` の DNS 名前解決障害による elan setup failure（Lean 自体は未起動）。続く #831 で新規ファイルの Sigma key 射影と `pow_two`/sum の二つの型エラーを検出し、修正。その後の #836 がすべて成功した。
 - CI workflow の `Build v128 substring unary delta first` によって、今後は新しい部分だけを先にビルドし、旧版の巨大な critical path を失敗原因探索のために繰り返し待つ必要がない。
 
+## 4-F. v116 の (B)/(U)/(L)/(S)/epsilon 実有限テーブルと言語的正確性（CI #858 成功）
+
+- **CI #858 SUCCESS** — [run `37822000555`](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37822000555)、code HEAD `06fe94b6307adee3b62222c0f9a0f35664e85f20`。新規モジュール専用ビルド、旧版 theorem-facing critical path、統合 `TCS1.All`、`sorry` と独自 `axiom` 禁止チェックの全項目成功。
+- `V128SubstringRemainingRuleTables.lean`：有限観測 factor 状態から (B)/(L)/(S) と epsilon-start の有限 `Finset` を具体化。`v116BinaryRuleTable_iff`、`v116LexicalRuleTable_iff`、`v116StartRuleTable_iff`、`v116EpsilonStartTable_iff`、`v116NonstartEpsilonRule_false`、`v116FourRuleTables_exact` が実テーブルと v116 意味論の完全一致を証明。以前の CI #836 で通過済み (U) 規則テーブルも再利用する。
+- `V128SubstringTabulatedGrammar.lean`：`v116TabulatedNonstartGrammar` はテーブル所属述語を直接規則として使う有限型 CFG。`v116TabulatedDerives_to_finiteCFG`、`finiteCFG_to_v116TabulatedDerives` により非終端導出が双方向に一致。`v116TabulatedBatchLanguage_eq_batchLanguage` は **すべての有限標本 K** に対し、(S)/epsilon start を含む構成全体の言語が、既存の検証済み `BatchLanguage H K` と等しいことを保証（空標本と epsilon を含む）。
+- この証明は以前の v115→v116 言語保存と v88 の `BatchLanguage` を**再利用**し、旧版の学習器を再実装していない。
+- **制限**：この有限テーブルの列挙は `noncomputable`。特に現行 (B) テーブルは観測状態の全三つ組を `Finset.univ.filter` で濾過しており、論文が要求する三カット `O(n_K^3)` **計算可能な候補列挙ではない**。したがって実装の `O(n_K^4)` **実行時間は未検証**であり、`thm:poly-build` の exact-version proof 完了とは呼ばない。
+- **次の一手**：既存の `ReconstructionSplitSlot K`（三カット有限型）から (B) 規則を sound/complete に列挙し、既存 `reconstructionSplitSlot_card_le_cube` をそのまま使って三次の出力候補上界を得る。(L)/(S) も有限候補を直接走査する計算可能な表現へ橋渡しし、canonical factor/context IDs、`h` cache、dedup、規則の文字列 encoder と step-count を結ぶ。
+- 初回 CI #849 で epsilon 表への所属補題のみ未解決。空語が K に属する場合分けで修正し、#858 で正式検証。
+
 ## 5. まだ完了していないこと（最優先順）
 
-1. **v116 の残りの実出力器との橋渡し**：`finiteSubstringGrammar` の (B)/(L)/(S)/epsilon の実際の有限規則テーブル（(U) の非計算的 Finset は CI #836 済み）、候補との sound/complete 対応、規則の書字コスト（または canonical ID）、構築・dedup・型計算の step-count。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
+1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。次は (B) の三カット列挙を実規則へ sound/complete に接続し、(L)/(S)/epsilon・(U) も計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
 2. **`prop:li-window`**：有限モノイドの正の像 semigroup が locally trivial ⇔ ある finite-window `h_(k,l)` の kernel が `ker h` を（正語上で）refine。古い fixed-window の基礎定理と区別し、新命題を直接形式化する。既存証明と原稿の正確な定義・既往文献帰属を必ず照合。
 3. 上記からの characteristic-data corollary と `prop:finite-info-closure` の **完全な CFL closure 側** の義務。
 4. v128 の全30個の theorem/proposition/lemma/corollary environment と Lean 宣言の exact correspondence（旧版の audit `True` marker を v128 の完全証明と誤認しない）。
