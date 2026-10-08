@@ -80,6 +80,11 @@ theorem v116BinarySplitCodes_cover
   apply Finset.mem_image.mpr
   refine ⟨s, Finset.mem_univ _, ?_⟩
   simp [v116BinarySplitCode, s, w, h, List.append_assoc]
+  have hlen :
+      p.length + B.1.length + C.1.length - p.length =
+        B.1.length + C.1.length := by omega
+  rw [hlen]
+  simp [List.append_assoc]
 
 /-- Every candidate index in the raw triple-cut space is already
     controlled by the previously verified cubic sample bound. -/
