@@ -479,16 +479,16 @@ theorem respectsFixedWindowSummary_of_positiveWindowKernelRefines
     rcases hlong with
       ⟨hxLong, hyLong, p, q, m₁, m₂,
         hp, hq, hx, hy⟩
+    have hxLen : 0 < x.length :=
+      lt_of_lt_of_le hthresholdPos hxLong
+    have hyLen : 0 < y.length :=
+      lt_of_lt_of_le hthresholdPos hyLong
     have hxPos : x ≠ [] := by
       intro hxNil
-      subst x
-      simp [fixedWindowThreshold] at hxLong
-      omega
+      simp [hxNil] at hxLen
     have hyPos : y ≠ [] := by
       intro hyNil
-      subst y
-      simp [fixedWindowThreshold] at hyLong
-      omega
+      simp [hyNil] at hyLen
     apply href x y hxPos hyPos
     apply
       fixedWindowMonoidHom_respects
