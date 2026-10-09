@@ -1,6 +1,6 @@
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
-> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#901 SUCCESS**（run `37846653643`、crosswalk code commit `9605407f`）。直近の新しい数学的証明を追加した checkpoint は **#890**（run `37830187537`、`e7858324`）、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
+> **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#922 SUCCESS**（run `37885096669`、code commit **`4ec6706165aea75fc60d7812ea491b78a524ff50`**）。同 SHA の **#921 も SUCCESS**。最後に追加された数学的証明は正語上の fixed-window kernel criterion の片方向、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
 
 Date: 2026-10-08. Manuscript source of truth: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex`.
 Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
@@ -431,6 +431,28 @@ Classification: **24 reusable theorem sources (R)**; **3 v128 bridges (B)**: mai
 **No old Lean proofs were replaced or invalidated.** The v79/v88 executable learner, materialized production table, CYK membership, Gold stabilization, combinatorial scan/candidate envelopes, typed-thickness/witness and linear/fixed-window results survive and are reused. Low-level CPU/Lean evaluator small-step cost semantics was **explicitly outside** the older project's stated boundary. The v128 direct B/U cubic candidates and quartic literal-output budget still need a concrete O(n_K^4) v116 algorithmic **operation-accounting bridge**; this is distinct from implementing a machine-code operational semantics.
 
 A `#check` only typechecks an existing proof declaration; it does not automatically establish textual equivalence with the v128 quantifiers and exact hypotheses. Accordingly this is a **first-pass complete mapping of all 30 environments**, **not** a declaration that the entire exact v128 has been internally verified. Full theorem-type equivalence, assumptions/axiom dependency and unnumbered mathematical exposition remain to be checked.
+
+## CI #921 and #922 GREEN: fixed-window positive kernel ⇒ locally trivial positive-image
+
+2026-10-09: Both [CI #921](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885093446) and [CI #922](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885096669) **SUCCESS** at full **Lean code SHA `4ec6706165aea75fc60d7812ea491b78a524ff50`**. Verified focused new modules, old theorem-facing path, `LeanCfgProject.TCS1.All`, no-`sorry` and no-project-`axiom`.
+
+`LeanCfgProject/TCS1/V128PositiveWindowKernel.lean` (verified):
+- `PositiveWindowKernelRefines` exactly expresses `ker(h_(k,l))|Sigma+ ⊆ ker(h)|Sigma+`. The restriction to nonempty factors is essential.
+- `PositiveWindowBoundaryInvariant` formalizes `h(p m1 q)=h(p m2 q)` for two nonempty whole words with the same fixed-length prefix/suffix.
+- `positiveWindowKernelRefines_iff_boundary` proves those conditions equivalent, including the `(0,0)` endpoint via existing concrete `fixedWindowMonoidHom`.
+- `fixedHSubstitutable_of_positiveWindowKernelRefines` and `fixedWindowSubstitutable_of_positiveWindowKernelRefines` reuse the existing monotonicity/fixed-window equivalence to transfer RS membership.
+
+`LeanCfgProject/TCS1/V128PositiveWindowKernelConverse.lean` (verified):
+- `v128RepeatWord_length_lower`, `v128RepeatWord_type_succ` make a sufficiently long word of the same type as an idempotent.
+- `v128FixedWindow_long_frame_middle_independent` shows arbitrary middle words are invisible to the concrete fixed-window type when both outside frames are sufficiently long.
+- `positiveWindowKernel_refines_implies_idempotent_sandwich` proves: any nonempty representative `r` with idempotent `e=h(r)`, and any middle word `z`, satisfies `h(r z r)=e`, hence `e*h(z)*e=e`.
+- `positiveWindowKernel_refines_implies_positiveImageTrivial` proves precisely the converse part of manuscript `prop:li-window`: if some window kernel refines `h` on positive words, then **the positive-image semigroup of `h` is locally trivial**, via the idempotent sandwich identity.
+
+The proof was reviewed by Lean CI, not just suggested. Failed intermediate CI #915 and #920 exposed elementary `omega` length normalizations; code commit `4ec6706165` fixes them and supersedes the failures. No historical proof or paper/release/main was edited.
+
+**Open mathematical direction**: `h(Sigma+)` locally trivial ⇒ `ker h_(n,n)|Sigma+ ⊆ ker h|Sigma+` with the manuscript's explicit `n=|h(Sigma+)|+1`, where Pin 2025's finite-semigroup factorizations `S^n=S E(S) S` and `e s f=e f` are used. The positive-image fixed-window typing being itself locally trivial, class union equality `KL=∪_{locally-trivial h} RS_h` and its CFL-restricted version also need exact check. Thus, **`prop:li-window` remains O/open as a whole**, **`cor:li-thickness` remains open**, and `thm:main`(iv) remains blocked.
+
+A user requested a **durable new-thread resumption checkpoint** on 2026-10-09. Treat this section, `START_HERE_TCS1_V128.md`, the 30-claim table and Issue #9 as authoritative, as opposed to summaries of chat turns. The v79/v88 executable learner, parser, Gold and polynomial operation-accounting proof sources remain intact and reused. A fully exact v128 manuscript audit is still not complete.
 
 ## Blocking obligations for a genuine v128 checkpoint
 
