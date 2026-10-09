@@ -2,6 +2,7 @@ import LeanCfgProject.TCS1.IndexedFixedHBridge
 import LeanCfgProject.TCS1.IndexedSection7Bridge
 import LeanCfgProject.TCS1.V128IndexedNormalizationCertificate
 import LeanCfgProject.TCS1.V128LocallyTrivialThickness
+import LeanCfgProject.TCS1.MixedDerivationLeastClosedBridge
 
 /-!
 # TCS #1 v128: indexed-source locally trivial characteristic data
@@ -219,6 +220,39 @@ theorem indexedLocallyTrivialCharacteristicData_nonempty_package
     refine ⟨({[]} : Finset (Word α)), ?_, ?_⟩
     · simpa [hL] using singletonEpsilon_characteristic H
     · simp
+
+/-- Source-level ordinary-thickness version of the nonempty locally trivial
+characteristic-data theorem. The `YieldBound` source assumption is now
+*proved* from the indexed CFG's parse-tree thickness certificate rather than
+supplied separately. This directly matches the ordinary-yield interpretation
+of the manuscript's source thickness, within the finite indexed encoding. -/
+theorem indexedLocallyTrivialCharacteristicData_of_ordinaryThickness
+    (H : FixedFiniteMonoidHom α M)
+    (hlocal : PositiveImageSandwichTrivial H)
+    (G : IndexedMixedCFG N α P)
+    (A : N)
+    (hnonempty :
+      ∃ w : Word α, w ∈ LeastClosedLanguage G.toMixedRules A)
+    (τR : Nat)
+    (hn : 0 < G.normalizationScale)
+    (hthick : IndexedMixedThicknessAtMost G τR)
+    (hsub :
+      FixedHSubstitutable H
+        (LeastClosedLanguage G.toMixedRules A)) :
+    ∃ K : Finset (Word α),
+      BatchLanguage H K =
+        LeastClosedLanguage G.toMixedRules A
+      ∧
+      (∑ word ∈ K, (word.length + 1)) ≤
+        1 + fixedWindowGrammarSizeEnvelope
+          (Fintype.card M)
+          (positiveWindowBound H + positiveWindowBound H)
+          (indexedSSBNFGrammarSizeEnvelope G.normalizationScale)
+          (ssbnfThicknessEnvelope 1 1 G.normalizationScale τR) := by
+  exact indexedLocallyTrivialCharacteristicData_nonempty_package
+    H hlocal G A hnonempty τR hn
+    (indexedMixedThicknessAtMost_implies_yieldBound G τR hthick)
+    hsub
 
 end V128IndexedLocallyTrivialCharacteristicData
 
