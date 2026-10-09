@@ -31,7 +31,7 @@ universe u v w
 
 section V128LocallyTrivialThickness
 
-variable {α : Type u}
+variable {α : Type u} [Fintype α]
 variable {M : Type v} [Monoid M] [Fintype M]
 variable {N : Type w}
 
