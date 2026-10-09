@@ -481,10 +481,12 @@ theorem respectsFixedWindowSummary_of_positiveWindowKernelRefines
       intro hxNil
       subst x
       simp [fixedWindowThreshold] at hxLong
+      omega
     have hyPos : y ≠ [] := by
       intro hyNil
       subst y
       simp [fixedWindowThreshold] at hyLong
+      omega
     apply href x y hxPos hyPos
     apply
       fixedWindowMonoidHom_respects
