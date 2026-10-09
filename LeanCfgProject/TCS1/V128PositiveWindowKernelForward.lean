@@ -474,7 +474,9 @@ theorem respectsFixedWindowSummary_of_positiveWindowKernelRefines
   intro x y hsummary
   rcases hsummary with hshort | hlong
   · simpa [hshort.2]
-  · rcases hlong with
+  · have hthresholdPos : 0 < fixedWindowThreshold k l := by
+      simp [fixedWindowThreshold]
+    rcases hlong with
       ⟨hxLong, hyLong, p, q, m₁, m₂,
         hp, hq, hx, hy⟩
     have hxPos : x ≠ [] := by
