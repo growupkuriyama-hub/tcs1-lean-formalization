@@ -4,6 +4,22 @@
 > 状態は GitHub 実体・CI を最優先。会話の記憶より本書と監査台帳・原稿・実際の Lean ソースを優先する。
 > 本書は時点付きスナップショット。再開時は必ず PR HEAD と最新 CI を再確認する。
 
+## 2026-10-09 21:53 JST — verified continuation after CI #954
+
+**Authoritative success point:** CI [#953](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37915608299) and [#954](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37915613488) both **SUCCESS** at code commit `0839dca9b0f3279ab7954bee90f0bdd8b663c859`. CI #954 individually passed the v128 delta build, theorem-facing critical path, full `TCS1.All` facade, rejection of `sorry`, and rejection of project-level `axiom`.
+
+**New verified Lean units (do not reconstruct):**
+
+- `V128PositiveWindowKernelForward.lean`: locally trivial positive image implies explicit positive kernel refinement with `n = |h(Σ⁺)|+1`, including positive image/cardinality, idempotent-power/prefix-collision factorization, and a two-idempotent sandwich argument; paired with the previously verified converse in `V128PositiveWindowKernelConverse.lean` to obtain an iff and an existential-window criterion.
+- `V128PositiveWindowKernelForward.lean`: upgrade from positive-word kernel refinement to full `RespectsFixedWindowSummary`, plus fixed-window-substitutability transfer and locally trivial concrete-window typing.
+- `V128LocallyTrivialThickness.lean`: quantitative characteristic-data/normalization package via the preexisting fixed-window sample and SSBNF bounds. This is a **representation-level theorem conditional on its explicitly listed reduced grammar, short-witness, and normalization hypotheses**; do not call the full manuscript `cor:li-thickness` exact-version-verified until the statement/quantifier audit is complete.
+
+**Status update:** The two previously open positive-window directions are closed in the Lean scope above; the local-triviality/fixed-window class transfer is implemented. CI #954 **does not** establish all 30 v128 manuscript statements as exact matched formulas. The previous 24 R / 3 B / 1 P / 2 O counts were the *pre-closure inventory* and must not be repeated as a fresh current count without reclassifying all 30.
+
+**Next priorities:** (1) audit `prop:li-window` and `cor:li-thickness` against the *current* `Papers/01_fixed-h-cfg/main.tex` and explicitly check empty-language, `h(Σ⁺)`, and effective polynomial/ordinary-thickness quantifiers; (2) finish v116 whole output-generator and `O(n_K^4)` operation-count bridge without confusing size bounds with time; (3) finite-information closure external CFL package; (4) complete 30-statement exact-version audit and `thm:main` packaging. Preserve this draft branch; do not merge PR #8 or edit Papers/main/v88 historical release without authorization.
+
+---
+
 ## 0. 再開の一行指示（そのままコピー可）
 
 「GitHub の `growupkuriyama-hub/tcs1-lean-formalization`、Draft PR #8（`audit/tcs1-v128-exact-delta`）にある `START_HERE_TCS1_V128.md` と `FORMALIZATION_TCS1_V128_DELTA.md` を読み、最新 CI を調べ、**v128 の未完了の差分だけ** Lean に実装・CI 修正し、引継書と PR を更新してください。旧版で通った証明を最初からやり直さないでください。」
