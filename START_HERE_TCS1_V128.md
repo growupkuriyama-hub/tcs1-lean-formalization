@@ -32,8 +32,10 @@
 - **CI #877 SUCCESS** — run `37826408393`、code commit `d4d61165f950713af141ebec291b5a6ef344f037`。全実 (B) 規則の三カット候補被覆と実規則数 `≤ n_K^3`、統合ビルド、禁止チェックを検証。実行時間の証明ではない。
 - **CI #890 SUCCESS** — run `37830187537`、code commit `e7858324859765065598255ac36cb747aff599e8`。計算可能な B ルール語コードの生成器と実有限 B 規則集合の等号、三次の出力本数、統合ビルド・禁止チェックまで検証（時間計算量の証明ではない）。
 - **CI #901 SUCCESS** — run `37846653643`、code commit `9605407fefad5bf94b34cd83aa4fd504966e03ac`。v128 原稿30件の Lean 宣言 crosswalk（65個の `#check`）を統合ビルド・禁止チェック付きで検証。未閉鎖の主張は明記して残す。
+- **CI #921 SUCCESS** — [run `37885093446`](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885093446)、code commit **`4ec6706165aea75fc60d7812ea491b78a524ff50`**。正語上の固定窓 kernel ⇔ 前後境界の型不変性、置換可能性 transfer、および固定窓 kernel refinement ⇒ 正の像の冪等元に関する `e*s*e=e` を証明。先行ビルド、旧 critical path、`TCS1.All`、禁止ゲートはすべて成功。
+- **CI #922 SUCCESS** — [run `37885096669`](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885096669)、同一 code SHA `4ec6706165aea75fc60d7812ea491b78a524ff50` において全ゲート成功。
 - 成功 CI には `TCS1.All` ビルド、theorem-facing critical path、`sorry` 禁止、独自 `axiom` 禁止が含まれる。
-- **コードの最後の完全成功は CI #901（監査索引の統合）**。旧数学的内容を直接追加した直近 checkpoint は CI #890。 文書のみを追加した後の HEAD はこのコード commit と異なる（引継書・監査文書を更新した時点で別の CI が走る）。必ず最新 HEAD と latest CI を確認。
+- **最新の完全成功は CI #922（同一 code SHA の #921 も成功）**。最後に新しい数学的証明を追加した code SHA は **`4ec6706165aea75fc60d7812ea491b78a524ff50`**。この引継書など**文書のみ**を編集した後の PR HEAD は異なるため、各再開時に最新 HEAD と CI を確認。文書追記後の実行がまだ green でない場合は code SHA #921/#922 と区別する。
 
 ## 3. 絶対に捨てない既存の検証済み資産
 
@@ -132,12 +134,40 @@
 - **本当に優先する新規数学的証明**：`prop:li-window` が述べる locally trivial positive-image の fixed-window kernel refinement criterion（明示 `(n,n)`、局所自明性、類の union）。原稿中の Pin 2025 に依存する補題を境界として明示し、既存の固定窓 typing / refinement theorem を再利用。次に `cor:li-thickness` の retained typed language / trimming / thickness bridge を証明する。古い Gold learner、規則、固定窓の section 7 を再実装しない。
 - **注意**：R=24 は各 v128 主張について再利用可能な非自明な Lean 定理が確認できたという意味。30件すべてが manuscript-exact に一対一の定理文で formal proof complete になったという意味ではない。行ごとの最終的な hypothesis/conclusion の全称量化・境界チェックは別途監査対象。
 
+## 4-J. 正の像の局所自明性への逆向き（CI #921/#922 成功）
+
+**今までの会話の要約ではなく、実際に GitHub ソースが CI green になった到達点。**
+
+- `LeanCfgProject/TCS1/V128PositiveWindowKernel.lean`：
+  - `PositiveWindowKernelRefines` を **正語 `Σ⁺` のみ**における `ker(h_{k,ℓ}) ⊆ ker(h)` として定義。空語を混ぜない。
+  - `PositiveWindowBoundaryInvariant` は、長さ `k` の prefix と長さ `ℓ` の suffix を固定して正語同士を比較した際の `h`-type 不変性。
+  - `positiveWindowKernelRefines_iff_boundary` はその **同値**を既存の実 `fixedWindowMonoidHom` に対して形式化。窓 `(0,0)` も含む。
+  - `fixedHSubstitutable_of_positiveWindowKernelRefines`、`fixedWindowSubstitutable_of_positiveWindowKernelRefines` は、すでにある refinement と Yoshinaka 固定窓対応を利用して **RS クラス側の移送**を証明。
+- `LeanCfgProject/TCS1/V128PositiveWindowKernelConverse.lean`：
+  - `v128RepeatWord`、`v128RepeatWord_length_lower`、`v128RepeatWord_type_succ` で冪等元を表す非空語を十分な長さに繰り返す。
+  - `v128FixedWindow_long_frame_middle_independent` で、長い左右の `p,q` の間に挟んだ中央の語は固定窓 summary から見えないことを証明。
+  - `positiveWindowKernel_refines_implies_idempotent_sandwich` が、非空語 `r` の像 `e=h(r)` が冪等なら任意の中央語 `z` に対し `h(r z r)=h(r)`、すなわち `e*h(z)*e=e` を証明。
+  - `PositiveImageSandwichTrivial`、`positiveWindowKernel_refines_implies_positiveImageTrivial` により **固定窓 refinement ⇒ 正の像 `h(Σ⁺)` の局所自明性（冪等元 sandwich identity）**を完結。
+- **Lean CI #921 と #922** はともに **SUCCESS**、code SHA **`4ec6706165aea75fc60d7812ea491b78a524ff50`**。旧 theorem-facing critical path、`TCS1.All`、`sorry`・プロジェクト `axiom` 禁止を含めて green。
+- **未証明を隠さない**：v128 `prop:li-window` の逆ではないほう、すなわち **「正の像が locally trivial ⇒ 明示 `n=|h(Σ⁺)|+1` による `(n,n)` 固定窓の正語 kernel refinement」**はまだ証明していない。Pin (2025) の有限半群分解 `S^n=S E(S) S` および `e s f=e f` の使用・実装が次の数学的核心。固定窓 `h_{k,ℓ}` 自身の正の像の局所自明性、クラス等式 `KL=∪RS_h` と CFL 版も、**この一方向が通っただけではすべては終了しない**。
+- `cor:li-thickness`、`thm:main` (iv) は引き続き **未閉鎖**。旧 `V83TypedThicknessWitnessBounds`、`V128RetainedTypedLanguageEquality`、`V128TypedTrimSuccessfulBranch`、Proposition 7.4 normalization、旧 fixed-window bound を再利用して仕上げる。
+
+### 4-J 関連のドキュメント
+
+- [30件の一対一対応表](./V128_NUMBERED_CLAIMS_ONE_TO_ONE_AUDIT_2026-10-09.md) — R=24 / B=3 / P=1 / O=2（**区分は維持**：#5 は一方向のみ前進し、まだ完結していない）。
+- [v128 詳細監査台帳](./FORMALIZATION_TCS1_V128_DELTA.md)。
+- [Issues #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9) と [Draft PR #8](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/pull/8)。
+
 ## 5. まだ完了していないこと（最優先順）
 
-1. **v116 の実行可能な出力器・四次時間証明との橋渡し**：非計算的な全 (B)/(U)/(L)/(S)/epsilon 有限テーブルの意味論的正確性は CI #858 済み。(B) 実規則の三カット候補被覆と三次本数上界は CI #877 で完了。**計算可能な (B) 有効性フィルタと実規則集合への正確な出力接続は CI #890 で完了**。次は二カット集合のキャッシュと列挙器の machine-step 証明を設計し、(L)/(S)/epsilon・(U) を計算可能な索引と結ぶ。canonical factor/context ID、出力エンコーダ、構築・dedup・型計算の step-count を実証する。候補計数の三次と記述量の四次が Lean を通っていても、実出力アルゴリズム全体が `O(n_K⁴)` 時間で実行可能と確認したことには **ならない**。
-2. **`prop:li-window`**：有限モノイドの正の像 semigroup が locally trivial ⇔ ある finite-window `h_(k,l)` の kernel が `ker h` を（正語上で）refine。古い fixed-window の基礎定理と区別し、新命題を直接形式化する。既存証明と原稿の正確な定義・既往文献帰属を必ず照合。
-3. 上記からの characteristic-data corollary と `prop:finite-info-closure` の **完全な CFL closure 側** の義務。
-4. v128 の全30個の theorem/proposition/lemma/corollary environment と Lean 宣言の exact correspondence（旧版の audit `True` marker を v128 の完全証明と誤認しない）。
+1. **`prop:li-window` の残る順方向（最優先の数学的差分）**：局所自明な正の像 semigroup から具体的に `(n,n)`（`n=|h(Σ⁺)|+1`）の正語 kernel refinement を証明。**反対方向の sandwich identity は CI #922 で完了**、再証明しない。Pin 2025 の `S^n = S E(S) S` および `e s f = e f` を正確に取り込む。窓 typing の正の像自体の局所自明性と `KL=⋃RS_h`（CFL 版を含む）まで原稿に合わせて扱う。
+2. **`cor:li-thickness` と主定理 (iv)**：上記 kernel-refinement と既存の retained typed fibre 言語等式、successful-branch trimming、fixed-window typed-yield bound、thickness-preserving SSBNF normalization、特性標本 bound を結合。学習器・固定窓旧証明を作り直さない。
+3. **v116 `thm:poly-build` への橋渡し**：旧版の実行可能 CYK/学習器と多項式 scan/comparison envelope は検証済み。新 v116 の意味論・実有限規則表・有効 (B) 表・B/U の三次本数・候補出力四次 envelope も検証済み。残る `(U)/(L)/(S)/epsilon` 有効構築、識別子・キャッシュ・重複処理を含む `O(n_K^4)` の**論文レベルの演算回数 accounting**。低レベル CPU/Lean evaluator の instruction semantics は必須にしない。「三次候補数」≠「実行時間四次」を明記。
+4. **`prop:finite-info-closure` 全体**：固定型 RS 側 (i)/(ii)/(iii) は Lean で検証済みだが、(ii) regular-filtered CFL と (iii) erasing inverse-image CFL の伝統的閉包定理を `\mathcal C_h` 結論に明示的に接続する Lean package は未確認。数学的には古典的な外部事実であり、新規主張と取り違えない。
+5. **`thm:main` (i)/(iii)・`cor:ilt` の v116 packaging と厳密照合**：既存の Gold/学習器/BatchLanguage を使い、`v116TabulatedBatchLanguage_eq_batchLanguage` による新版の意味論保存を各 stage で接続。
+6. **原稿 v128 の exact-version 最終監査**：番号付き環境 **30件の対応先特定と Lean `#check` 65件の green は CI #901** で完了。しかし *manuscript-exact* な全仮定/結論/全称量化の一致、番号なしの重要主張、依存境界は未了。既存の v88 audit `True` marker を全文証明と混同しない。
+
+**進捗の数え方**：30件中 **24件 R（旧/現行 Lean 数学的証明を再利用できる）・3件 B（接続が要る）・1件 P（部分証明）・2件 O（主張全体は未閉鎖）**。これは「全体の80%が formal proof complete」と言っているのではなく、**30件のうち80%の項目に再利用可能な既存の proof source がある**という監査上の意味。30件の対応表作成は **30/30 完了**、v128 exact-version 完全形式化のパーセンテージは未確定。
 
 ## 6. 再開手順（今後の ChatGPT の作業用）
 
@@ -150,7 +180,7 @@
 
 ## 7. 再開を楽にする短いプロンプト
 
-> 「博士論文統合プロジェクトの TCS #1 Lean 形式化を、GitHub PR #8 の `START_HERE_TCS1_V128.md` から再開してください。最新 CI を確認し、v116 実出力器の O(n_K^4) 証明へ進めてください。完了済みの v88 構成と CI #901 までの監査と既存証明をやり直さず、コードを実際に push・CI 確認・引継書更新まで実行してください。」
+> 「博士論文統合プロジェクトの TCS #1 **v128** Lean 形式化を続けてください。最初に GitHub `growupkuriyama-hub/tcs1-lean-formalization` の **Draft PR #8**（`audit/tcs1-v128-exact-delta`）の `START_HERE_TCS1_V128.md` と `FORMALIZATION_TCS1_V128_DELTA.md`、30件の一対一監査表を読み、HEAD と最新 CI を確認してください。**CI #921/#922**（code SHA `4ec6706165aea75fc60d7812ea491b78a524ff50`）で `prop:li-window` の **固定窓 kernel ⇒ 局所自明性**は証明済みです。**逆方向『局所自明性 ⇒ 明示 (n,n) 固定窓の kernel refinement』** の未証明部分から進め、次に `cor:li-thickness` を旧版の typed-yield/normalization を使って接続してください。旧 v88 定理や CYK/学習器を作り直さず、Lean を PR ブランチへ push → CI green 確認 → 本引継書と Issue #9 更新まで行ってください。原稿 `Papers/01_fixed-h-cfg/main.tex`、main、v88 リリースは編集・merge しないでください。」
 
 **本書は GitHub に永続化した作業履歴の入口です。チャット履歴の保存・圧縮に依存しません。**
 
