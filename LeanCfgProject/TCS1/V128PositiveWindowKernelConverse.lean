@@ -119,8 +119,7 @@ theorem positiveWindowKernel_refines_implies_idempotent_sandwich
     omega
   have hpnonempty : p ≠ [] := by
     intro h
-    have hzero := congrArg List.length h
-    simp at hzero
+    have hzero : p.length = 0 := by simpa [h]
     omega
   have hx : p ++ z ++ p ≠ [] := by
     intro h
