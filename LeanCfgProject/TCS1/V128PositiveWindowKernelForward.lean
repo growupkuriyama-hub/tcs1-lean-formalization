@@ -34,6 +34,11 @@ def PositiveImageElement
     (H : FixedFiniteMonoidHom α M) :=
   {m : M // ∃ w : Word α, w ≠ [] ∧ H.h w = m}
 
+instance positiveImageElementFinite
+    (H : FixedFiniteMonoidHom α M) :
+    Finite (PositiveImageElement H) :=
+  Finite.of_injective Subtype.val Subtype.coe_injective
+
 noncomputable instance positiveImageElementFintype
     (H : FixedFiniteMonoidHom α M) :
     Fintype (PositiveImageElement H) := by
@@ -143,8 +148,7 @@ theorem v128_exists_idempotent_power
           calc
             x ^ (n + (q + 1) * d) =
                 x ^ ((n + q * d) + d) := by
-                  congr 1
-                  omega
+                  simp [Nat.add_mul, Nat.add_assoc]
             _ = x ^ (n + q * d) :=
                   hperiodOne (n + q * d) (by omega)
             _ = x ^ n := ih
