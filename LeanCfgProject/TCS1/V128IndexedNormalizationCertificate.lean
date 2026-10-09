@@ -1,4 +1,4 @@
-import LeanCfgProject.TCS1.IndexedConcreteSSBNFNormalization
+import LeanCfgProject.TCS1.IndexedSection7Bridge
 
 /-!
 # TCS #1 v128: concrete indexed normalization quantitative certificate
@@ -65,6 +65,46 @@ theorem v128_indexed_normalization_size_and_nonstart_witnesses
     refine ⟨w, hw, ?_⟩
     simpa [indexed_proposition74_explicit_envelope,
       thicknessBar] using hlen
+
+/-- The source-normalized non-start witnesses satisfy *exactly* the
+`UntypedDerives` interface of the Section 7 characteristic-data package.
+Unlike the preceding theorem, this conclusion no longer mentions
+`BinaryNullableDerives` or the separated-start internal representation. -/
+theorem v128_indexed_normalization_untyped_shortWitness
+    (G : IndexedMixedCFG N α P)
+    (A : N)
+    (hprod :
+      ∃ u : Word α,
+        u ∈ LeastClosedLanguage G.toMixedRules A ∧
+        u ≠ [])
+    (τR : Nat)
+    (hn : 0 < G.normalizationScale)
+    (hsource :
+      YieldBound
+        (fun B => LeastClosedLanguage G.toMixedRules B)
+        τR) :
+    ∀ X :
+      ReducedUnitFreeState
+        (indexedFiniteFrontEndGrammar G)
+        (indexedProductiveUnitFreeState_of_nonempty G A hprod),
+      ∃ z : Word α,
+        UntypedDerives
+          (reducedSSBNFTerminalRule
+            (indexedFiniteFrontEndGrammar G)
+            (indexedProductiveUnitFreeState_of_nonempty G A hprod))
+          (reducedSSBNFBinaryRule
+            (indexedFiniteFrontEndGrammar G)
+            (indexedProductiveUnitFreeState_of_nonempty G A hprod))
+          X z
+        ∧ z.length ≤
+          1 + G.normalizationScale ^ 2 * (τR + 1) := by
+  intro X
+  obtain ⟨z, hz, hlen⟩ :=
+    indexedReducedSSBNF_shortWitness
+      G A hprod τR hn hsource X
+  refine ⟨z, hz, ?_⟩
+  simpa [indexed_proposition74_explicit_envelope,
+    thicknessBar] using hlen
 
 end V128IndexedNormalizationCertificate
 
