@@ -52,15 +52,17 @@ theorem positiveWindowKernel_refines_implies_boundary
   intro p q m₁ m₂ hp hq hx hy
   have hcutx :
       fixedWindowThreshold k l ≤ (p ++ m₁ ++ q).length := by
-    have hxpos : 0 < (p ++ m₁ ++ q).length :=
-      List.length_pos_of_ne_nil hx
+    have hxpos : 0 < p.length + m₁.length + q.length := by
+      simpa only [List.length_append] using
+        (List.length_pos_of_ne_nil hx)
     simp only [List.length_append]
     unfold fixedWindowThreshold
     omega
   have hcuty :
       fixedWindowThreshold k l ≤ (p ++ m₂ ++ q).length := by
-    have hypos : 0 < (p ++ m₂ ++ q).length :=
-      List.length_pos_of_ne_nil hy
+    have hypos : 0 < p.length + m₂.length + q.length := by
+      simpa only [List.length_append] using
+        (List.length_pos_of_ne_nil hy)
     simp only [List.length_append]
     unfold fixedWindowThreshold
     omega
