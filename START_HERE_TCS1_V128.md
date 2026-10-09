@@ -20,6 +20,12 @@
 
 ---
 
+## 2026-10-09 21:53 JST — manuscript-exact li-thickness audit
+
+See [V128_LI_THICKNESS_EXACT_SCOPE_AUDIT_2026-10-09.md](./V128_LI_THICKNESS_EXACT_SCOPE_AUDIT_2026-10-09.md). **CI #957 and #958 SUCCESS** at audit HEAD `ed4c2a77da30c78091cc9e937421ebdf8051b307` after the validated CI #954 code. Current interpretation: `prop:li-window` positive-word equivalence and explicit bound are formally checked; the locally trivial characteristic-data theorem is checked only with explicit SSBNF, short-derivation and normalization bounds **as hypotheses**. The original paper's `cor:li-thickness` and `thm:main`(iv) universally quantify over arbitrary reduced CFGs, so exact-version completion needs a real normalized-grammar bridge and polynomial source-size bounds, not just an envelope. No paper/main/v88 edits. Draft PR remains open.
+
+---
+
 ## 0. 再開の一行指示（そのままコピー可）
 
 「GitHub の `growupkuriyama-hub/tcs1-lean-formalization`、Draft PR #8（`audit/tcs1-v128-exact-delta`）にある `START_HERE_TCS1_V128.md` と `FORMALIZATION_TCS1_V128_DELTA.md` を読み、最新 CI を調べ、**v128 の未完了の差分だけ** Lean に実装・CI 修正し、引継書と PR を更新してください。旧版で通った証明を最初からやり直さないでください。」
