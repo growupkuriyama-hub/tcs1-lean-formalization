@@ -2,7 +2,7 @@
 
 > **判定対象**: `growupkuriyama-hub/Papers/01_fixed-h-cfg/main.tex` の内部版 **v128**、`main` の Git blob `07c53aa9f2bd8c76aa2d29f90f01fbe81e763588`（2026-10-09 確認）。番号付き `theorem` / `proposition` / `lemma` / `corollary` は **30環境**、うち第27項は `\label` がないので原稿中の位置で特定。
 >
-> **検証した Lean の場所**: `growupkuriyama-hub/tcs1-lean-formalization` の Draft PR #8、`audit/tcs1-v128-exact-delta`。最終的な**コード検証済み checkpoint は CI #890**（2026-10-09、Lean code SHA `e7858324859765065598255ac36cb747aff599e8`）。この文書は **論文の主張と既存宣言の意味論的な対応に関する監査表**であり、独立した30件の Lean theorem statements を全部再度宣言したという意味ではない。
+> **検証した Lean の場所**: `growupkuriyama-hub/tcs1-lean-formalization` の Draft PR #8、`audit/tcs1-v128-exact-delta`。**最新のコード検証済み checkpoint は CI #922 SUCCESS**（CI #921 も同 SHA で成功、2026-10-09、Lean code SHA `4ec6706165aea75fc60d7812ea491b78a524ff50`）。この文書は **論文の主張と既存宣言の意味論的な対応に関する監査表**であり、独立した30件の Lean theorem statements を全部再度宣言したという意味ではない。
 >
 > **再利用の基礎**: `V79ManuscriptClaimAudit.lean`（論文順の `#check` 対応表）、`V79TheoremSurfaceAudit.lean`、`V88FullManuscriptAudit.lean`、`MainTheoremMaterializedPackage.lean`、`MaterializedProductionCost.lean`、`V83TypedThicknessWitnessBounds.lean`。旧版の一対一監査は原稿 v79 → v88 の同期で検査済み。ただし **`#check` は宣言の存在・型検査であって、v128 原稿との文言一致を自動証明するものではない**。旧版の補題と v128 の追加条件を混同しない。
 >
@@ -20,7 +20,7 @@
 | 2 | `prop:finite-info-closure` (343) | `fixedHSubstitutable_inter_product`; `fixedHSubstitutable_regularFilter_product`; `inverseImage_fixedHSubstitutable_with_erasureFlag` | **P** | (i) 証明済み。(ii) の RS 側、(iii) の消去フラグ付き RS 側は Lean にあるが、両方の **CFL 閉包**（正規言語との共通部分、逆準同型像）は外部の古典定理であり、v128 の `\Ccf{}` の結論へ接続する Lean theorem は未確認。原稿もこの2つを標準的閉包性として引用。 |
 | 3 | `prop:yl-special` (459) | `fixedWindowSubstitutable_iff_fixedHSubstitutable` | **R** | 固定 `(k,ℓ)` に対応する `h_{k,ℓ}` のクラス同値。 |
 | 4 | `thm:main` (518) | `indexedFixedH_learning_materialized_core`; `corollary_poly_update_materialized`; `indexedClassicalFixedWindowSection7_package`; `indexedLinear_characteristic_package`; v128 新規の `V128SubstringTabulatedGrammar` | **B** | (i)–(iii) は既存の意味論・Gold・多項式 envelope を再利用。ただし **v116 の具体的 `\mathcal B_h`** と旧版の学習器の構築計算量を原稿の表現で統合した最終 lemma は未確認。(iv) は `prop:li-window` と `cor:li-thickness` の未閉鎖部分に依存。(v) 線形部は再利用可能。 |
-| 5 | `prop:li-window` (558) | `FixedWindowExactEquivalence.lean`（従来の固定窓 special case）および `SyntacticRefinementRegularity.lean`（一般的 refinement） | **O** | **正の像半群が locally trivial ⇔ 正語上のある固定窓 kernel refinement**、明示 `(n,n)`、固定窓の正の像の局所自明性、`KL=\bigcup RS_h` と CFL 版の全セットは、既存ファイルからの完全な単一定理として確認できない。原稿の証明は Pin 2025 の有限半群事実に依拠。 |
+| 5 | `prop:li-window` (558) | `positiveWindowKernelRefines_iff_boundary`; **`positiveWindowKernel_refines_implies_positiveImageTrivial`**; `positiveWindowKernel_refines_implies_idempotent_sandwich`（CI #921/#922）; `FixedWindowExactEquivalence.lean`（旧定理） | **O** | **固定窓の正語 kernel refinement ⇒ 正の像の局所自明性（冪等元の `ese=e`）は CI #922 で形式化済み**。**逆方向** locally trivial ⇒ 明示 `(n,n)`（`n=|h(Σ⁺)|+1`）での正語 kernel refinement は未証明。固定窓の正の像の局所自明性、`KL=\bigcup RS_h` と CFL 版の全セットも残る。原稿の証明は Pin 2025 の有限半群事実に依拠。 |
 | 6 | `lem:sample-consistency` (653) | `sample_consistency` | **R** | 観測標本の生成。 |
 | 7 | `thm:soundness` (664) | `batchLanguage_sound`; `substringBatchLanguage_eq_batchLanguage` | **R** | v116 の言語同値を経由して旧版 soundness をそのまま利用可能。 |
 | 8 | `prop:typed-core` (801) | `concreteTypedActive_language_eq_untyped`; `typedDerives_yield_type`; **`retainedTypedNonstartLanguage_eq_inter_fiber`** | **R** | v128 で明記された各 retained non-start `A_μ` の言語と `h`-fiber の等号には既存の専用 v128 ファイルが対応。 |
@@ -49,9 +49,16 @@
 
 **30件の整理**：**R=24**、**B=3**（#4,#11,#12）、**P=1**（#2）、**O=2**（#5,#19）。**R=24 とは「24件の v128 完全同期証明が新規に作られた」という意味ではなく、「対応する既存 Lean 定理の再利用先が具体的に特定できた」という意味**である。型の細部や外部閉包事実の扱いは上記に記したとおり。
 
+### 2026-10-09 更新：CI #921/#922 で #5 の一方向が形式化済み
+
+- **成功 CI**：[CI #921](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885093446) / [CI #922](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885096669)、**同じ code SHA `4ec6706165aea75fc60d7812ea491b78a524ff50`**。新しい2つの Lean ファイルは既存の定理群、`TCS1.All`、`sorry`/独自 `axiom` チェックまで通過。
+- **#5 `prop:li-window` の達成範囲**：`PositiveWindowKernelRefines` と `PositiveWindowBoundaryInvariant` の同値、正語 kernel からの RS 型の転送、`fixedWindowKernelRefines ⇒ PositiveImageSandwichTrivial`（正の像 semigroup の全冪等元が `ese=e` を満たす）を Lean で実証。参照元は `V128PositiveWindowKernel.lean` と `V128PositiveWindowKernelConverse.lean`。
+- **未了**：半群の局所自明性 ⇒ 窓 `(n,n)` での kernel refinement（Pin 2025 の有限半群補題を使用）、KL の類の union 部分、#19 `cor:li-thickness`、#4 主定理(iv) の完成。よって **全30件分類の数字 R=24 / B=3 / P=1 / O=2 は変えていない**。
+- **統計解釈**：R=24（全体30件の80%）は *再利用可能な既存 Lean 証明ソースの特定率*。本書は**30件すべての主張が証明完了したことも、exact-v128 の検証進捗が80%だということも主張しない**。
+
 ## 最優先の数学的差分（再証明を避ける）
 
-1. **`prop:li-window`**（#5）：まず使う Pin 2025 の2つの有限半群事実を *明示的な有限半群 lemma または引用する外部境界* として固定し、`ker h_{n,n}|Σ⁺ ⊆ ker h|Σ⁺` の含意と逆含意を Lean でつなぐ。固定窓の `h_{k,ℓ}` 定義と refinement monotonicity は既存のものを使う。
+1. **`prop:li-window`**（#5）：CI #922 で証明した正語 kernel ⇒ 局所自明性を再証明せず、**残る局所自明性 ⇒ 明示 `(n,n)` 窓 kernel の方向**に必要な Pin 2025 の2つの有限半群事実を *明示的な有限半群 lemma または引用する外部境界* として固定し、`ker h_{n,n}|Σ⁺ ⊆ ker h|Σ⁺` の含意と逆含意を Lean でつなぐ。固定窓の `h_{k,ℓ}` 定義と refinement monotonicity は既存のものを使う。
 2. **`cor:li-thickness`**（#19）および `thm:main` (iv)：#5 の kernel refinement の上に、v128 専用の retained typed fiber 言語等式と trimming-successful-branch 補題、旧版の fixed-window/normalization/typed-thickness witness bounds を合成。新しい学習器・古い Section 7 を作り直さない。
 3. **`prop:finite-info-closure`**（#2）：既存の RS 側3命題は再利用。もし manuscript-exact な **Lean 定理文**が必要なら、CFL と regular language の共通部分および inverse homomorphism 閉包を既存 mathlib / 外部既知定理から引用して `\Ccf{}` 部分まで package する。一般的な古典定理の再証明はしない。
 4. **`thm:poly-build`**（#12）と `thm:main` (i),(iii)：旧 v79 の `MaterializedProductionCost` / `MainTheoremMaterializedPackage` は**本当に存在する**。最新の CI #890 では v116 **計算可能な B テーブルが正しい**ことも証明済み。残りの U（バケット）と L/S/ε の実出力、型・context キャッシュ、符号化・候補走査の**抽象的 operation-count** に対する新版 `O(n_K^4)` を評価する。**低レベルの Lean evaluator / CPU semantics を新しい必須基準にしない**。
@@ -73,6 +80,6 @@
 - [v88 exact version audit](./LeanCfgProject/TCS1/V88FullManuscriptAudit.lean)
 - [旧版の production cost](./LeanCfgProject/TCS1/MaterializedProductionCost.lean)
 - [v128 差分監査](./FORMALIZATION_TCS1_V128_DELTA.md)
-- [CI #890 code checkpoint](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37830187537)
+- [CI #922 code checkpoint](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37885096669)
 
 **この監査では旧版の Lean 定理・主張を変更していない。** main、提出済み TCS 原稿、v88 tag/release も無変更、PR #8 は Draft。
