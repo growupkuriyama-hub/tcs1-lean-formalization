@@ -29,7 +29,8 @@ jobs:
           lake build \
             LeanCfgProject.TCS1.V128PositiveWindowKernel \
             LeanCfgProject.TCS1.V128PositiveWindowKernelConverse \
-            LeanCfgProject.TCS1.V128PositiveWindowKernelForward
+            LeanCfgProject.TCS1.V128PositiveWindowKernelForward \
+            LeanCfgProject.TCS1.V128LocallyTrivialThickness
           lake build \
             LeanCfgProject.TCS1.V128SubstringUnaryRuleTable \
             LeanCfgProject.TCS1.V128SubstringRemainingRuleTables \
