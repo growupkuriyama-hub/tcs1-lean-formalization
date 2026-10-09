@@ -254,6 +254,49 @@ theorem indexedLocallyTrivialCharacteristicData_of_ordinaryThickness
     (indexedMixedThicknessAtMost_implies_yieldBound G τR hthick)
     hsub
 
+/-- The source-level form closest to manuscript `cor:li-thickness`:
+the input is a *reduced* finite indexed CFG, its ordinary parse-tree
+thickness bound and the fixed original typing H. Reduction guarantees
+nonemptiness of the designated start language; its start symbol guarantees a
+positive finite source scale. Neither is assumed separately.
+
+The remaining manuscript-exact obligation is identifying the concrete finite
+encoding scale with the manuscript's grammar-size convention and providing an
+explicit polynomial-time normalization/computation assertion. -/
+theorem indexedLocallyTrivialCharacteristicData_reduced_source
+    (H : FixedFiniteMonoidHom α M)
+    (hlocal : PositiveImageSandwichTrivial H)
+    (G : IndexedMixedCFG N α P)
+    (A : N)
+    (hred : IndexedMixedReduced G A)
+    (τR : Nat)
+    (hthick : IndexedMixedThicknessAtMost G τR)
+    (hsub :
+      FixedHSubstitutable H
+        (LeastClosedLanguage G.toMixedRules A)) :
+    ∃ K : Finset (Word α),
+      BatchLanguage H K =
+        LeastClosedLanguage G.toMixedRules A
+      ∧
+      (∑ word ∈ K, (word.length + 1)) ≤
+        1 + fixedWindowGrammarSizeEnvelope
+          (Fintype.card M)
+          (positiveWindowBound H + positiveWindowBound H)
+          (indexedSSBNFGrammarSizeEnvelope G.normalizationScale)
+          (ssbnfThicknessEnvelope 1 1 G.normalizationScale τR) := by
+  have hnonempty :
+      ∃ w : Word α,
+        w ∈ LeastClosedLanguage G.toMixedRules A := by
+    obtain ⟨w, hw⟩ := hred.2 A
+    exact ⟨w, mixedDerives_mem_leastClosed G.toMixedRules hw⟩
+  have hn : 0 < G.normalizationScale := by
+    letI : Nonempty N := ⟨A⟩
+    have hNpos : 0 < Fintype.card N := Fintype.card_pos
+    unfold IndexedMixedCFG.normalizationScale
+    omega
+  exact indexedLocallyTrivialCharacteristicData_of_ordinaryThickness
+    H hlocal G A hnonempty τR hn hthick hsub
+
 end V128IndexedLocallyTrivialCharacteristicData
 
 end TCS1
