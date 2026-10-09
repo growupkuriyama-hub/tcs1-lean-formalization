@@ -7,6 +7,18 @@ Manuscript internal version: **v128**, SHA-256 recorded in PAPER.yaml:
 `cb18358871d34f6120fed03bc9da7bfed5f1f3095487cca03b07d40ae4d90128`.
 Historical verified Lean baseline: **v88** (`tcs1-v88-formalization-3.0.0`).
 
+## Verified delta after CI #954 (2026-10-09)
+
+CI [#953](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37915608299) and [#954](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/37915613488) succeeded at code SHA `0839dca9b0f3279ab7954bee90f0bdd8b663c859`. All #954 gates passed: new v128 delta, theorem-facing path, `TCS1.All`, no `sorry`, no project `axiom`.
+
+- `prop:li-window`: positive-image locally trivial ⇒ explicit `(n,n)` kernel refinement (`n = |h(Σ⁺)|+1`) in `V128PositiveWindowKernelForward.lean`; converse in `V128PositiveWindowKernelConverse.lean`. The forward file also contains the fixed-window summary contract and pointwise class transfer. **Code proved and CI-tested; manuscript-exact audit not yet certified.**
+- `cor:li-thickness`: `V128LocallyTrivialThickness.lean` combines characteristic sample exact reconstruction with fixed-window/SSBNF bound transfer at the explicit window. The theorem carries explicit reduced-presentation, finite-index, short-yield and normalization hypotheses. **Code proved and CI-tested; confirm that these match all manuscript quantifiers, and establish any external grammar normalization implication if absent.**
+- Other open items remain as described below, especially `thm:main`(iv) exact formulation, finite-info closure and complete `O(n_K^4)` operation accounting. Prior 24/3/1/2 counts are a pre-closure crosswalk and not an updated proof completion percentage.
+
+Source of truth for manuscript is the current `Papers/01_fixed-h-cfg/main.tex` and `PAPER.yaml`. The old v128 snapshot hash noted below may not equal the newer current internal version; never assume that a CI build proves the later manuscript automatically.
+
+---
+
 ## Scope and honesty rule
 
 **This is NOT a completed exact-version v128 manuscript verification.** The v88
