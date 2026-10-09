@@ -28,7 +28,7 @@ jobs:
         run: |
           lake build \
             LeanCfgProject.TCS1.V128PositiveWindowKernel \
-            LeanCfgProject.TCS1.V128PositiveWindowKernelConverse
+            LeanCfgProject.TCS1.V128PositiveWindowKernelConverse \
             LeanCfgProject.TCS1.V128PositiveWindowKernelForward
           lake build \
             LeanCfgProject.TCS1.V128SubstringUnaryRuleTable \
