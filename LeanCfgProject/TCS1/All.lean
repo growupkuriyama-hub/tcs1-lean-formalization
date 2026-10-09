@@ -259,6 +259,7 @@ import LeanCfgProject.TCS1.V128SubstringTabulatedGrammar
 import LeanCfgProject.TCS1.V128SubstringBinarySplitSlots
 import LeanCfgProject.TCS1.V128SubstringEffectiveBinaryTable
 import LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk
+import LeanCfgProject.TCS1.V128PositiveWindowKernel
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
