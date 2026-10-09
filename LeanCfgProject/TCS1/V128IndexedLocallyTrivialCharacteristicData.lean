@@ -137,6 +137,77 @@ theorem indexedLocallyTrivialCharacteristicData_package
         hshort hN ht hb (le_refl _) (le_refl _)
     simpa [indexedFixedHCanonicalSample, Nf, start] using hnorm
 
+/--
+Source-level characteristic data for **every nonempty** indexed target under
+the locally trivial positive-image hypothesis. In the positive-word case it
+reuses the concrete indexed normalization theorem. If the target has no
+nonempty word, nonemptiness forces the language to be exactly `{[]}`, and
+the existing epsilon-only characteristic sample is used.
+
+The additional constant `1` makes the same displayed polynomial envelope
+valid also for the epsilon-only endpoint. Source yield and normalization
+hypotheses are still explicit; this is not yet an exact arbitrary-reduced-CFG
+formulation of manuscript `cor:li-thickness`.
+-/
+theorem indexedLocallyTrivialCharacteristicData_nonempty_package
+    (H : FixedFiniteMonoidHom α M)
+    (hlocal : PositiveImageSandwichTrivial H)
+    (G : IndexedMixedCFG N α P)
+    (A : N)
+    (hnonempty :
+      ∃ w : Word α, w ∈ LeastClosedLanguage G.toMixedRules A)
+    (τR : Nat)
+    (hn : 0 < G.normalizationScale)
+    (hsource :
+      YieldBound
+        (fun B => LeastClosedLanguage G.toMixedRules B)
+        τR)
+    (hsub :
+      FixedHSubstitutable H
+        (LeastClosedLanguage G.toMixedRules A)) :
+    ∃ K : Finset (Word α),
+      BatchLanguage H K =
+        LeastClosedLanguage G.toMixedRules A
+      ∧
+      (∑ word ∈ K, (word.length + 1)) ≤
+        1 + fixedWindowGrammarSizeEnvelope
+          (Fintype.card M)
+          (positiveWindowBound H + positiveWindowBound H)
+          (indexedSSBNFGrammarSizeEnvelope G.normalizationScale)
+          (ssbnfThicknessEnvelope 1 1 G.normalizationScale τR) := by
+  classical
+  by_cases hprod :
+      ∃ u : Word α,
+        u ∈ LeastClosedLanguage G.toMixedRules A ∧ u ≠ []
+  · obtain ⟨hchar, hnorm⟩ :=
+      indexedLocallyTrivialCharacteristicData_package
+        H hlocal G A hprod τR hn hsource hsub
+    refine ⟨indexedFixedHCanonicalSample H G A hprod, hchar, ?_⟩
+    omega
+  · have hL :
+        LeastClosedLanguage G.toMixedRules A =
+          ({[]} : Set (Word α)) := by
+      apply Set.ext
+      intro w
+      constructor
+      · intro hw
+        have hw0 : w = [] := by
+          by_contra hne
+          exact hprod ⟨w, hw, hne⟩
+        simpa [hw0]
+      · intro hw
+        have hw0 : w = [] := by
+          simpa using hw
+        subst w
+        obtain ⟨z, hz⟩ := hnonempty
+        have hz0 : z = [] := by
+          by_contra hzne
+          exact hprod ⟨z, hz, hzne⟩
+        simpa [hz0] using hz
+    refine ⟨({[]} : Finset (Word α)), ?_, ?_⟩
+    · simpa [hL] using singletonEpsilon_characteristic H
+    · simp
+
 end V128IndexedLocallyTrivialCharacteristicData
 
 end TCS1
