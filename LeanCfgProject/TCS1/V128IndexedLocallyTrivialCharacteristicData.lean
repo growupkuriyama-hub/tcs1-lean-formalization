@@ -75,6 +75,18 @@ theorem indexedLocallyTrivialCharacteristicData_package
     ReducedUnitFreeState
       (indexedFiniteFrontEndGrammar G) start
   letI : Fintype Nf := Fintype.ofFinite _
+  -- Keep the finite rule-index instances coherent with the concrete
+  -- normalization-count bounds (which use Fintype.ofFinite).
+  letI : Fintype
+      (UntypedTerminalRuleIndex
+        (reducedSSBNFTerminalRule
+          (indexedFiniteFrontEndGrammar G) start)) :=
+    Fintype.ofFinite _
+  letI : Fintype
+      (UntypedBinaryRuleIndex
+        (reducedSSBNFBinaryRule
+          (indexedFiniteFrontEndGrammar G) start)) :=
+    Fintype.ofFinite _
 
   have hshort :
       ∀ X : Nf,
