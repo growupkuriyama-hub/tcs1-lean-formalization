@@ -32,7 +32,8 @@ jobs:
             LeanCfgProject.TCS1.V128SubstringTabulatedGrammar \
             LeanCfgProject.TCS1.V128SubstringBinarySplitSlots \
             LeanCfgProject.TCS1.V128SubstringEffectiveBinaryTable \
-            LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk
+            LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk \
+            LeanCfgProject.TCS1.V128PositiveWindowKernel
 
       - name: Build theorem-facing critical path
         run: |
