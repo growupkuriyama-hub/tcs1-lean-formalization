@@ -263,6 +263,7 @@ import LeanCfgProject.TCS1.V128PositiveWindowKernel
 import LeanCfgProject.TCS1.V128PositiveWindowKernelConverse
 import LeanCfgProject.TCS1.V128PositiveWindowKernelForward
 import LeanCfgProject.TCS1.V128LocallyTrivialThickness
+import LeanCfgProject.TCS1.V128IndexedNormalizationCertificate
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
