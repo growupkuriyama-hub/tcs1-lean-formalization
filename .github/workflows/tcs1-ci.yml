@@ -27,14 +27,15 @@ jobs:
       - name: Build v128 finite-rule delta first
         run: |
           lake build \
+            LeanCfgProject.TCS1.V128PositiveWindowKernel \
+            LeanCfgProject.TCS1.V128PositiveWindowKernelConverse
+          lake build \
             LeanCfgProject.TCS1.V128SubstringUnaryRuleTable \
             LeanCfgProject.TCS1.V128SubstringRemainingRuleTables \
             LeanCfgProject.TCS1.V128SubstringTabulatedGrammar \
             LeanCfgProject.TCS1.V128SubstringBinarySplitSlots \
             LeanCfgProject.TCS1.V128SubstringEffectiveBinaryTable \
-            LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk \
-            LeanCfgProject.TCS1.V128PositiveWindowKernel \
-            LeanCfgProject.TCS1.V128PositiveWindowKernelConverse
+            LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk
 
       - name: Build theorem-facing critical path
         run: |
