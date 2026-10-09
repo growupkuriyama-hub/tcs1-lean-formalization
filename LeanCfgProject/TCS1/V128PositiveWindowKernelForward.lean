@@ -462,6 +462,51 @@ theorem positiveImageTrivial_implies_positiveWindowKernelRefines
       (positiveImageTrivial_implies_boundary_at_explicit_window
         H hlocal)
 
+/-- Positive-word kernel refinement is enough to recover the full
+`RespectsFixedWindowSummary` contract.  Short summaries are literal word
+equality, while long summaries are necessarily positive and may therefore use
+the positive-word refinement hypothesis. -/
+theorem respectsFixedWindowSummary_of_positiveWindowKernelRefines
+    (H : FixedFiniteMonoidHom α M)
+    (k l : Nat)
+    (href : PositiveWindowKernelRefines H k l) :
+    RespectsFixedWindowSummary H k l := by
+  intro x y hsummary
+  rcases hsummary with hshort | hlong
+  · simpa [hshort.2]
+  · rcases hlong with
+      ⟨hxLong, hyLong, p, q, m₁, m₂,
+        hp, hq, hx, hy⟩
+    have hxPos : x ≠ [] := by
+      intro hxNil
+      subst x
+      simp [fixedWindowThreshold] at hxLong
+    have hyPos : y ≠ [] := by
+      intro hyNil
+      subst y
+      simp [fixedWindowThreshold] at hyLong
+    apply href x y hxPos hyPos
+    apply
+      fixedWindowMonoidHom_respects
+        (α := α) k l x y
+    exact Or.inr
+      ⟨hxLong, hyLong, p, q, m₁, m₂,
+        hp, hq, hx, hy⟩
+
+/-- A locally trivial positive image therefore satisfies the exact
+fixed-window semantic contract at the explicit manuscript window
+`n=|h(Σ⁺)|+1`. -/
+theorem positiveImageTrivial_implies_respects_explicitWindow
+    (H : FixedFiniteMonoidHom α M)
+    (hlocal : PositiveImageSandwichTrivial H) :
+    RespectsFixedWindowSummary
+      H (positiveWindowBound H) (positiveWindowBound H) := by
+  exact
+    respectsFixedWindowSummary_of_positiveWindowKernelRefines
+      H (positiveWindowBound H) (positiveWindowBound H)
+      (positiveImageTrivial_implies_positiveWindowKernelRefines
+        H hlocal)
+
 /-- Exact positive-image criterion, now in both directions, with the explicit
 window on the forward side. -/
 theorem positiveImageTrivial_iff_explicitWindowKernelRefines
