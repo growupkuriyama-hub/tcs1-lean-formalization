@@ -97,6 +97,7 @@ theorem suffix_mem_frontSupport_iff (l : List (MixedSymbol N α)) :
     obtain ⟨p, _, rfl⟩ := List.mem_map.mp hpr
     exact indexedClosedFrontSupport_suffix_mem G ⟨p, ⟨i, hi⟩⟩
 
+include L in
 theorem frontSupport_suffix_ne_nil {l : List (MixedSymbol N α)}
     (h : BinarizedState.suffix l ∈ frontSupport G) : l ≠ [] := by
   obtain ⟨pr, _, i, hi, rfl⟩ := (suffix_mem_frontSupport_iff G L l).mp h
@@ -130,7 +131,8 @@ theorem mem_allSuffixStates_iff (X : FrontEndState N α) :
   · rintro ⟨pr, hpr, i, hi, rfl⟩
     exact ⟨⟨_, rfl⟩, (suffix_mem_frontSupport_iff G L _).mpr ⟨pr, hpr, i, hi, rfl⟩⟩
   · rintro ⟨⟨l, rfl⟩, h⟩
-    exact (suffix_mem_frontSupport_iff G L l).mp h
+    obtain ⟨pr, hpr, i, hi, rfl⟩ := (suffix_mem_frontSupport_iff G L l).mp h
+    exact ⟨pr, hpr, i, hi, rfl⟩
 
 /-- Shorthand for the existing finite front-end grammar. -/
 abbrev Gf : BinaryNullableGrammar {x // x ∈ frontSupport G} α :=
@@ -189,12 +191,12 @@ theorem codeMatches_indexed :
       rcases (frontEnd_binary_iff _ x y z).mp h with ⟨B, rhs, rfl, hR, hshape⟩ | hsuf | hsuf
       · exact Or.inl ⟨(B, rhs), (L.mem_prs G B rhs).mpr hR,
           (mem_binOfProd _ _ _ _).mpr ⟨rfl, hshape⟩⟩
-      · obtain ⟨B, C, rfl, _, _⟩ := hsuf
+      · obtain ⟨B, C, rfl, hy, hz⟩ := hsuf
         exact Or.inr ⟨_, (mem_allSuffixStates_iff G L _).mpr ⟨⟨_, rfl⟩, hx⟩,
-          (mem_binOfSuffix _ _ _ _).mpr ⟨rfl, hsuf⟩⟩
-      · obtain ⟨B, C, D, rest, rfl, _, _⟩ := hsuf
+          (mem_binOfSuffix _ _ _ _).mpr ⟨rfl, Or.inl ⟨B, C, rfl, hy, hz⟩⟩⟩
+      · obtain ⟨B, C, D, rest, rfl, hy, hz⟩ := hsuf
         exact Or.inr ⟨_, (mem_allSuffixStates_iff G L _).mpr ⟨⟨_, rfl⟩, hx⟩,
-          (mem_binOfSuffix _ _ _ _).mpr ⟨rfl, hsuf⟩⟩
+          (mem_binOfSuffix _ _ _ _).mpr ⟨rfl, Or.inr ⟨B, C, D, rest, rfl, hy, hz⟩⟩⟩
   unit x y := by
     show _ ↔ ∃ hx hy, (frontEndBinaryGrammar G.toMixedRules).unitRule x y
     rw [frontCode_unit, List.mem_append, forListC_const_mem, forListC_const_mem]
@@ -217,9 +219,9 @@ theorem codeMatches_indexed :
       rcases (frontEnd_unit_iff _ x y).mp h with ⟨B, C, rfl, hR, rfl⟩ | hsuf
       · exact Or.inl ⟨(B, [Sum.inl C]), (L.mem_prs G B _).mpr hR,
           (mem_unitOfProd _ _ _).mpr ⟨C, rfl, rfl, rfl⟩⟩
-      · obtain ⟨B, rfl, _⟩ := hsuf
+      · obtain ⟨B, rfl, hy⟩ := hsuf
         exact Or.inr ⟨_, (mem_allSuffixStates_iff G L _).mpr ⟨⟨_, rfl⟩, hx⟩,
-          (mem_unitOfSuffix _ _ _).mpr ⟨rfl, hsuf⟩⟩
+          (mem_unitOfSuffix _ _ _).mpr ⟨rfl, B, rfl, hy⟩⟩
   eps x := by
     show _ ↔ ∃ hx, (frontEndBinaryGrammar G.toMixedRules).epsilonRule x
     rw [frontCode_eps, forListC_const_mem]
@@ -435,8 +437,8 @@ theorem prop_thickSSBNFNormal_executable_degenerate (A : N)
     have hne := epsilonFreeDerives_nonempty (Gf G) hE
     have hB := epsilonFreeDerives_to_binaryNullable (Gf G) hE
     exact ⟨w, (indexedFiniteFrontEnd_old_language_iff_source G A w).mp hB, hne⟩
-  have hout : out = { nonterminals := [], terminal := [], binary := [], start := none,
-      epsilon := (memC stateEqC (BinarizedState.old (Sum.inl A)) (idxTrace G L A).null).1 } := by
+  have hout : out = SSBNFCode.mk [] [] [] none
+      (memC stateEqC (BinarizedState.old (Sum.inl A)) (idxTrace G L A).null).1 := by
     show (idxTrace G L A).out = _
     rw [trace_out, hnp]
     rfl
