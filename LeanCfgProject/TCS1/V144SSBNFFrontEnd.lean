@@ -258,7 +258,7 @@ theorem mem_termOfProd (pr : N × List (MixedSymbol N α)) (x : FrontEndState N 
   · simp [termOfProd]
   · rcases s with B | b
     · simp [termOfProd]
-    · simp [termOfProd]; tauto
+    · simp [termOfProd] <;> first | tauto | aesop
   · simp [termOfProd]
 
 theorem mem_binOfProd (pr : N × List (MixedSymbol N α)) (x y z : FrontEndState N α) :
@@ -271,8 +271,8 @@ theorem mem_binOfProd (pr : N × List (MixedSymbol N α)) (x y z : FrontEndState
   rcases r with _ | ⟨B, _ | ⟨C, _ | ⟨D, rest⟩⟩⟩
   · simp [binOfProd]
   · simp [binOfProd]
-  · simp [binOfProd]; tauto
-  · simp [binOfProd]; tauto
+  · simp [binOfProd] <;> first | tauto | aesop
+  · simp [binOfProd] <;> first | tauto | aesop
 
 theorem mem_unitOfProd (pr : N × List (MixedSymbol N α)) (x y : FrontEndState N α) :
     (x, y) ∈ unitOfProd pr ↔
@@ -282,7 +282,7 @@ theorem mem_unitOfProd (pr : N × List (MixedSymbol N α)) (x y : FrontEndState 
   rcases r with _ | ⟨s, _ | ⟨t, rest⟩⟩
   · simp [unitOfProd]
   · rcases s with B | b
-    · simp [unitOfProd]; tauto
+    · simp [unitOfProd] <;> first | tauto | aesop
     · simp [unitOfProd]
   · simp [unitOfProd]
 
@@ -305,8 +305,8 @@ theorem mem_binOfSuffix (X x y z : FrontEndState N α) :
   · rcases r with _ | ⟨B, _ | ⟨C, _ | ⟨D, rest⟩⟩⟩
     · simp [binOfSuffix]
     · simp [binOfSuffix]
-    · simp [binOfSuffix]; tauto
-    · simp [binOfSuffix]; tauto
+    · simp [binOfSuffix] <;> first | tauto | aesop
+    · simp [binOfSuffix] <;> first | tauto | aesop
 
 theorem mem_unitOfSuffix (X x y : FrontEndState N α) :
     (x, y) ∈ unitOfSuffix X ↔
@@ -315,7 +315,7 @@ theorem mem_unitOfSuffix (X x y : FrontEndState N α) :
   · simp [unitOfSuffix]
   · rcases r with _ | ⟨B, _ | ⟨C, rest⟩⟩
     · simp [unitOfSuffix]
-    · simp [unitOfSuffix]; tauto
+    · simp [unitOfSuffix] <;> first | tauto | aesop
     · simp [unitOfSuffix]
 
 end Membership
@@ -400,14 +400,14 @@ theorem topBinarizedRhs_eq_pair {M : Type*} (rhs : List M) (Y Z : BinarizedState
   rcases rhs with _ | ⟨B, _ | ⟨C, _ | ⟨D, rest⟩⟩⟩
   · simp [topBinarizedRhs]
   · simp [topBinarizedRhs]
-  · simp [topBinarizedRhs]; tauto
-  · simp [topBinarizedRhs]; tauto
+  · simp [topBinarizedRhs] <;> first | tauto | aesop
+  · simp [topBinarizedRhs] <;> first | tauto | aesop
 
 theorem topBinarizedRhs_eq_single {M : Type*} (rhs : List M) (Y : BinarizedState M) :
     topBinarizedRhs rhs = [Y] ↔ ∃ B, rhs = [B] ∧ Y = BinarizedState.old B := by
   rcases rhs with _ | ⟨B, _ | ⟨C, _ | ⟨D, rest⟩⟩⟩
   · simp [topBinarizedRhs]
-  · simp [topBinarizedRhs]; tauto
+  · simp [topBinarizedRhs] <;> first | tauto | aesop
   · simp [topBinarizedRhs]
   · simp [topBinarizedRhs]
 
@@ -428,7 +428,7 @@ theorem binarizedRule_pair_iff {M : Type*} (G' : SequenceGrammar M α)
   · intro h
     generalize hl : [Y, Z] = l at h
     cases h with
-    | @source A rhs hG => exact Or.inl ⟨A, rhs, rfl, hG, hl.symm⟩
+    | @source A rhs hG => exact Or.inl ⟨A, rhs, rfl, hG, rfl⟩
     | suffixEmpty => simp at hl
     | suffixUnit B => simp at hl
     | suffixBinary B C =>
@@ -451,7 +451,7 @@ theorem binarizedRule_single_iff {M : Type*} (G' : SequenceGrammar M α)
   · intro h
     generalize hl : [Y] = l at h
     cases h with
-    | @source A rhs hG => exact Or.inl ⟨A, rhs, rfl, hG, hl.symm⟩
+    | @source A rhs hG => exact Or.inl ⟨A, rhs, rfl, hG, rfl⟩
     | suffixEmpty => simp at hl
     | suffixUnit B =>
         simp only [List.cons.injEq, and_true] at hl
@@ -694,7 +694,6 @@ theorem stateLen_le_of_mem (nts : List N) (alph : List α)
   · obtain ⟨pr, hpr, i, _, rfl⟩ := (mem_allSuffixStates prs x).mp hx
     simp only [stateLen, List.length_drop]
     have := le_sum_map_of_mem (fun pr : N × List (MixedSymbol N α) => pr.2.length) hpr
-    simp only at this
     omega
 
 /-- **State comparisons cost at most `inputScale + 1` steps.** -/
