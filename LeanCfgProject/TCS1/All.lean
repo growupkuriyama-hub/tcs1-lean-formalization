@@ -274,6 +274,9 @@ import LeanCfgProject.TCS1.V135RegularFilterCFL
 import LeanCfgProject.TCS1.V134IntroParityExample
 import LeanCfgProject.TCS1.V135SubstringLiteralOutputSize
 import LeanCfgProject.TCS1.V135LiWindowClassUnion
+import LeanCfgProject.TCS1.V135CostedPrimitives
+import LeanCfgProject.TCS1.V135PolyBuildAlgorithm
+import LeanCfgProject.TCS1.V135PolyBuildBridge
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient

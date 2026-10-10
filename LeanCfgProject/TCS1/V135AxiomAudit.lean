@@ -1,4 +1,5 @@
 import LeanCfgProject.TCS1.V135MainTheoremItemIV
+import LeanCfgProject.TCS1.V135PolyBuildBridge
 
 /-!
 # TCS #1 v135: kernel axiom audit for the new paper-facing theorems
@@ -35,6 +36,12 @@ info: 'LeanCfgProject.TCS1.thm_main_item_iv_fixedWindow' depends on axioms: [pro
 -/
 #guard_msgs in
 #print axioms thm_main_item_iv_fixedWindow
+
+/--
+info: 'LeanCfgProject.TCS1.PolyBuild.thm_polyBuild' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms PolyBuild.thm_polyBuild
 
 end TCS1
 end LeanCfgProject
