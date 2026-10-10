@@ -6,7 +6,7 @@
 > productions, each production has encoding length `O(n_K)`, so the grammar can be checked and
 > written explicitly in `O(n_K^4)` time."
 >
-> CI status of the files below: see the top section of `NEXT_CHAT_HANDOFF_TCS1_2026-10-10.md`.
+> **CI:** the three files below were first verified in CI #1016 (`b7e8c45`). Latest GREEN containing them: `a27fa38` (CI #1024), including the `#guard_msgs` axiom check of `PolyBuild.thm_polyBuild`.
 
 ## 1. What was implemented
 

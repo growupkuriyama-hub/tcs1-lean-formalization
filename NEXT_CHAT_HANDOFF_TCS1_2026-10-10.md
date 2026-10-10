@@ -1,3 +1,73 @@
+# 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 夜（Claude セッション 2）
+
+> **この節が最新。** 下の「午後更新」「午前版」は履歴。再開手順：**この節 → GitHub の実 HEAD と最新 Actions（annotations API）→ 実際の Lean ファイル → `Papers/01_fixed-h-cfg/main.tex`(v135)**。
+
+## A. 状態の要約（GitHub Actions の実結果）
+
+| 項目 | 値 |
+|---|---|
+| ブランチ / PR | `audit/tcs1-v128-exact-delta` / Draft PR #8（未 merge・Draft のまま） |
+| **最後に GREEN を確認したコード SHA** | **`a27fa38b07139da6fd5d3d8300424bc5107b18f0` — CI [#1024](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38030781856) SUCCESS（5 ゲートすべて、`#guard_msgs` 公理監査を含む）** |
+| 本セッションのその他の GREEN | `64cc480` CI #1022（(iii)・(v)・cor:ilt）、`b7e8c45` CI #1016（thm:poly-build） |
+| 前セッション最後の GREEN | `d130c3d` CI #1008、文書 HEAD `1ea5bbe` CI #1010/#1011 |
+| 原稿 | v135、sha256 `e8590799…`（Papers `2e67f3a`） |
+
+## B. 本セッションで新たに CI 検証された定理
+
+**`thm:poly-build`（第一目標）** — `V135CostedPrimitives.lean`、`V135PolyBuildAlgorithm.lean`、`V135PolyBuildBridge.lean`（CI #1016）
+- **計算モデル**（ファイル冒頭に明記）：値と歩数を同じ再帰で計算。連結リストのセル訪問・生成、文字等価、文字型参照と有限モノイド演算・等価、添字比較、ループ 1 回、出力 append のセルを単位とする。`Finset` 操作・ハッシュ・ソートは不使用。任意長文字列比較を定数とはしない（文字単位で課金）。
+- `constructV116C`：実行可能な構成器。因子を**そのまま名前として**書く（原稿の証明が許す方式。ID もハッシュも不要）。(B)・(U)・(L)・(S)・ε・非終端記号をすべて出力。重複行は残る。
+- **定理 A**：`mem_binary`・`mem_unary`・`mem_lexical`・`mem_start`・`epsilon_iff`・`mem_nonterminals`、既存表への接続 `constructV116H_*_iff`（`v116EffectiveBinaryWordTable`＝実 (B) 表、`v116UnaryRuleTable`、(L)(S)(ε) 表）。
+- **定理 B**：`constructV116H_language`。書かれた文法を名前どおりの CFG と読んだ言語が `BatchLanguage H K` と一致。
+- **定理 C**：`constructV116Cost_le`（≤ `1400·(N+1)^4`、`N = Σ(|w|+1)`）、`constructV116HCost_le`（重複なしの列なら `N = ‖K‖`）。
+- 紙面対応：`PolyBuild.thm_polyBuild`。公理は `#guard_msgs` で標準3公理のみと強制。
+- `#eval` で具体例 `K={ab,b}` の出力を確認済み。
+- 監査文書：`V135_POLY_BUILD_COMPLEXITY_AUDIT.md`。**四次時間をこの計算モデルで証明済み。**
+
+**`prop:finite-info-closure` (iii) の CFL 側** — `V135InverseHomTransducer.lean`、`V135InverseHomCFL.lean`、`V135InverseHomFinite.lean`（CI #1022）
+- 文字位置トランスデューサ（境界から境界への run ＝ 非消去文字語の逆像）。状態で精密化した文法、消去文字の挿入文法、両者の合成で `{y | φ(y) ∈ L}` を正確に生成。
+- 有効状態への制限、有限性、汎用補題「右辺長有界 ⇒ 有限 `IndexedMixedCFG`」。
+- `InverseHom.cfl_inverseImage`：**消去的準同型を含む**一般の `φ` について、明示的な有限 CFG で逆像を生成。
+- `InverseHom.finiteInfoClosure_iii_cfl`：CFL 性と `ĥ=(h∘φ)×e_φ` による substitutability（既存の RS 定理を再利用）。
+
+**`thm:main`(v)** — `V135LinearEnvelopeArith.lean`、`V135MainTheoremItemV.lean`（CI #1022）
+- `thm_main_item_v`：任意の線形有限 CFG について（reduced・非空の仮定なし）、集合駆動の特性標本が `‖K‖ ≤ c·(|G|+1)^12` を満たす。`|G|` は encodingScale `|N|+|P|+Σ|rhs|`、`c` は `|M|` と `|Σ|` のみに依存。v116 演算子版も証明。
+
+**`cor:ilt` の v116 文法出力版** — `V135CorIltV116.lean`（CI #1022）
+- `cor_ilt_v116`：v116 構成器が書いた文法コードを出力する学習器。出力文法が**構文的に安定**し、その言語が目標に一致し、各出力の構成は `1400(‖K_n‖+1)^4` 歩以内。
+
+## C. 修復した CI 失敗（すべて annotation で原因を確認）
+
+- #1012（`c367cb9`）：bridge で `rfl` が名前付き引数より先に展開され型不一致 → `4e6caf1`
+- #1014（`4e6caf1`）：同種の unit 規則 → `b7e8c45` → **#1016 GREEN**
+- #1018（`20b8c5c`）：`rcases … rfl` 後の仮定名の衝突 → `09d8e43`
+- #1020（`09d8e43`）：`insSym` 補助補題の simp 形、`show` の型未確定 → `64cc480` → **#1022 GREEN**
+- #1024（`a27fa38`）：新しい主要定理（(iii)・(v)・cor:ilt v116・(ii)）の公理 guard を追加 → **GREEN**（依存は標準3公理のみ）
+
+## D. 残る課題（未証明のもの）
+
+1. **`prop:thick-ssbnf-normal` の「多項式時間で変換」**：正規化の言語保存・サイズ・厚さは既存の定理で証明済み。歩数付きの実行可能な正規化器は未実装。
+2. **`thm:poly-build` の付随事項**：出力の重複除去は行っていない。標本を列として保持するコスト（`Finset.toList`）と学習器の所属判定は、v116 表現としては未課金で、既存 v79 の materialized 会計に依存。
+3. 計算量は RAM／ポインタ機械の操作数であり、Lean コンパイル後の実機時間やビット計算量ではない。モノイド演算の単位コストは `M` 固定・有限が前提。
+
+## E. 次回の最初の作業
+
+1. HEAD の CI を確認する（失敗していれば annotations API で原因を確認）。
+2. D-1：既存の `indexed_proposition74_full_package` の構成段階（terminal isolation → 二分化 → ε 除去 → unit 除去 → trim）ごとに歩数付きの実装を作り、既存の言語定理と接続する。
+3. 原稿側：`thm:poly-build` の証明文は四次の評価として正しい。バケット分割や正準 ID は四次には不要、という注記は任意（原稿の変更は不要）。
+
+## F. 変更・追加したファイル（本セッション）
+
+- 新規 Lean：`V135CostedPrimitives.lean`、`V135PolyBuildAlgorithm.lean`、`V135PolyBuildBridge.lean`、`V135InverseHomTransducer.lean`、`V135InverseHomCFL.lean`、`V135InverseHomFinite.lean`、`V135LinearEnvelopeArith.lean`、`V135MainTheoremItemV.lean`、`V135CorIltV116.lean`
+- 修正：`All.lean`（import 追加）、`V135AxiomAudit.lean`（guard 追加）
+- 文書：本書・`START_HERE`・`DELTA` の冒頭、`V135_NUMBERED_CLAIMS_CROSSWALK_2026-10-10.md`（#2・#4・#11・#12 を F に）、新規 `V135_POLY_BUILD_COMPLEXITY_AUDIT.md`
+
+## G. 変更禁止（従来通り）
+
+`Papers`、TCS 投稿版、形式化 `main`、v88、PR #8 の merge・Ready 化、force push。
+
+---
+
 # 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 午後更新（Claude セッション）
 
 > **この節が最新。** 下の「2026-10-10 (JST) 午前版」以降は履歴として残す。
