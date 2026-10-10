@@ -1,5 +1,9 @@
 import LeanCfgProject.TCS1.V135MainTheoremItemIV
 import LeanCfgProject.TCS1.V135PolyBuildBridge
+import LeanCfgProject.TCS1.V135InverseHomFinite
+import LeanCfgProject.TCS1.V135MainTheoremItemV
+import LeanCfgProject.TCS1.V135CorIltV116
+import LeanCfgProject.TCS1.V135RegularFilterCFL
 
 /-!
 # TCS #1 v135: kernel axiom audit for the new paper-facing theorems
@@ -42,6 +46,36 @@ info: 'LeanCfgProject.TCS1.PolyBuild.thm_polyBuild' depends on axioms: [propext,
 -/
 #guard_msgs in
 #print axioms PolyBuild.thm_polyBuild
+
+/--
+info: 'LeanCfgProject.TCS1.InverseHom.finiteInfoClosure_iii_cfl' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms InverseHom.finiteInfoClosure_iii_cfl
+
+/--
+info: 'LeanCfgProject.TCS1.InverseHom.cfl_inverseImage' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms InverseHom.cfl_inverseImage
+
+/--
+info: 'LeanCfgProject.TCS1.thm_main_item_v' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms thm_main_item_v
+
+/--
+info: 'LeanCfgProject.TCS1.cor_ilt_v116' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms cor_ilt_v116
+
+/--
+info: 'LeanCfgProject.TCS1.finiteInfoClosure_ii_cfl' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
+#print axioms finiteInfoClosure_ii_cfl
 
 end TCS1
 end LeanCfgProject
