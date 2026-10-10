@@ -12,13 +12,17 @@ namespace LeanCfgProject
 namespace TCS1
 
 /--
-info: 'LeanCfgProject.TCS1.SSBNFNorm.prop_thickSSBNFNormal_executable' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'LeanCfgProject.TCS1.SSBNFNorm.prop_thickSSBNFNormal_executable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 -/
 #guard_msgs in
 #print axioms SSBNFNorm.prop_thickSSBNFNormal_executable
 
 /--
-info: 'LeanCfgProject.TCS1.SSBNFNorm.prop_thickSSBNFNormal_executable_degenerate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'LeanCfgProject.TCS1.SSBNFNorm.prop_thickSSBNFNormal_executable_degenerate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
 -/
 #guard_msgs in
 #print axioms SSBNFNorm.prop_thickSSBNFNormal_executable_degenerate
