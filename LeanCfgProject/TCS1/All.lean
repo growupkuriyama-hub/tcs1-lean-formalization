@@ -269,6 +269,9 @@ import LeanCfgProject.TCS1.V128IndexedLocallyTrivialCharacteristicData
 import LeanCfgProject.TCS1.V135LiThicknessExactCorollary
 import LeanCfgProject.TCS1.V135MainTheoremItemIV
 import LeanCfgProject.TCS1.V135AxiomAudit
+import LeanCfgProject.TCS1.V135ItemIVv116Operator
+import LeanCfgProject.TCS1.V135RegularFilterCFL
+import LeanCfgProject.TCS1.V134IntroParityExample
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
