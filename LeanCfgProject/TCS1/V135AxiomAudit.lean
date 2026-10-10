@@ -4,7 +4,7 @@ import LeanCfgProject.TCS1.V135MainTheoremItemIV
 # TCS #1 v135: kernel axiom audit for the new paper-facing theorems
 
 Each `#guard_msgs` block below makes the build **fail** unless the printed
-axiom dependencies are exactly Lean's three standard axioms.  In particular a
+dependency list is exactly Lean's three standard axioms.  In particular a
 hidden `sorryAx` or any project-level axiom anywhere in the dependency cone
 would change the message and break CI.
 -/
