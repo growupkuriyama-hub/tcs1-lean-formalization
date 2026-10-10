@@ -165,7 +165,9 @@ theorem code_to_finite (H : FixedFiniteMonoidHom α M) (ws : List (Word α))
       rw [constructV116H, mem_unary H.h H.map_nil H.map_append] at h'
       have hrel := (substringUnaryRelated_iff H ws x y).2 h'
       obtain ⟨p, q, _, hy⟩ := hrel.2
-      exact BinaryNullableDerives.unit (B := ⟨y, p, q, hy⟩) hrel (ih ⟨p, q, hy⟩)
+      have hu : (finiteSubstringGrammar H ws.toFinset).unitRule ⟨x, hx⟩ ⟨y, p, q, hy⟩ :=
+        hrel
+      exact BinaryNullableDerives.unit hu (ih ⟨p, q, hy⟩)
   | @binary x y z wy wz h dy dz ihy ihz =>
       intro hx
       have h' : (x, y, z) ∈ (constructV116H H ws).binary := h
