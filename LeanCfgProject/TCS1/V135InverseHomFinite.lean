@@ -216,40 +216,24 @@ theorem flatMap_insSym_length {X : Type u} (l : List (MixedSymbol X Γ)) :
   | nil => simp
   | cons s l ih =>
       rw [List.flatMap_cons, List.length_append, List.length_cons]
-      cases s <;> simp [insSym] <;> omega
+      have h : (insSym s).length ≤ 2 := by cases s <;> simp [insSym]
+      omega
 
-theorem mem_flatMap_insSym {X : Type u} (l : List (MixedSymbol X Γ)) (Y : X ⊕ Bool) :
-    Sum.inl Y ∈ l.flatMap insSym ↔
-      Y = Sum.inr false ∧ (∃ c, Sum.inr c ∈ l) ∨
-        ∃ Z, Y = Sum.inl Z ∧ Sum.inl Z ∈ l := by
-  induction l with
-  | nil => simp
-  | cons s l ih =>
-      rw [List.flatMap_cons, List.mem_append, ih]
-      cases s with
-      | inl B =>
-          simp only [insSym, List.mem_singleton, Sum.inl.injEq, List.mem_cons,
-            reduceCtorEq, false_or, exists_eq_or_imp]
-          constructor
-          · rintro (rfl | ⟨h1, h2⟩ | ⟨Z, rfl, hZ⟩)
-            · exact Or.inr (Or.inl rfl)
-            · exact Or.inl ⟨h1, h2⟩
-            · exact Or.inr (Or.inr ⟨Z, rfl, hZ⟩)
-          · rintro (⟨h1, h2⟩ | rfl | ⟨Z, rfl, hZ⟩)
-            · exact Or.inr (Or.inl ⟨h1, h2⟩)
-            · exact Or.inl rfl
-            · exact Or.inr (Or.inr ⟨Z, rfl, hZ⟩)
-      | inr c =>
-          simp only [insSym, List.mem_cons, Sum.inl.injEq, List.mem_singleton,
-            reduceCtorEq, or_false, false_or]
-          constructor
-          · rintro (rfl | ⟨h1, ⟨c', hc'⟩⟩ | ⟨Z, rfl, hZ⟩)
-            · exact Or.inl ⟨rfl, c, Or.inl rfl⟩
-            · exact Or.inl ⟨h1, c', Or.inr hc'⟩
-            · exact Or.inr ⟨Z, rfl, hZ⟩
-          · rintro (⟨rfl, _⟩ | ⟨Z, rfl, hZ⟩)
-            · exact Or.inl rfl
-            · exact Or.inr (Or.inr ⟨Z, rfl, hZ⟩)
+theorem mem_flatMap_insSym_cases {X : Type u} (l : List (MixedSymbol X Γ))
+    (Y : X ⊕ Bool) (h : Sum.inl Y ∈ l.flatMap insSym) :
+    Y = Sum.inr false ∨ ∃ Z, Y = Sum.inl Z ∧ Sum.inl Z ∈ l := by
+  obtain ⟨s, hs, hY⟩ := List.mem_flatMap.mp h
+  cases s with
+  | inl B =>
+      have e : Y = Sum.inl B := by simpa [insSym] using hY
+      exact Or.inr ⟨B, e, hs⟩
+  | inr c =>
+      have e : Y = Sum.inr false := by simpa [insSym] using hY
+      exact Or.inl e
+
+theorem mem_flatMap_insSym_of_mem {X : Type u} (l : List (MixedSymbol X Γ))
+    (Z : X) (h : Sum.inl Z ∈ l) : Sum.inl (Sum.inl Z) ∈ l.flatMap insSym :=
+  List.mem_flatMap.mpr ⟨_, h, by simp [insSym]⟩
 
 /-- Along an annotation from a valid state, every refined nonterminal whose
 endpoints are connected by a run has valid endpoints. -/
@@ -301,14 +285,14 @@ theorem erasingInverse_valid (R : MixedRules N Sig) (S : N) :
       · trivial
   | Sum.inl X, hR, hX =>
       obtain ⟨rhs1, ⟨rhs0, _, hA⟩, rfl⟩ := hR
-      rcases (mem_flatMap_insSym rhs1 Y).1 hY with ⟨rfl, _⟩ | ⟨Z, rfl, hZ⟩
+      rcases mem_flatMap_insSym_cases rhs1 Y hY with rfl | ⟨Z, rfl, hZ⟩
       · trivial
       · -- every refined nonterminal of the rule is productive, hence connected
         have hprod : ∀ B s' q', Sum.inl (B, s', q') ∈ rhs1 →
             ∃ u y, TRun φ s' u q' y := by
           intro B s' q' hm
           have hm' : Sum.inl (Sum.inl (B, s', q')) ∈ rhs1.flatMap insSym :=
-            (mem_flatMap_insSym rhs1 _).2 (Or.inr ⟨_, rfl, hm⟩)
+            mem_flatMap_insSym_of_mem rhs1 _ hm
           obtain ⟨w, dw⟩ := msd_productive hd _ hm'
           have hw := mixedDerives_mem_closed _ _
             (insInterp_closed (invRules φ R) (fun c => φ c = []) (S, none, none)) dw
@@ -428,7 +412,8 @@ theorem finiteInfoClosure_iii_cfl {M : Type u} [Monoid M] [Fintype M]
   refine ⟨N', P', hN', hP', G', S', ?_⟩
   rw [hlang]
   ext y
-  show y.flatMap (fun c => φ [c]) ∈ _ ↔ φ y ∈ _
+  show y.flatMap (fun c => φ [c]) ∈ MixedNonterminalLanguage G.toMixedRules S ↔
+    φ y ∈ MixedNonterminalLanguage G.toMixedRules S
   rw [wordHom_eq_flatMap φ φ_nil φ_append y]
 
 end Main
