@@ -452,14 +452,15 @@ theorem finiteInfoClosure_ii_cfl
     (F : Finset Mg)
     (G : IndexedMixedCFG N α P) (S : N)
     (hL : FixedHSubstitutable H (MixedNonterminalLanguage G.toMixedRules S)) :
-    Fintype (Option (N × Mg)) ∧ Fintype (RegularFilterProd G F) ∧
+    Nonempty (Fintype (Option (N × Mg))) ∧
+    Nonempty (Fintype (RegularFilterProd G F)) ∧
     MixedNonterminalLanguage (regularFilterGrammar G S g F).toMixedRules none =
       MixedNonterminalLanguage G.toMixedRules S ∩
         RecognizedPreimage g (↑F : Set Mg) ∧
     FixedHSubstitutable (productTyping H g)
       (MixedNonterminalLanguage G.toMixedRules S ∩
         RecognizedPreimage g (↑F : Set Mg)) :=
-  ⟨inferInstance, inferInstance, regularFilterGrammar_language G S g F,
+  ⟨⟨inferInstance⟩, ⟨inferInstance⟩, regularFilterGrammar_language G S g F,
     fixedHSubstitutable_regularFilter_product H g (↑F : Set Mg) hL⟩
 
 end FiniteInfoClosureII
