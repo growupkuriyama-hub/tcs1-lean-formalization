@@ -227,9 +227,9 @@ theorem insInterp_closed (R : MixedRules X Γ) (Z : Γ → Prop) (S : X) :
   obtain ⟨rhs', hR, hreal⟩ := hy
   match X', hR with
   | Sum.inl A, hR =>
-      obtain ⟨rhs, hR, rfl⟩ := hR
+      obtain ⟨rhs, hRA, rfl⟩ := hR
       obtain ⟨pieces, hp, hi⟩ := ins_realizes R Z S rhs y hreal
-      exact ⟨pieces.flatten, MixedDerives.rule hR hp, hi⟩
+      exact ⟨pieces.flatten, MixedDerives.rule hRA hp, hi⟩
   | Sum.inr false, hR =>
       rcases hR with rfl | ⟨d, hd, rfl⟩
       · have hy0 : y = [] := hreal

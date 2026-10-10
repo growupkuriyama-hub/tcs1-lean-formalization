@@ -280,6 +280,9 @@ import LeanCfgProject.TCS1.V135PolyBuildBridge
 import LeanCfgProject.TCS1.V135InverseHomTransducer
 import LeanCfgProject.TCS1.V135InverseHomCFL
 import LeanCfgProject.TCS1.V135InverseHomFinite
+import LeanCfgProject.TCS1.V135LinearEnvelopeArith
+import LeanCfgProject.TCS1.V135MainTheoremItemV
+import LeanCfgProject.TCS1.V135CorIltV116
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
