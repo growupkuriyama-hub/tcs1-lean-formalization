@@ -1,3 +1,92 @@
+# 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 午後更新（Claude セッション）
+
+> **この節が最新。** 下の「2026-10-10 (JST) 午前版」以降は履歴として残す。
+> 再開手順：**この節 → GitHub の実 HEAD と最新 Actions → 実際の Lean ファイル → `Papers/01_fixed-h-cfg/main.tex`(v135)**。文書内の CI 記載より GitHub の実体を優先すること。
+
+## A. 状態の要約（数値はすべて GitHub Actions の実結果）
+
+| 項目 | 値 |
+|---|---|
+| 作業ブランチ / PR | `audit/tcs1-v128-exact-delta` / Draft PR #8（未 merge、Draft のまま） |
+| **最後に GREEN を確認したコード SHA** | **`d130c3d10c111a67030aa4aa96ff919a343eb1b7`** — CI [#1008](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38016749202) SUCCESS（push、全5ゲート） |
+| それ以前の GREEN（本セッション） | `6515d63` CI [#1004](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38015129745)；`51e895d` CI [#1000](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38013389121) / [#1001](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38013392163) |
+| セッション開始時の最後の GREEN | `481c76d` CI #976/#977 |
+| 現在の HEAD | 本文書をコミットした SHA（`git log -1`）。文書コミットの CI 結果は PR #8 で確認 |
+| 原稿 | v135、sha256 `e8590799dbb889f6a375f61c6b9f8c00f3c23d6691d73561808d0989e450ecad`（Papers `2e67f3a`） |
+
+各 GREEN run は 5 ゲートすべて成功：v128 delta 先行ビルド、theorem-facing critical path、`LeanCfgProject.TCS1.All`、`sorry` 禁止、独自 `axiom` 禁止。
+
+## B. 本セッションで修復した CI 失敗（原因はすべてログで確認済み）
+
+1. **CI ログが読めない問題**：このクラウド環境からは Actions のログ blob（`*.blob.core.windows.net`）が遮断される。→ ワークフローに **診断専用ステップ**を追加（`fb195d9`）：各 `lake build` 出力を `tee`（`pipefail` 付きで終了コードは不変）し、失敗時のみ `.github/scripts/lean_errors_to_annotations.py` が `error: file:line:col` を **check-run annotation** として再出力。取得は `gh api repos/<owner>/<repo>/check-runs/<job_id>/annotations`。ゲートは一切弱めていない。
+2. CI #992/#993（`74654c6`）・#994（`fb195d9`）：最初の Lean エラーは **`MixedDerivationLeastClosedBridge.lean:30` termination 推論失敗**（相互再帰 theorem）。`GeneralCFGDerivationBridge.lean`（`7ff0602` の修正）は **エラーなし＝修正は有効**と確認。→ `74deed2` で `MixedDerives.rec` / `MixedSymbolsDerive.rec`（motive_1/motive_2 明示）による証明に置換。命題は不変。
+3. CI #996（`2da1459`）：新規ファイルの `simpa` 1 箇所 → `0cc1b1b` で修正。
+4. CI #998（`0cc1b1b`）：Lean は全成功、`axiom` grep が **コメント行頭の単語 "axiom"** に誤反応 → `51e895d` で文言のみ変更（ゲートは不変）→ **#1000 GREEN**。
+5. CI #1002（`707e927`）：`Fintype` を `∧` に入れた型エラー 1 件 → `6515d63` で `Nonempty (Fintype _)` に → **#1004 GREEN**。
+6. CI #1006（`471a657`）：新ファイルの import 漏れ（`reconstructionSampleWord_encoding_le_norm`）→ `d130c3d` で import 追加 → **#1008 GREEN**。
+
+## C. 新しく Lean で証明した主要定理（CI 付き）
+
+**`cor:li-thickness`（原稿完全形）** — `V135LiThicknessExactCorollary.lean`（CI #1000）
+- `cor_liThickness_exact (H) (hlocal : PositiveImageSandwichTrivial H) : ∃ c d, c = corLiThicknessConst H ∧ d = 12 ∧ ∀ {N P} [Fintype N] [Fintype P] [DecidableEq N] (G : IndexedMixedCFG N α P) (S), IndexedMixedReduced G S → FixedHSubstitutable H L → L.Nonempty ∧ ∃ K, IsSetDrivenCharacteristicSample (BatchLanguage H) L K ∧ ‖K‖ ≤ c·(|G|+τ_G+1)^d`（`L` = 構文木言語 `MixedNonterminalLanguage G.toMixedRules S`）。
+- `c` は `H`（`|M|`、窓 `n=|h(Σ⁺)|+1`）と `|Σ|` のみに依存し、文法の量化の **前** に固定。
+- `|G|` = 通常の記号数 `Σ_p(1+|rhs p|)`（`IndexedMixedCFG.symbolCount`）、`τ_G` = **厳密な max–min**（`IndexedMixedCFG.ordinaryThickness`、到達性と最小性を証明）。
+- characteristic sample は論文 §2 の定義そのもの（`C ⊆ L` かつ全 `C⊆K⊆L` で再構成が `L`）。再構成の型付けは **元の `H`**。
+- 補題：`leastClosedLanguage_eq_mixedNonterminalLanguage`、`normalizationScale_le_symbolCount`（reduced なら `|N|+|Σ|+|P|+Σ|rhs| ≤ |Σ|+2|G|+1`）、`liThicknessEnvelope_le_poly`。
+- `V135AxiomAudit.lean`：`#guard_msgs` + `#print axioms` で主要4定理の依存公理が `[propext, Classical.choice, Quot.sound]` のみであることを **ビルド時に強制**。
+
+**`thm:main`(iv)** — `V135MainTheoremItemIV.lean`（CI #1000）、`V135ItemIVv116Operator.lean`（CI #1004）
+- `thm_main_item_iv`：上記に加え、同じ `B_h` を仮説解釈に用いる **既存の materialized conservative learner** が全正例提示で Gold 安定化（`indexedFixedH_learning_materialized_core` を再利用）。
+- `thm_main_item_iv_fixedWindow`：全 `h_{k,ℓ}` について（`fixedWindow_positiveImageTrivial` 経由）。
+- `cor_liThickness_bound_v116`：原稿の v116 表形式 `B_h`（`v116TabulatedBatchLanguage`）に対しても同じ特性標本（演算子の外延的同一性 `v116TabulatedBatchLanguage_eq_batchLanguage_fun`）。
+
+**`prop:finite-info-closure` (ii) の CFL 側** — `V135RegularFilterCFL.lean`（CI #1004）
+- 任意の述語 CFG の typed refinement：`(A,m) ⇒* w ↔ A ⇒* w ∧ g(w)=m`（相互再帰子による両方向）。
+- 新開始記号の和、有限 indexed 表示 `regularFilterGrammar`（生成規則 index `(Σ p, Fin |rhs p| → M_g) ⊕ F`）。
+- `regularFilterGrammar_language`：言語 = `L(G,S) ∩ g⁻¹(F)`。`finiteInfoClosure_ii_cfl`：有限 CFG による生成 ＋ `(h×g)`-substitutable。
+
+**v134 で追加された序論の例 `L={a,aa}`** — `V134IntroParityExample.lean`（CI #1004）：`S→a|aa` が生成、自明型付けで非 substitutable、パリティ型付けで substitutable かつ `a`,`aa` を分離。
+
+**`thm:poly-build` の出力部分（時間定理ではない）** — `V135SubstringLiteralOutputSize.lean`（CI #1008）
+- 実際の v116 規則表（B/U/L/S/ε）全体の **リテラル出力長** ≤ `(2|Σ|+7)(n_K+1)^4`、候補走査＋書き出しの合計 ≤ `(2|Σ|+11)(n_K+1)^4`。
+
+**`prop:li-window` の class-union 節** — `V135LiWindowClassUnion.lean`（CI #1008）
+- `prop_liWindow_classUnion : InKL L ↔ InLocallyTrivialRSUnion L`、`prop_liWindow_classUnion_cfl`（有限 indexed CFG による CFL と交差）。
+
+## D. 原稿との照合結果
+
+- v128→v135：**番号付き 30 主張＋定義 2 の本文と全 30 証明が文字列として同一**（空白正規化後、機械比較）。差分は序論・先行研究、`L={a,aa}` 例、`L₀` の位置、1 語の言い換え、文献のみ。詳細：`V135_NUMBERED_CLAIMS_CROSSWALK_2026-10-10.md`。
+- `cor:li-thickness` の10項目監査：`V135_LI_THICKNESS_MAIN_IV_EXACT_AUDIT_2026-10-10.md`。
+
+## E. まだ残る課題（未証明・未接続を明示）
+
+1. **`thm:poly-build` の時間上界**：v116 構成器そのものの多項式時間（さらに `O(n_K^4)`）は未証明。証明済みは候補数（三次）と出力長（四次）のみ。次の具体案（すべて `O(n_K^4)` に収まる RAM 型 単位コスト・表アクセス模型）：
+   (a) 因子等価表 `E[(s,i),(s',i'),ℓ]` を `ℓ` について漸化（`O(n_K^3)` 項目）；(b) 各因子スロットの正準 ID = 等しい最初のスロット（`O(n_K^4)` 参照）；(c) 前後文脈 ID も接頭辞/接尾辞等価表で同様；(d) `h` 型は 1 記号ずつ延長して `O(n_K^2)`；(e) (B) は正準親スロットからのみ出力すれば重複なし（`O(n_K^3)`）；(f) (U) は `n_K^2×n_K^2` 真偽行列に組ペア走査（`O(n_K^4)`）で書き込み、最後に走査出力；(g) 出力表＝既証明の実表（`v116EffectiveBinaryWordTable_eq_actual`、`v116UnaryRuleTable_iff` 等）との一致を証明し、コストを `V135SubstringLiteralOutputSize` と合成。
+2. **`prop:finite-info-closure` (iii) の CFL 側**（CFL の（消去的）逆準同型像閉包）：外部の古典定理のまま。RS 側は証明済み。
+3. **`prop:thick-ssbnf-normal` の「多項式時間で変換」**：構成とサイズ/厚さの多項式評価は証明済みだが、変換の計算時間は Lean 定理ではない（`cor:li-thickness` には不要）。
+4. `cor:ilt`：v116 文法を逐次出力する学習器としての包装は未（言語としては外延的に同一）。
+5. `thm:main`(v) の量化形の再監査（本セッションでは未実施）。
+
+## F. 変更したファイル（本セッション）
+
+- 新規 Lean：`V135LiThicknessExactCorollary.lean`、`V135MainTheoremItemIV.lean`、`V135AxiomAudit.lean`、`V135ItemIVv116Operator.lean`、`V135RegularFilterCFL.lean`、`V134IntroParityExample.lean`、`V135SubstringLiteralOutputSize.lean`、`V135LiWindowClassUnion.lean`
+- 修正 Lean：`MixedDerivationLeastClosedBridge.lean`（証明のみ）、`All.lean`（import 追加）
+- CI：`.github/workflows/tcs1-ci.yml`（tee＋失敗時アノテーション、ゲート不変）、`.github/scripts/lean_errors_to_annotations.py`
+- 文書：本書、`START_HERE_TCS1_V128.md`・`FORMALIZATION_TCS1_V128_DELTA.md` の冒頭、`V135_LI_THICKNESS_MAIN_IV_EXACT_AUDIT_2026-10-10.md`、`V135_NUMBERED_CLAIMS_CROSSWALK_2026-10-10.md`
+
+## G. 変更禁止（従来通り）
+
+`Papers` の原稿・`main`、TCS 投稿版、形式化リポジトリ `main`、v88 リリース/タグ、Draft PR #8 の merge・Ready 化、force push。
+
+## H. 次回最初の作業
+
+1. PR #8 で HEAD の CI を確認（失敗なら annotations API で最初の Lean エラーを取得）。
+2. E-1 の `O(n_K^4)` 構成器を新ファイルで実装（まず (a)(b)(e) と出力表一致、次に (U)）。
+3. E-2 を最小限の補題（CFL の逆準同型像）として形式化するか、外部依存として原稿の引用範囲に明記。
+
+---
+> **以下は 2026-10-10 午前版（履歴）。** 「最新の CI #986/#987 in_progress」等は当時の記述であり、その後 #986/#987 は cancelled、最初の実エラーは上記 B-2 の通り。
+
 # 【最優先・新ChatGPT再開用】TCS #1 Lean形式化 引継ぎ — 2026-10-10 (JST)
 
 > **This is a durable restart packet, not a declaration of proof completion.**
