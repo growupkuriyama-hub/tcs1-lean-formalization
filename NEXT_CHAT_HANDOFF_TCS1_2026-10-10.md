@@ -1,3 +1,86 @@
+# 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 深夜（Claude セッション 4）
+
+> **この節が最新。** 下の「セッション 3」以前は日付付きの履歴（上書きしていない）。再開手順：**この節 → GitHub の実 HEAD と最新 Actions（annotations API）→ 実際の Lean ファイル → `Papers/01_fixed-h-cfg/main.tex`（現在 v158）**。
+
+## A. 状態
+
+| 項目 | 値 |
+|---|---|
+| ブランチ / PR | `audit/tcs1-v128-exact-delta` / Draft PR #8（merge・Ready 化していない） |
+| **最後に GREEN を確認したコード SHA** | **`d95c5af0c6e672cb65214e8760a3e2ff39ace387` — CI [#1050](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38053099704) SUCCESS（5 ゲートすべて、V158 の `#guard_msgs` 公理監査を含む）** |
+| 本セッションの GREEN | `5207728` CI #1044（DPDA 一式）、`783bf83` CI #1048（CYK・学習器・`cor:ilt` 精密節・構文モノイド） |
+| 前セッション最後の GREEN | `313aa04` CI #1040（文書 HEAD `234ba18`、CI #1042/#1043） |
+| 原稿 | v158（Papers `044c5ce`、sha256 `bb5a334c…`）。v148 から変わったのは `prop:nonlinear-rs-example` の証明文だけ |
+
+## B. 本セッションで CI 検証された成果
+
+### 優先 1：Δ\* の DCFL 性（`prop:nonlinear-rs-example`、P → F）
+
+- `V158DPDA.lean`：一般の DPDA を定義した。
+  - 構造体 `DPDA Q Γ σ` のフィールドは `start`、`bottom`、`final`、`trans : Q → Option σ → Γ → Option (Q × List Γ)`、`det`。
+  - 意味論：`Step`（読み取り遷移と ε 遷移）、`Reaches`（`ReflTransGen`）、終状態受理 `Accepts`。
+  - `IsDCFL L := ∃ (Q Γ : Type) (_ : Fintype Q) (_ : Fintype Γ) (M : DPDA Q Γ σ), M.language = L`（決定可能性の述語ではない）。
+  - `DPDA.step_deterministic`：遷移関係が関数的であること（公理に依存しない）。
+  - 実時間 DPDA について `reaches_iff_run`、`accepts_iff_run`。
+- `V158DeltaStarDPDA.lean`：Δ\* の DPDA を具体的に構成した。
+  - 状態 `ready`（終状態）／`up`／`down`、スタック記号 `bot`／`first`／`mark`、ε 遷移なし。
+  - 定理 A：`deltaStarDPDA_realTime`（決定性は構造体の条件と `step_deterministic`）。
+  - 定理 B：`stack_length_eq`（読んだ接頭辞 `u` に対しスタック長 `= 1 + |u|_a − |u|_b`）。
+  - 定理 C：`run_encode`、`deltaStarDPDA_accepts_iff_scan`（既存のパーサ `scan` を一歩ずつ模倣する）。
+  - 定理 D：`deltaStarDPDA_language`（`= DeltaStar.Language`）、`…_eq_star`（ブロックの Kleene star）、`…_eq_displayed`（原稿の文法）。
+  - 定理 E：`deltaStar_isDCFL`。
+- `V158DeltaStarDCFLPackage.lean`：`DeltaStar.nonlinear_rs_example_full_dcfl`。DCFL、文法、非正規、非線形、h⋆ 置換可能、固定窓外のすべての節を含む。
+- `V158CounterDyckDPDA.lean`：`uncappedCounter_isDCFL`、`dyckOne_isDCFL`（原稿の地の文にある主張）。
+
+### 優先 2：逐次学習器の更新時間（`thm:main`(iii)／`cor:ilt`）
+
+- `V158CodeCYK.lean`：書かれた v116 文法コード上の歩数付き CYK。
+  - チャートは Horn 閉包で計算する。
+  - `codeMemberC_correct`（`= true ↔ w ∈ codeLanguage c`）。
+  - `codeMemberC_cost_le`（`≤ 2·10⁶ (C+1)³(|w|+1)⁷(Λ+4)`）。
+- `V158CostedLearner.lean`：学習器の状態 `⟨data, cur, code⟩`（すべて明示リスト）と更新 `updateC`。
+  - 所属判定・重複判定・追加・再構成の歩数をすべて数える。`Finset` も `Finset.toList` も使わない。
+  - `stateAt_spec`：既存の意味論的な学習器（`materializedConservativeHypothesis`）と一致する。
+  - `code_language`、`updateC_conservative`、`costedLearner_gold`（書かれたコードが構文的に安定する）。
+  - `updateCost_le`：`≤ 4·10¹⁶ (P+1)^20`、`P` はそれまでのデータの符号長。
+- `V158CostedLearnerCharacteristic.lean`：`costedLearner_at_most_one_change`（`cor:ilt` の「`n₀` 以降の変更は高々 1 回」）。
+- `V158MainItemIII.lean`：`CostedLearner.thm_main_item_iii_executable`（同一の実行可能な学習器について、集合駆動の意味、保守性、Gold 同定、更新時間の多項式上界）。
+
+### 優先 3：v158 精密監査
+
+- `V158_NUMBERED_CLAIMS_CROSSWALK.md`：F=10、R=19、P=1。
+  - **新しく見つけた欠落**
+    - #1 `prop:regular-auto` の「構文射を取れて核が `≡_L`」の節に Lean 定理がなかった。`V158SyntacticMorphism.lean` の `regular_syntacticMorphism` で証明した（R → F）。
+    - #20 `prop:linear-normal` の「多項式時間で変換」は未形式化だった。`linearPreparedGrammar` は `noncomputable` で、歩数もない（R → **P**）。
+  - **追加**：`finiteMonoid_obstruction_set`（無限集合 Ξ の形、`V158ObstructionSet.lean`）。
+- 監査文書：`V158_DELTA_STAR_DPDA_AUDIT.md`、`V158_LEARNER_UPDATE_TIME_AUDIT.md`。
+
+## C. CI の失敗と修正
+
+- `bb6c5e1` CI #1046：学習器の基底段の `simp`、`set` と項の不一致、`positivity` の whnf タイムアウト。状態に依存しない補題 `updateC_cost_le` に分けて修正（`783bf83`、#1048 GREEN）。
+- `d95c5af` CI #1050：`thm:main`(iii) パッケージと V158 公理ガードを含めて GREEN。`V158ObstructionSet.lean` と文書は最終コミットで追加した（その CI の結果は PR #8 の最新 Actions で確認すること）。
+
+## D. 文書の事故と復旧（重要）
+
+セッション 3 のコミット `234ba18` で、`START_HERE_TCS1_V128.md` と `FORMALIZATION_TCS1_V128_DELTA.md` の履歴部分が誤って消えていた。原因は Python の `open(p,'w').write(x + open(p).read())`（書き込み用に開いて空にした後で読んでいた）。本セッションで `7360802` の版から履歴を復元し、冒頭に注記を入れた。旧版は Git 履歴でも読める：`git show 7360802:START_HERE_TCS1_V128.md`。
+
+## E. 残る課題
+
+1. **#20 `prop:linear-normal` の多項式時間**：実行可能な線形正規化器と歩数、既存の `linearPreparedGrammar` との一致。`SSBNFNorm`（V144）と同じ手法で行う。
+2. R 行 #13〜#17、#21〜#22 は、本セッションでは型を一行ずつ再導出していない（v128 の一対一監査に依拠）。
+3. 学習器の多項式の次数（20）は最適化していない。計算量は RAM 操作数である。
+
+## F. 新規ファイル（本セッション）
+
+- Lean：`V158DPDA`、`V158DeltaStarDPDA`、`V158DeltaStarDCFLPackage`、`V158CounterDyckDPDA`、`V158CodeCYK`、`V158CostedLearner`、`V158CostedLearnerCharacteristic`、`V158MainItemIII`、`V158SyntacticMorphism`、`V158ObstructionSet`、`V158AxiomAudit`
+- 文書：`V158_DELTA_STAR_DPDA_AUDIT.md`、`V158_LEARNER_UPDATE_TIME_AUDIT.md`、`V158_NUMBERED_CLAIMS_CROSSWALK.md`
+
+## G. 変更禁止（従来どおり）
+
+`Papers`、TCS 投稿版、形式化の `main`、v88、PR #8 の merge・Ready 化、force push。
+
+---
+
 # 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 夜（Claude セッション 3）
 
 > **この節が最新。** 下の「セッション 2」以降は履歴。再開手順：**この節 → GitHub の実 HEAD と最新 Actions（annotations API）→ 実際の Lean ファイル → `Papers/01_fixed-h-cfg/main.tex`（現在 v148）**。
