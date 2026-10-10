@@ -277,6 +277,9 @@ import LeanCfgProject.TCS1.V135LiWindowClassUnion
 import LeanCfgProject.TCS1.V135CostedPrimitives
 import LeanCfgProject.TCS1.V135PolyBuildAlgorithm
 import LeanCfgProject.TCS1.V135PolyBuildBridge
+import LeanCfgProject.TCS1.V135InverseHomTransducer
+import LeanCfgProject.TCS1.V135InverseHomCFL
+import LeanCfgProject.TCS1.V135InverseHomFinite
 import LeanCfgProject.TCS1.V128FiniteInformationClosure
 import LeanCfgProject.TCS1.V128InverseImageKernel
 import LeanCfgProject.TCS1.V128SubstringQuotient
