@@ -1,3 +1,5 @@
+> **CURRENT 2026-10-10 HANDOFF:** [NEXT_CHAT_HANDOFF_TCS1_2026-10-10.md](./NEXT_CHAT_HANDOFF_TCS1_2026-10-10.md) overrides all historical “latest/CI #922” statements below. LAST VERIFIED GREEN: **`481c76d` CI #976/#977**. Later source HEAD `7ff0602` (with `MixedDerivationLeastClosedBridge` and reduced-source sample package) requires fresh CI; intermediate #984/#985 **failed** on `GeneralCFGDerivationBridge.lean:50` termination, patched but unverified. Manuscript now **v135**, not v128. **Do not declare `cor:li-thickness`, `thm:main`(iv), or all 30 claims exact-complete** without version and quantifier audit.
+
 # TCS #1 v128 — exact-version Lean delta audit (IN PROGRESS)
 
 > **2026-10-09 最新の引継ぎ正本:** [`START_HERE_TCS1_V128.md`](./START_HERE_TCS1_V128.md)。追跡 [Issue #9](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/issues/9)。最新の検証済み Lean code CI は **#922 SUCCESS**（run `37885096669`、code commit **`4ec6706165aea75fc60d7812ea491b78a524ff50`**）。同 SHA の **#921 も SUCCESS**。最後に追加された数学的証明は正語上の fixed-window kernel criterion の片方向、ただし文書追記後の HEAD と CI の一致は再確認すること。旧版の学習器を作り直さない。
