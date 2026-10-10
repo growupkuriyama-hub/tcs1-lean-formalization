@@ -164,7 +164,7 @@ theorem code_to_finite (H : FixedFiniteMonoidHom α M) (ws : List (Word α))
       have h' : (x, y) ∈ (constructV116H H ws).unary := h
       rw [constructV116H, mem_unary H.h H.map_nil H.map_append] at h'
       have hrel := (substringUnaryRelated_iff H ws x y).2 h'
-      obtain ⟨_, p, q, _, hy⟩ := hrel
+      obtain ⟨p, q, _, hy⟩ := hrel.2
       exact BinaryNullableDerives.unit (B := ⟨y, p, q, hy⟩) hrel (ih ⟨p, q, hy⟩)
   | @binary x y z wy wz h dy dz ihy ihz =>
       intro hx
@@ -177,8 +177,12 @@ theorem code_to_finite (H : FixedFiniteMonoidHom α M) (ws : List (Word α))
         ⟨hy, by simpa only [List.append_assoc] using hpxq⟩
       have hz' : Observed ws.toFinset z (p ++ y) q :=
         ⟨hz, by simpa only [List.append_assoc] using hpxq⟩
-      exact BinaryNullableDerives.binary (B := ⟨y, p, z ++ q, hy'⟩)
-        (C := ⟨z, p ++ y, q, hz'⟩) rfl (ihy ⟨p, z ++ q, hy'⟩) (ihz ⟨p ++ y, q, hz'⟩)
+      let B' : ObservedSubstringNonterminal ws.toFinset := ⟨y, p, z ++ q, hy'⟩
+      let C' : ObservedSubstringNonterminal ws.toFinset := ⟨z, p ++ y, q, hz'⟩
+      have hrule : (finiteSubstringGrammar H ws.toFinset).binaryRule
+          ⟨y ++ z, p, q, hxne, hpxq⟩ B' C' := rfl
+      exact BinaryNullableDerives.binary hrule (ihy ⟨p, z ++ q, hy'⟩)
+        (ihz ⟨p ++ y, q, hz'⟩)
 
 theorem finite_to_code (H : FixedFiniteMonoidHom α M) (ws : List (Word α))
     {A : ObservedSubstringNonterminal ws.toFinset} {w : List α}
