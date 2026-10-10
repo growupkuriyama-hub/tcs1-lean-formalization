@@ -216,7 +216,8 @@ theorem card_nonterminal_le_of_reachable
       rw [h1] at h2
       exact Sum.inl_injective h2
   have hcard := Fintype.card_le_of_injective f hf
-  simpa [Fintype.card_option, productionOccurrence_card] using hcard
+  simpa [Fintype.card_option, productionOccurrence_card,
+    IndexedMixedCFG.totalRhsLength] using hcard
 
 /-- For a reduced grammar the internal normalization scale
 `|N|+|Σ|+|P|+∑|rhs|` is linear in the symbol count, with the fixed `|Σ|`

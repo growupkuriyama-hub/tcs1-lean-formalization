@@ -103,6 +103,40 @@ theorem thm_main_item_iv
   rw [hEqL] at hgold
   exact hgold
 
+/--
+The clause of `thm:main` (iv) "in particular this applies to every
+fixed-window typing `h_{k,ℓ}`": the concrete window typing has a locally
+trivial positive image (`fixedWindow_positiveImageTrivial`, verified), so
+item (iv) holds for it with constants depending only on `k, ℓ, Σ`.
+-/
+theorem thm_main_item_iv_fixedWindow
+    (k l : Nat) [DecidableEq (FixedWindowMonoid α k l)] :
+    ∃ c d : Nat,
+      c = corLiThicknessConst (fixedWindowMonoidHom (α := α) k l) ∧
+      d = corLiThicknessDegree ∧
+      ∀ {N : Type u} {P : Type w}
+        [Fintype N] [Fintype P] [DecidableEq N]
+        (G : IndexedMixedCFG N α P) (S : N),
+        IndexedMixedReduced G S →
+        FixedHSubstitutable (fixedWindowMonoidHom (α := α) k l)
+          (MixedNonterminalLanguage G.toMixedRules S) →
+        (MixedNonterminalLanguage G.toMixedRules S).Nonempty ∧
+        (∃ K : Finset (Word α),
+          IsSetDrivenCharacteristicSample
+            (BatchLanguage (fixedWindowMonoidHom (α := α) k l))
+            (MixedNonterminalLanguage G.toMixedRules S) K ∧
+          (∑ x ∈ K, (x.length + 1)) ≤
+            c * (G.symbolCount + G.ordinaryThickness + 1) ^ d)
+        ∧
+        (∀ datum : Nat → Word α,
+          (∀ n, datum n ∈ MixedNonterminalLanguage G.toMixedRules S) →
+          (∀ x, x ∈ MixedNonterminalLanguage G.toMixedRules S →
+            ∃ n, x ∈ concreteAccumulatedSample datum n) →
+          MaterializedGoldConclusion (fixedWindowMonoidHom (α := α) k l)
+            (MixedNonterminalLanguage G.toMixedRules S) datum) :=
+  thm_main_item_iv (fixedWindowMonoidHom (α := α) k l)
+    (fixedWindow_positiveImageTrivial (α := α) k l)
+
 end V135MainTheoremItemIV
 
 end TCS1
