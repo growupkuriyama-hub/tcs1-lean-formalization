@@ -26,21 +26,23 @@ jobs:
 
       - name: Build v128 finite-rule delta first
         run: |
+          set -o pipefail
           lake build \
             LeanCfgProject.TCS1.V128PositiveWindowKernel \
             LeanCfgProject.TCS1.V128PositiveWindowKernelConverse \
             LeanCfgProject.TCS1.V128PositiveWindowKernelForward \
-            LeanCfgProject.TCS1.V128LocallyTrivialThickness
+            LeanCfgProject.TCS1.V128LocallyTrivialThickness 2>&1 | tee -a build-delta.log
           lake build \
             LeanCfgProject.TCS1.V128SubstringUnaryRuleTable \
             LeanCfgProject.TCS1.V128SubstringRemainingRuleTables \
             LeanCfgProject.TCS1.V128SubstringTabulatedGrammar \
             LeanCfgProject.TCS1.V128SubstringBinarySplitSlots \
             LeanCfgProject.TCS1.V128SubstringEffectiveBinaryTable \
-            LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk
+            LeanCfgProject.TCS1.V128ThirtyClaimCrosswalk 2>&1 | tee -a build-delta.log
 
       - name: Build theorem-facing critical path
         run: |
+          set -o pipefail
           lake build \
             LeanCfgProject.TCS1.V83LevelCodedDifferenceCore \
             LeanCfgProject.TCS1.V83LevelCodedOccurrenceKernel \
@@ -55,10 +57,16 @@ jobs:
             LeanCfgProject.TCS1.V83OrdinaryThicknessIndexedPackage \
             LeanCfgProject.TCS1.V86FullManuscriptAudit \
             LeanCfgProject.TCS1.V87FullManuscriptAudit \
-            LeanCfgProject.TCS1.V88FullManuscriptAudit
+            LeanCfgProject.TCS1.V88FullManuscriptAudit 2>&1 | tee build-critical.log
 
       - name: Build TCS1 facade
-        run: lake build LeanCfgProject.TCS1.All
+        run: |
+          set -o pipefail
+          lake build LeanCfgProject.TCS1.All 2>&1 | tee build-facade.log
+
+      - name: Surface Lean errors as annotations (diagnostic only)
+        if: failure()
+        run: python3 .github/scripts/lean_errors_to_annotations.py build-delta.log build-critical.log build-facade.log
 
       - name: Reject sorry in TCS1
         run: |
