@@ -298,6 +298,8 @@ import LeanCfgProject.TCS1.V144SSBNFBridge
 import LeanCfgProject.TCS1.V144SSBNFFrontEnd
 import LeanCfgProject.TCS1.V144SSBNFNormalize
 import LeanCfgProject.TCS1.V144LinearSeparatorExists
+import LeanCfgProject.TCS1.V144SSBNFExample
+import LeanCfgProject.TCS1.V144AxiomAudit
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
