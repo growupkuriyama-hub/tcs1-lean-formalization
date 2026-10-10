@@ -1,3 +1,7 @@
+> # ⭐ NEW CHAT: read [NEXT_CHAT_HANDOFF_TCS1_2026-10-10.md](./NEXT_CHAT_HANDOFF_TCS1_2026-10-10.md) FIRST
+> **2026-10-10 優先訂正：** このファイルの後続にある「最新 CI #922/#954」等の表現は当時のスナップショット。**最後に成功確認したソース SHA は `481c76d`（CI #976/#977 SUCCESS）**。その後の source changes には **CI #984/#985 FAILURE**（`GeneralCFGDerivationBridge.lean:50` の `omega`）。コミット `7ff0602` にその修正を push したが、**修正後の CI はこの更新文作成時点で未確認**。必ず GitHub の実際の最新 run と HEAD を調べること。`cor:li-thickness` / `thm:main`(iv) の原稿 v135 完全一致は未宣言。
+> 説明・数学的依存・未完了課題・再開プロンプトは上記 Handoff 正本に集約。PR #8 は Draft、Papers/main・v88 は変更しない。
+
 # 【再開用・正本】TCS #1 v128 Lean 形式化 — 2026-10-09 引継書
 
 > **これを次の ChatGPT スレッドで最初に読むこと。最初から作り直さない。**
