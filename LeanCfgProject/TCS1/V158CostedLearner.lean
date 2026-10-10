@@ -156,7 +156,12 @@ theorem stateAt_spec (datum : Nat → Word α) :
       (stateAt H datum n).cur.Nodup ∧
       (stateAt H datum n).cur.toFinset = materializedConservativeHypothesis H datum n ∧
       (stateAt H datum n).code = constructV116H H (stateAt H datum n).cur
-  | 0 => by simp [stateAt, init]
+  | 0 => by
+      refine ⟨List.nodup_nil, ?_, List.nodup_nil, ?_, rfl⟩
+      · show ([] : List (Word α)).toFinset = concreteAccumulatedSample datum 0
+        rw [List.toFinset_nil]; rfl
+      · show ([] : List (Word α)).toFinset = materializedConservativeHypothesis H datum 0
+        rw [List.toFinset_nil]; rfl
   | n + 1 => by
       obtain ⟨hd1, hd2, hc1, hc2, hc3⟩ := stateAt_spec datum n
       set s := stateAt H datum n with hs
@@ -357,53 +362,46 @@ theorem length_le_inputNorm (ws : List (Word α)) : ws.length ≤ inputNorm ws :
   unfold inputNorm
   exact length_le_sum_map_succ ws (fun w => w.length)
 
-/--
-**Update cost.**  The `(n+1)`-st update (membership test in the written grammar,
-duplicate test, list append, and possibly writing a new grammar) takes at most
-`4·10¹⁶ · (P + 1)^20` steps, `P` the encoded size of the positive data
-`datum 1, …, datum (n+1)` seen so far.
--/
-theorem updateCost_le (datum : Nat → Word α) (n : Nat) :
-    updateCost H datum n ≤
-      40000000000000000 * (positiveDataPrefixNorm datum (n + 1) + 1) ^ 20 := by
-  set P := positiveDataPrefixNorm datum (n + 1) with hP
-  set s := stateAt H datum n with hs
-  set w := datum (n + 1) with hw
-  obtain ⟨hd1, hd2, hc1, hc2, hc3⟩ := stateAt_spec H datum n
-  have hPn : positiveDataPrefixNorm datum (n + 1) =
-      positiveDataPrefixNorm datum n + (w.length + 1) := rfl
-  have hcur := inputNorm_cur_le H datum n
-  have hdat := inputNorm_data_le H datum n
-  have hdl := length_le_inputNorm s.data
-  -- membership test
-  set Cc := 1400 * (inputNorm s.cur + 1) ^ 4 with hCc
-  have hsz : CodeSize s.code Cc := by rw [hc3]; exact constructV116H_codeSize H s.cur
-  have hnb : NameBound s.code (inputNorm s.cur) := by rw [hc3]; exact constructV116H_nameBound H s.cur
+theorem inputNorm_newData_le (s : State α) (w : Word α) :
+    inputNorm (newData s w) ≤ inputNorm s.data + (w.length + 1) := by
+  unfold newData
+  split_ifs
+  · omega
+  · rw [appendC_fst]
+    unfold inputNorm
+    simp
+
+/-- Cost of one update from an arbitrary well-formed state. -/
+theorem updateC_cost_le (s : State α) (w : Word α) (P : Nat)
+    (hc3 : s.code = constructV116H H s.cur)
+    (hcur : inputNorm s.cur ≤ P) (hdat : inputNorm s.data + (w.length + 1) ≤ P) :
+    (updateC H s w).2 ≤ 40000000000000000 * (P + 1) ^ 20 := by
+  have hsz : CodeSize s.code (1400 * (inputNorm s.cur + 1) ^ 4) := by
+    rw [hc3]; exact constructV116H_codeSize H s.cur
+  have hnb : NameBound s.code (inputNorm s.cur) := by
+    rw [hc3]; exact constructV116H_nameBound H s.cur
   have hmem := codeMemberC_cost_le w hsz hnb
-  -- duplicate test and append
   have hwm := wordMemC_snd_le w s.data
   have hap : (appendC s.data [w]).2 = s.data.length + 1 := appendC_snd _ _
-  -- rebuild
-  obtain ⟨hn1, hn2⟩ := newData_spec s w hd1
-  have hnd : inputNorm (newData s w) ≤ P := by
-    rw [inputNorm_eq_sampleNorm hn1, hn2, hd2]
-    have := concreteAccumulatedSample_norm_le_prefix datum (n + 1)
-    exact this
+  have hdl := length_le_inputNorm s.data
+  have hnd := inputNorm_newData_le s w
   have hreb := constructV116Cost_le (fun a => H.h [a]) (newData s w)
   unfold constructV116Cost at hreb
-  -- monomials in P
   have hP1 : 1 ≤ P + 1 := by omega
-  have hcP : inputNorm s.cur ≤ P := by omega
-  have hwP : w.length + 1 ≤ P + 1 := by omega
-  have hCc : Cc + 1 ≤ 1401 * (P + 1) ^ 4 := by
-    have : (inputNorm s.cur + 1) ^ 4 ≤ (P + 1) ^ 4 := Nat.pow_le_pow_left (by omega) 4
-    have : 1 ≤ (P + 1) ^ 4 := Nat.one_le_pow _ _ hP1
+  have hA : 1400 * (inputNorm s.cur + 1) ^ 4 + 1 ≤ 1401 * (P + 1) ^ 4 := by
+    have h1 : (inputNorm s.cur + 1) ^ 4 ≤ (P + 1) ^ 4 := Nat.pow_le_pow_left (by omega) 4
+    have h2 : 1 ≤ (P + 1) ^ 4 := Nat.one_le_pow _ _ hP1
     omega
+  have hB : w.length + 1 ≤ P + 1 := by omega
+  have hC : inputNorm s.cur + 4 ≤ 4 * (P + 1) := by omega
   have hm2 : (codeMemberC s.code w).2 ≤ 21999073608000000 * (P + 1) ^ 20 := by
     refine le_trans hmem ?_
-    calc 2000000 * ((Cc + 1) ^ 3 * (w.length + 1) ^ 7 * (inputNorm s.cur + 4))
+    calc 2000000 * ((1400 * (inputNorm s.cur + 1) ^ 4 + 1) ^ 3 * (w.length + 1) ^ 7 *
+          (inputNorm s.cur + 4))
         ≤ 2000000 * ((1401 * (P + 1) ^ 4) ^ 3 * (P + 1) ^ 7 * (4 * (P + 1))) := by
-          gcongr <;> omega
+          apply Nat.mul_le_mul_left
+          exact Nat.mul_le_mul (Nat.mul_le_mul (Nat.pow_le_pow_left hA 3)
+            (Nat.pow_le_pow_left hB 7)) hC
       _ = 21999073608000000 * (P + 1) ^ 20 := by ring
   have hX1 : P + 1 ≤ (P + 1) ^ 20 := by
     calc P + 1 = (P + 1) ^ 1 := (pow_one _).symm
@@ -414,17 +412,33 @@ theorem updateCost_le (datum : Nat → Word α) (n : Nat) :
   have hX4 : (P + 1) ^ 4 ≤ (P + 1) ^ 20 := Nat.pow_le_pow_right hP1 (by omega)
   have hwm' : (wordMemC w s.data).2 ≤ 2 * ((P + 1) * (P + 1)) := by
     refine le_trans hwm ?_
-    have : s.data.length * (w.length + 2) ≤ (P + 1) * (P + 1) :=
+    have h1 : s.data.length * (w.length + 2) ≤ (P + 1) * (P + 1) :=
       Nat.mul_le_mul (by omega) (by omega)
-    have : 1 ≤ (P + 1) * (P + 1) := Nat.one_le_iff_ne_zero.mpr (by positivity)
+    have h2 : 1 ≤ (P + 1) * (P + 1) :=
+      Nat.one_le_iff_ne_zero.mpr (Nat.mul_ne_zero (by omega) (by omega))
     omega
   have hreb' : (constructV116C (fun a => H.h [a]) (newData s w)).2 ≤ 1400 * (P + 1) ^ 4 := by
     refine le_trans hreb ?_
     have : (inputNorm (newData s w) + 1) ^ 4 ≤ (P + 1) ^ 4 := Nat.pow_le_pow_left (by omega) 4
     omega
-  show (updateC H s w).2 ≤ _
   unfold updateC
   split_ifs <;> simp only [] <;> omega
+
+/--
+**Update cost.**  The `(n+1)`-st update (membership test in the written grammar,
+duplicate test, list append, and possibly writing a new grammar) takes at most
+`4·10¹⁶ · (P + 1)^20` steps, `P` the encoded size of the positive data
+`datum 1, …, datum (n+1)` seen so far.
+-/
+theorem updateCost_le (datum : Nat → Word α) (n : Nat) :
+    updateCost H datum n ≤
+      40000000000000000 * (positiveDataPrefixNorm datum (n + 1) + 1) ^ 20 := by
+  obtain ⟨_, _, _, _, hc3⟩ := stateAt_spec H datum n
+  have hcur := inputNorm_cur_le H datum n
+  have hdat := inputNorm_data_le H datum n
+  have hPn : positiveDataPrefixNorm datum (n + 1) =
+      positiveDataPrefixNorm datum n + ((datum (n + 1)).length + 1) := rfl
+  exact updateC_cost_le H (stateAt H datum n) (datum (n + 1)) _ hc3 (by omega) (by omega)
 
 end Learner
 
