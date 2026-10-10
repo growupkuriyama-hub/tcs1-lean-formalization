@@ -1,3 +1,76 @@
+# 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 夜（Claude セッション 3）
+
+> **この節が最新。** 下の「セッション 2」以降は履歴。再開手順：**この節 → GitHub の実 HEAD と最新 Actions（annotations API）→ 実際の Lean ファイル → `Papers/01_fixed-h-cfg/main.tex`（現在 v148）**。
+
+## A. 状態（GitHub Actions の実結果）
+
+| 項目 | 値 |
+|---|---|
+| ブランチ / PR | `audit/tcs1-v128-exact-delta` / Draft PR #8（merge・Ready 化していない） |
+| **最後に GREEN を確認したコード SHA** | **`313aa04c95a16d09ccc5c7ead3d62ae0d1f5a715` — CI [#1040](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38044662069) SUCCESS（5 ゲートすべて、V144 の `#guard_msgs` 公理監査と `#guard` 実行例を含む）** |
+| 新規定理を初めて検証した CI | `315f25a` CI [#1036](https://github.com/growupkuriyama-hub/tcs1-lean-formalization/actions/runs/38042988338)（5 ゲートすべて成功） |
+| 本セッション初回の GREEN | `bed41c3` CI #1028（Horn エンジン＋正規化器本体） |
+| 前セッション最後の GREEN | `a27fa38` CI #1024 |
+| 原稿 | 依頼時点 v144（sha256 `d9c23a41…`）→ 現在の Papers `main` は **v148**（`04994e0`、sha256 `824fc84a…`）。照合は両方に対して実施 |
+
+## B. 本セッションで CI 検証された定理
+
+**`prop:thick-ssbnf-normal` の多項式時間（第一目標）**
+- `V144HornClosure.lean`：歩数付き Horn 閉包エンジン `hornC`。正しさ `mem_hornC_iff`、歩数 `hornC_cost_le`（`8(|dom|+1)²(|rules|+Σ|body|+1)(E+1)`）。
+- `V144SSBNFNormalizer.lean`：付録の順序どおりの実行可能な正規化器 `normalizeTrace`。順序は nullable、二分化後の ε 除去（二項規則ごとに変種 3 個以下、2^k 列挙なし）、unit 閉包、unit 除去、productive、reachable、出力。各段の値の仕様と歩数を証明し、全体で `normalizeTrace_steps_le`（`≤ 400(m+1)^5(E+1)`）。
+- `V144SSBNFBridge.lean`：計算したリストが既存の意味論的定義（`BinaryNullable`、`EpsilonElimUnitRule`、`UnitReach`、`UnitFree*`、`ProductiveUnitFreeReachable`、`reducedSSBNF*`）と**完全に一致**することを証明。書かれた文法の導出と既存の縮約文法の導出も一致する（`codeDerives_iff`、`codeStartLanguage_eq`、到達性 `out_reachable`）。
+- `V144SSBNFFrontEnd.lean`：明示リストからの前処理。wrapper による終端分離と、suffix 状態（入力右辺の尾部へのポインタ）による二分化。`frontEndBinaryGrammar` の規則を明示的に特徴づけ、サイズ・比較コスト・線形時間 `frontCodeC_snd_le` を証明。
+- `V144SSBNFNormalize.lean`：`normalizeSSBNF`。`codeMatches_indexed`（前処理の出力が既存の `indexedFiniteFrontEndGrammar G` と完全に一致）、`inputScale_eq_normalizationScale`、**`normalizeSSBNF_steps_le`：`≤ 900(n+1)^6` 歩**。
+  - **紙面対応 `prop_thickSSBNFNormal_executable`**：次の 5 点を示す。
+    1. 言語 = `L(G,A)`
+    2. 既存の縮約 SSBNF 文法 `Nf` と非終端記号・規則が完全に一致
+    3. 異なる要素の数が `indexedSSBNFGrammarSizeEnvelope n` 以下、書かれたリスト長が `n`／`n³`
+    4. すべての非終端記号が到達可能で、`1 + n²·thicknessBar τR` 以下の長さの語を導出する
+    5. 時間 `900(n+1)^6`
+  - `prop_thickSSBNFNormal_executable_degenerate`：非空の語がない場合も正しく、すべての入力で正しい。
+- `V144SSBNFExample.lean`：`S → aSb | ε` でコンパイル済みの正規化器を実行し、`#guard` で確認（非終端記号 4、終端規則 3、二項規則 2、ε フラグ、4313 歩）。
+- 計算モデル：V135 と同じく、値と歩数を同じ再帰で計算する。suffix 状態の比較はセル単位、記号の比較は 1 歩（word-RAM）。`Finset` は証明の中でだけ使い、アルゴリズムでは使わない。詳細は `V144_SSBNF_NORMALIZATION_TIME_AUDIT.md`。
+
+**v144–v148 監査（第二目標）**：`V144_NUMBERED_CLAIMS_CROSSWALK.md`
+- 機械的な差分（v135／v144／v148）：主張文が変わったのは `prop:linear-separator-example` だけ。証明が変わったのは #3、#5、#12、#23、#24。
+- `prop:linear-separator-example`（∃h 形）：`prop_linearSeparatorExample_existsH`（`V144LinearSeparatorExists.lean`）。既存の `lpm_proposition86_full_semantic` から ∃ の証人を与えた。
+- `thm:poly-build`（v141 の直接列挙）：`constructV116C` と同じ O(n³) 候補 × O(n) で、重複除去なし。整合する。
+- `prop:nonlinear-rs-example`：主張は不変。**「決定性文脈自由」の節は Lean で形式化されていない**（DPDA モデルがない）ため R から **P** に再評価した。
+- 集計：F=8（#2, #4, #5, #11, #12, #18, #19, #23）、R=21、P=1（#24）。
+
+**公理監査**：`V144AxiomAudit.lean`（`#guard_msgs`、上記の紙面対応 4 定理）。
+
+## C. CI で修正した失敗（annotations で確認）
+
+- `3ba1980` CI #1030：Bridge の `cases` で変数が消えた、`EpsilonElimUnitRule` の場合分けの名前の数。`Prod.mk.inj` と `subst`、補題 `epsElim_cases` で修正。
+- `225c096` CI #1032：FrontEnd の `simp` が `Sum.exists` で展開しすぎた、`generalize` がゴールにも及んだ。ローカルの mock で再現して修正（`7c2e016`）。
+- `7c2e016` CI #1034：Normalize の `obtain` の再利用、`include L`、構造体リテラルの修正。`315f25a` CI #1036 で GREEN。
+
+## D. 残る課題（未証明）
+
+1. `prop:nonlinear-rs-example` の DCFL 節：DPDA の形式化がない。
+2. 学習器の 1 更新あたりのコスト：`cor:ilt`／`thm:main`(iii) の更新は所属判定（table-backed CYK）と標本リスト（`Finset.toList`）を含むが、v116 表現での歩数は未計上。次の補題は、歩数付き CYK を v116 文法コードの上に実装し、`codeLanguage` との一致と多項式歩数を示すこと。
+3. 正規化の次数（6）は最適化していない。書いたリストは重複を許す（異なる要素の数は既存の上界で抑えられる）。
+4. 計算量は RAM／ポインタ機械の操作数である。ビット計算量や実機の時間ではない。
+
+## E. 次回の最初の作業
+
+1. HEAD の CI を確認する（`gh run list` と annotations API）。
+2. D-2：歩数付き CYK 所属判定と、学習器 1 更新の歩数。
+3. （任意）D-1：DPDA の定義と Δ* の受理。
+
+## F. 変更・追加したファイル（本セッション）
+
+- 新規 Lean：`V144HornClosure`、`V144SSBNFNormalizer`、`V144SSBNFBridge`、`V144SSBNFFrontEnd`、`V144SSBNFNormalize`、`V144LinearSeparatorExists`、`V144SSBNFExample`、`V144AxiomAudit`
+- 変更：`All.lean`（import の追加のみ）
+- 文書：本書、`START_HERE`、`DELTA` の冒頭、新規 `V144_SSBNF_NORMALIZATION_TIME_AUDIT.md`、`V144_NUMBERED_CLAIMS_CROSSWALK.md`
+
+## G. 変更禁止（従来どおり）
+
+`Papers`、TCS 投稿版、形式化の `main`、v88、PR #8 の merge・Ready 化、force push。
+
+---
+
 # 【最優先・再開用】TCS #1 Lean 形式化 引継ぎ — 2026-10-10 夜（Claude セッション 2）
 
 > **この節が最新。** 下の「午後更新」「午前版」は履歴。再開手順：**この節 → GitHub の実 HEAD と最新 Actions（annotations API）→ 実際の Lean ファイル → `Papers/01_fixed-h-cfg/main.tex`(v135)**。
