@@ -23,10 +23,12 @@ section MixedDerivationLeastClosedBridge
 
 variable {N : Type u} {α : Type v}
 
-mutual
-
 /-- Every successful mixed CFG parse tree is sound in any rule-closed
-nonterminal interpretation. -/
+nonterminal interpretation.
+
+Proved with the mutual recursor `MixedDerives.rec` (explicit motives for both
+mutual families), so no structural/well-founded termination inference is
+involved. -/
 theorem mixedDerives_mem_closed
     (R : MixedRules N α)
     (L : N → Set (List α))
@@ -34,14 +36,30 @@ theorem mixedDerives_mem_closed
     {A : N} {w : List α}
     (d : MixedDerives R A w) :
     w ∈ L A := by
-  cases d with
-  | @rule A rhs pieces hR hpieces =>
-      apply hclosed A
-      exact ⟨rhs, hR,
-        mixedSymbolsDerive_realizes_closed R L hclosed hpieces⟩
+  refine MixedDerives.rec
+    (motive_1 := fun A w _ => w ∈ L A)
+    (motive_2 := fun rhs pieces _ => RhsRealizes L rhs pieces.flatten)
+    ?rule ?nil ?terminal ?nonterminal d
+  case rule =>
+    intro A rhs pieces hR _ ih
+    apply hclosed A
+    exact ⟨rhs, hR, ih⟩
+  case nil =>
+    show ([] : List (List α)).flatten = []
+    rfl
+  case terminal =>
+    intro a rhs pieces _ ih
+    show ∃ t, ([a] :: pieces).flatten = a :: t ∧ RhsRealizes L rhs t
+    exact ⟨pieces.flatten, by simp, ih⟩
+  case nonterminal =>
+    intro A rhs w pieces _ _ ihA ihT
+    show ∃ u v, (w :: pieces).flatten = u ++ v ∧ u ∈ L A ∧
+      RhsRealizes L rhs v
+    exact ⟨w, pieces.flatten, by simp, ihA, ihT⟩
 
 /-- Each aligned RHS derivation realizes its word under any closed
-interpretation of nonterminals. -/
+interpretation of nonterminals (second component of the same mutual
+induction, via `MixedSymbolsDerive.rec`). -/
 theorem mixedSymbolsDerive_realizes_closed
     (R : MixedRules N α)
     (L : N → Set (List α))
@@ -50,20 +68,26 @@ theorem mixedSymbolsDerive_realizes_closed
     {pieces : List (List α)}
     (d : MixedSymbolsDerive R rhs pieces) :
     RhsRealizes L rhs pieces.flatten := by
-  cases d with
-  | nil =>
-      rfl
-  | @terminal a rhs pieces tail =>
-      refine ⟨pieces.flatten, ?_, ?_⟩
-      · simp
-      · exact mixedSymbolsDerive_realizes_closed R L hclosed tail
-  | @nonterminal A rhs w pieces head tail =>
-      refine ⟨w, pieces.flatten, ?_, ?_, ?_⟩
-      · simp
-      · exact mixedDerives_mem_closed R L hclosed head
-      · exact mixedSymbolsDerive_realizes_closed R L hclosed tail
-
-end
+  refine MixedSymbolsDerive.rec
+    (motive_1 := fun A w _ => w ∈ L A)
+    (motive_2 := fun rhs pieces _ => RhsRealizes L rhs pieces.flatten)
+    ?rule ?nil ?terminal ?nonterminal d
+  case rule =>
+    intro A rhs pieces hR _ ih
+    apply hclosed A
+    exact ⟨rhs, hR, ih⟩
+  case nil =>
+    show ([] : List (List α)).flatten = []
+    rfl
+  case terminal =>
+    intro a rhs pieces _ ih
+    show ∃ t, ([a] :: pieces).flatten = a :: t ∧ RhsRealizes L rhs t
+    exact ⟨pieces.flatten, by simp, ih⟩
+  case nonterminal =>
+    intro A rhs w pieces _ _ ihA ihT
+    show ∃ u v, (w :: pieces).flatten = u ++ v ∧ u ∈ L A ∧
+      RhsRealizes L rhs v
+    exact ⟨w, pieces.flatten, by simp, ihA, ihT⟩
 
 /-- A concrete successful parse-tree yield belongs to the least rule-closed
 source language. -/
