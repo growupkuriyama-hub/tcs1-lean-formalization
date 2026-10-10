@@ -300,6 +300,11 @@ import LeanCfgProject.TCS1.V144SSBNFNormalize
 import LeanCfgProject.TCS1.V144LinearSeparatorExists
 import LeanCfgProject.TCS1.V144SSBNFExample
 import LeanCfgProject.TCS1.V144AxiomAudit
+import LeanCfgProject.TCS1.V158DPDA
+import LeanCfgProject.TCS1.V158DeltaStarDPDA
+import LeanCfgProject.TCS1.V158DeltaStarDCFLPackage
+import LeanCfgProject.TCS1.V158CounterDyckDPDA
+import LeanCfgProject.TCS1.V158AxiomAudit
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 
