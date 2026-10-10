@@ -297,6 +297,7 @@ import LeanCfgProject.TCS1.V144SSBNFNormalizer
 import LeanCfgProject.TCS1.V144SSBNFBridge
 import LeanCfgProject.TCS1.V144SSBNFFrontEnd
 import LeanCfgProject.TCS1.V144SSBNFNormalize
+import LeanCfgProject.TCS1.V144LinearSeparatorExists
 /-!
 # TCS #1 integrated facade: archived v79 baseline plus v83 proof layer and v88 re-verification
 

@@ -74,14 +74,17 @@ theorem horn_null_sound (cm : CodeMatches g Gs) {x : σ}
   | @rule x body hm _ ih =>
       simp only [nullRules, List.mem_append, List.mem_map] at hm
       rcases hm with ⟨z, hz, he⟩ | ⟨p, hp, he⟩ | ⟨t, ht, he⟩
-      · cases he
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
         obtain ⟨hx, hr⟩ := (cm.eps z).mp hz
         exact ⟨hx, BinaryNullableDerives.epsilon hr⟩
-      · cases he
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
         obtain ⟨hx, hy, hr⟩ := (cm.unit p.1 p.2).mp hp
         obtain ⟨_, d⟩ := ih p.2 (by simp)
         exact ⟨hx, BinaryNullableDerives.unit hr d⟩
-      · cases he
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
         obtain ⟨hx, hy, hz, hr⟩ := (cm.bin t.1 t.2.1 t.2.2).mp ht
         obtain ⟨_, dB⟩ := ih t.2.1 (by simp)
         obtain ⟨_, dC⟩ := ih t.2.2 (by simp)
@@ -130,6 +133,15 @@ theorem mem_null_iff {ceq : σ → σ → Bool × Nat} (hc : CeqCorrect ceq)
 
 /-! ### ε-elimination -/
 
+omit [DecidableEq σ] in
+theorem epsElim_cases {X Z : {x // P x}} (h : EpsilonElimUnitRule Gs X Z) :
+    Gs.unitRule X Z ∨ (∃ B, Gs.binaryRule X B Z ∧ BinaryNullable Gs B) ∨
+      (∃ C, Gs.binaryRule X Z C ∧ BinaryNullable Gs C) := by
+  cases h with
+  | original h => exact Or.inl h
+  | dropLeft hbin hnull => exact Or.inr (Or.inl ⟨_, hbin, hnull⟩)
+  | dropRight hbin hnull => exact Or.inr (Or.inr ⟨_, hbin, hnull⟩)
+
 theorem mem_eunit_iff {ceq : σ → σ → Bool × Nat} (hc : CeqCorrect ceq)
     (cm : CodeMatches g Gs) (x z : σ) :
     (x, z) ∈ (epsUnitC ceq g (nullC ceq g).1).1 ↔
@@ -146,14 +158,12 @@ theorem mem_eunit_iff {ceq : σ → σ → Bool × Nat} (hc : CeqCorrect ceq)
       obtain ⟨_, hnull⟩ := (mem_null_iff hc cm y).mp hn
       exact ⟨hx, hz, EpsilonElimUnitRule.dropRight hr hnull⟩
   · rintro ⟨hx, hz, hr⟩
-    cases hr with
-    | original h => exact Or.inl ((cm.unit x z).mpr ⟨hx, hz, h⟩)
-    | @dropLeft _ B _ hbin hnull =>
-        exact Or.inr (Or.inl ⟨B.1, (cm.bin x B.1 z).mpr ⟨hx, B.2, hz, hbin⟩,
-          (mem_null_iff hc cm B.1).mpr ⟨B.2, hnull⟩⟩)
-    | @dropRight _ _ C hbin hnull =>
-        exact Or.inr (Or.inr ⟨C.1, (cm.bin x z C.1).mpr ⟨hx, hz, C.2, hbin⟩,
-          (mem_null_iff hc cm C.1).mpr ⟨C.2, hnull⟩⟩)
+    rcases epsElim_cases hr with h | ⟨B, hbin, hnull⟩ | ⟨C, hbin, hnull⟩
+    · exact Or.inl ((cm.unit x z).mpr ⟨hx, hz, h⟩)
+    · exact Or.inr (Or.inl ⟨B.1, (cm.bin x B.1 z).mpr ⟨hx, B.2, hz, hbin⟩,
+        (mem_null_iff hc cm B.1).mpr ⟨B.2, hnull⟩⟩)
+    · exact Or.inr (Or.inr ⟨C.1, (cm.bin x z C.1).mpr ⟨hx, hz, C.2, hbin⟩,
+        (mem_null_iff hc cm C.1).mpr ⟨C.2, hnull⟩⟩)
 
 /-! ### Unit closure -/
 
@@ -172,9 +182,11 @@ theorem horn_unit_sound (x : σ) (hx : P x) {z : σ}
   | @rule z body hm _ ih =>
       simp only [unitRulesFrom, List.mem_cons, List.mem_map] at hm
       rcases hm with he | ⟨p, hp, he⟩
-      · cases he
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
         exact ⟨hx, UnitReach.refl _⟩
-      · cases he
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
         obtain ⟨hy, hz, hr⟩ := (heu p.1 p.2).mp hp
         obtain ⟨_, hreach⟩ := ih p.1 (by simp)
         exact ⟨hz, UnitReach.trans hreach (UnitReach.step hr (UnitReach.refl _))⟩
@@ -198,9 +210,11 @@ theorem horn_unit_prepend {A B : σ} (hAB : (A, B) ∈ eunit) {z : σ}
   | @rule z body hm _ ih =>
       simp only [unitRulesFrom, List.mem_cons, List.mem_map] at hm
       rcases hm with he | ⟨p, hp, he⟩
-      · cases he
-        exact hstep (A, B) hAB hbase
-      · cases he
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
+        exact hstep _ hAB hbase
+      · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+        subst h1; subst h2
         exact hstep p hp (ih p.1 (by simp))
 
 omit [DecidableEq σ] in
@@ -283,10 +297,12 @@ theorem horn_prod_iff (x : σ) :
     | @rule x body hm _ ih =>
         simp only [prodRules, List.mem_append, List.mem_map] at hm
         rcases hm with ⟨p, hp, he⟩ | ⟨t, ht, he⟩
-        · cases he
+        · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+          subst h1; subst h2
           obtain ⟨hx, hr⟩ := (hut p.1 p.2).mp hp
           exact ⟨hx, [p.2], UnitFreeDerives.terminal hr⟩
-        · cases he
+        · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+          subst h1; subst h2
           obtain ⟨hx, _, _, hr⟩ := (hub t.1 t.2.1 t.2.2).mp ht
           obtain ⟨_, wC, dC⟩ := ih t.2.1 (by simp)
           obtain ⟨_, wD, dD⟩ := ih t.2.2 (by simp)
@@ -335,12 +351,13 @@ theorem horn_reach_iff (x : σ) :
     | @rule x body hm _ ih =>
         simp only [reachRules, List.mem_cons, List.mem_flatMap] at hm
         rcases hm with he | ⟨t, ht, hm⟩
-        · cases he
+        · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+          subst h1; subst h2
           exact ⟨start, hs, ProductiveUnitFreeReachable.start⟩
         · obtain ⟨⟨hx, hc', hd, hr⟩, hpx, hpc, hpd⟩ := (hpb t.1 t.2.1 t.2.2).mp ht
           obtain ⟨X, hX, hreach⟩ := ih t.1 (by
             simp only [List.mem_cons, List.mem_singleton, List.not_mem_nil, or_false] at hm
-            rcases hm with he | he <;> (cases he; simp))
+            rcases hm with he | he <;> (obtain ⟨_, h2⟩ := Prod.mk.inj he; rw [h2]; simp))
           obtain ⟨_, wc, dc⟩ := (hprod _).mp hpc
           obtain ⟨_, wd, dd⟩ := (hprod _).mp hpd
           let C' : ProductiveUnitFreeState Gs := ⟨⟨t.2.1, hc'⟩, ⟨wc, dc⟩⟩
@@ -351,9 +368,11 @@ theorem horn_reach_iff (x : σ) :
             rw [this]; exact hr
           simp only [List.mem_cons, List.mem_singleton, List.not_mem_nil, or_false] at hm
           rcases hm with he | he
-          · cases he
+          · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+            subst h1; subst h2
             exact ⟨C', rfl, ProductiveUnitFreeReachable.left hreach hrule⟩
-          · cases he
+          · obtain ⟨h1, h2⟩ := Prod.mk.inj he
+            subst h1; subst h2
             exact ⟨D', rfl, ProductiveUnitFreeReachable.right hreach hrule⟩
   · rintro ⟨X, rfl, hX⟩
     induction hX with

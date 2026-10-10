@@ -408,6 +408,70 @@ theorem prop_thickSSBNFNormal_executable (A : N)
     exact ⟨z, (codeDerives_iff hc cm start hs _ z).mpr ⟨X, rfl, hz⟩, hlen⟩
   · exact normalizeSSBNF_steps_le G L A
 
+
+/--
+**The degenerate case.**  If the start nonterminal has no nonempty word, the
+normalizer writes no nonterminal, no rule and no start rule, and the written
+grammar (only the ε flag) still generates exactly `L(G, A)`.  Together with
+`prop_thickSSBNFNormal_executable`, the executable normalizer is correct on
+every input.
+-/
+theorem prop_thickSSBNFNormal_executable_degenerate (A : N)
+    (hnone : ¬ ∃ u : Word α, u ∈ LeastClosedLanguage G.toMixedRules A ∧ u ≠ []) :
+    let out := (normalizeSSBNF L.nts L.alph L.prs A).1
+    out.nonterminals = [] ∧ out.terminal = [] ∧ out.binary = [] ∧ out.start = none ∧
+    UntypedStartLanguage (codeTerminalRule out) (codeBinaryRule out) (codeStartRule out)
+        (out.epsilon = true) = LeastClosedLanguage G.toMixedRules A := by
+  intro out
+  have hc := stateEqC_correct (N := N) (α := α)
+  have cm := codeMatches_indexed G L
+  have hnp : (memC stateEqC (BinarizedState.old (Sum.inl A)) (idxTrace G L A).prod).1 = false := by
+    rw [memC_fst hc, decide_eq_false_iff_not]
+    intro hmem
+    rw [trace_prod_iff hc cm] at hmem
+    obtain ⟨hx, w, d⟩ := hmem
+    apply hnone
+    have hE := unitFreeDerives_to_epsilonFree (Gf G) d
+    have hne := epsilonFreeDerives_nonempty (Gf G) hE
+    have hB := epsilonFreeDerives_to_binaryNullable (Gf G) hE
+    exact ⟨w, (indexedFiniteFrontEnd_old_language_iff_source G A w).mp hB, hne⟩
+  have hout : out = { nonterminals := [], terminal := [], binary := [], start := none,
+      epsilon := (memC stateEqC (BinarizedState.old (Sum.inl A)) (idxTrace G L A).null).1 } := by
+    show (idxTrace G L A).out = _
+    rw [trace_out, hnp]
+    rfl
+  have heps : (memC stateEqC (BinarizedState.old (Sum.inl A)) (idxTrace G L A).null).1 = true ↔
+      [] ∈ LeastClosedLanguage G.toMixedRules A := by
+    rw [memC_fst hc, decide_eq_true_iff, trace_null, mem_null_iff hc cm]
+    constructor
+    · rintro ⟨_, h⟩
+      exact (indexedFiniteFrontEnd_old_language_iff_source G A []).mp h
+    · intro h
+      exact ⟨old_mem_frontSupport G _,
+        (indexedFiniteFrontEnd_old_language_iff_source G A []).mpr h⟩
+  refine ⟨by rw [hout], by rw [hout], by rw [hout], by rw [hout], ?_⟩
+  ext w
+  show UntypedStartDerives _ _ _ _ w ↔ w ∈ LeastClosedLanguage G.toMixedRules A
+  constructor
+  · intro h
+    cases h with
+    | @nonempty x _ hstart _ =>
+        have : out.start = some x := hstart
+        rw [hout] at this
+        cases this
+    | epsilon h =>
+        have : out.epsilon = true := h
+        rw [hout] at this
+        exact heps.mp this
+  · intro hw
+    by_cases hne : w = []
+    · subst hne
+      refine UntypedStartDerives.epsilon ?_
+      show out.epsilon = true
+      rw [hout]
+      exact heps.mpr hw
+    · exact absurd ⟨w, hw, hne⟩ hnone
+
 end Indexed
 
 end SSBNFNorm
